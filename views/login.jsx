@@ -86,7 +86,7 @@ export default class LoginView extends React.Component {
         }
         else {
           // TODO: Save jsonResponse.token
-          this.props.navigation.navigate('Test');
+          this.props.navigation.navigate('App');
         }
       })
       .catch(err => {
@@ -106,7 +106,7 @@ export default class LoginView extends React.Component {
       <View>
         <Item floatingLabel>
           <Label>First Name</Label>
-          <Input onChangeText={updateUsername.bind(this)}/>
+          <Input onChangeText={updateFirstName.bind(this)}/>
         </Item>
         <Item floatingLabel>
           <Label>Last Name</Label>
