@@ -1,32 +1,22 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { createStackNavigator } from 'react-navigation';
+import LoginView from './views/login';
+import TestView from './views/test';
+
+const RootStack = createStackNavigator({
+    Login: LoginView,
+    Test: TestView,
+  },
+  {
+    initialRouteName: 'Login',
+  }
+);
 
 export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {count: 0};
-  }
-
-  componentDidMount() {
-    fetch('http://localhost:3000/examples/Mark').then(res => {
-      this.setState({
-        count: res.counter
-      });
-    })
-    .catch(err => {
-      if (err) throw err;
-    });
-  }
-
+  
   render() {
-    return (
-      <View style={styles.container}>
-        <Text>{this.state.count}</Text>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
-      </View>
-    );
+    return <RootStack/>;
   }
 }
 
