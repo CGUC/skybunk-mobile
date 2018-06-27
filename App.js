@@ -1,32 +1,48 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { createStackNavigator } from 'react-navigation';
+import { Font, AppLoading } from 'expo';
+import { Container, Text, View } from 'native-base';
+import LoginView from './views/login';
+import TestView from './views/test';
+
+const RootStack = createStackNavigator({
+    Login: LoginView,
+    Test: TestView,
+  },
+  {
+    initialRouteName: 'Login',
+  }
+);
 
 export default class App extends React.Component {
+  // This junk is just to avoid a bug with expo fonts...
   constructor(props) {
     super(props);
-    this.state = {count: 0};
+    this.state = { 
+      loading: true,
+    };
   }
 
-  componentDidMount() {
-    fetch('http://localhost:3000/examples/Mark').then(res => {
-      this.setState({
-        count: res.counter
-      });
-    })
-    .catch(err => {
-      if (err) throw err;
+  async componentWillMount() {
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
+    this.setState({ loading: false });
   }
 
   render() {
-    return (
-      <View style={styles.container}>
-        <Text>{this.state.count}</Text>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
-      </View>
-    );
+    if (this.state.loading) {
+      return (
+        <Container>
+          <AppLoading/>
+        </Container>
+      );
+    }
+    else {
+      return <RootStack/>;
+    }
   }
 }
 
