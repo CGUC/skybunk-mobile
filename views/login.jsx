@@ -1,7 +1,9 @@
 import React from 'react';
 import { Dimensions, ImageBackground, View } from 'react-native';
-import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Label, Body, Right, Title, Form, Input, Item } from 'native-base';
-import { Font, AppLoading } from "expo";
+import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon,
+  Left, Label, Body, Right, Title, Form, Input, Item } from 'native-base';
+import Banner from '../components/Banner'
+import ApiClient from '../ApiClient'
 
 export default class LoginView extends React.Component {
   static navigationOptions = { header: null };
@@ -9,7 +11,6 @@ export default class LoginView extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      loading: true,
       registering: false,
       username: null,
       password: null,
@@ -17,15 +18,6 @@ export default class LoginView extends React.Component {
       lastName: null,
       goldenTicket: null
     };
-  }
-
-  // This is just to avoid a bug with expo...
-  async componentWillMount() {
-    await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
-    });
-    this.setState({ loading: false });
   }
 
   toggleRegistering() {
@@ -36,64 +28,31 @@ export default class LoginView extends React.Component {
     });
   }
 
-  updateLastName(text) {
-    this.setState({
-      ...this.state,
-      lastName: text,
-    });
-  }
-
-  updateFirstName(text) {
-    this.setState({
-      ...this.state,
-      firstName: text,
-    });
-  }
-
-  updateUsername(text) {
-    this.setState({
-      ...this.state,
-      username: text,
-    });
-  }
-
-  updateGoldenTicket(text) {
-    this.setState({
-      ...this.state,
-      goldenTicket: text,
-    });
-  }
-
-  updatePassword(text) {
-    this.setState({
-      ...this.state,
-      password: text,
-    });
+  updateFormStateFunc(key) {
+    return function(text) {
+      this.setState({
+        ...this.state,
+        [key]: text,
+      });
+    }
   }
 
   submitForm() {
+    // Register the user
     if (this.state.registering) {
-      fetch('http://api.grebelife.com/users/', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: this.state.username,
-          password: this.state.password,
-          firstName: this.state.firstName,
-          lastName: this.state.lastName,
-          goldenTicket: this.state.goldenTicket,
-        }),
+      ApiClient.post('/users', {}, {
+        username: this.state.username,
+        password: this.state.password,
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        goldenTicket: this.state.goldenTicket,
       })
       .then(response => response.json())
       .then(jsonResponse => {
-        console.log(jsonResponse);
         if (jsonResponse.message) {
           this.setState({
             ...this.state,
-            errorMessage: jsonResponse.message
+            errorMessage: jsonResponse.message // TODO: Fix error from server and update here
           });
         }
         else {
@@ -111,21 +70,14 @@ export default class LoginView extends React.Component {
         console.log(err);
       });
     }
+    // Login the user
     else {
-      fetch('http://api.grebelife.com/users/login/', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      ApiClient.post('/users/login', {}, {
           username: this.state.username,
           password: this.state.password,
-        }),
       })
       .then(response => response.json())
       .then(jsonResponse => {
-        console.log(jsonResponse);
         if (jsonResponse.err) {
           this.setState({
             ...this.state,
@@ -133,6 +85,7 @@ export default class LoginView extends React.Component {
           });
         }
         else {
+          // TODO: Save jsonResponse.token
           this.props.navigation.navigate('Test');
         }
       })
@@ -143,73 +96,64 @@ export default class LoginView extends React.Component {
   }
 
   render() {
-    if (this.state.loading) {
-      return (
+    const updateUsername = this.updateFormStateFunc('username');
+    const updatePassword = this.updateFormStateFunc('password');
+    const updateFirstName = this.updateFormStateFunc('firstName');
+    const updateLastName = this.updateFormStateFunc('lastName');
+    const updateGoldenTicket = this.updateFormStateFunc('goldenTicket');
+
+    const registerFields = 
+      <View>
+        <Item floatingLabel>
+          <Label>First Name</Label>
+          <Input onChangeText={updateUsername.bind(this)}/>
+        </Item>
+        <Item floatingLabel>
+          <Label>Last Name</Label>
+          <Input onChangeText={updateLastName.bind(this)}/>
+        </Item>
+        <Item floatingLabel>
+          <Label>Golden Ticket #</Label>
+          <Input onChangeText={updateGoldenTicket.bind(this)}/>
+        </Item>
+      </View>;
+
+    return (
+      <ImageBackground 
+        style={{width: Dimensions.get('window').width, height: Dimensions.get('window').height}}
+        source={{uri: 'http://backgroundcheckall.com/wp-content/uploads/2017/12/tumblr-hipster-background-12.jpg'}}
+      >
         <Container>
-          <AppLoading/>
+          <Content contentContainerStyle={{ justifyContent: 'center', flex: 0.8, marginLeft: 50, marginRight: 50 }}>
+            <Title>Skybunk</Title>
+            
+            <Form>
+              <Item floatingLabel>
+                <Label>User Name</Label>
+                <Input onChangeText={updateUsername.bind(this)}/>
+              </Item>
+              <Item floatingLabel>
+                <Label>Password</Label>
+                <Input secureTextEntry onChangeText={updatePassword.bind(this)}/>
+              </Item>
+              {this.state.registering ? registerFields : null}
+            </Form>
+            
+            {this.state.errorMessage ? <Banner error message={this.state.errorMessage}/> : null}
+            {this.state.successMessage ? <Banner error message={this.state.successMessage}/> : null}
+            
+            <View style={{marginTop:10}}>
+              <Button style={{marginLeft:15, marginTop:5}} bordered light onPress={this.submitForm.bind(this)}>
+                <Text>{this.state.registering ? 'Register' : 'Login'}</Text>
+              </Button>
+              <Button transparent dark onPress={this.toggleRegistering.bind(this)}>
+                <Text>{this.state.registering ? 'Already have an account?' : "Don't have an account?"}</Text>
+              </Button>
+            </View>
+
+          </Content>
         </Container>
-      );
-    }
-    else {
-      const registerFields = 
-        <View>
-          <Item floatingLabel>
-            <Label>First Name</Label>
-            <Input onChangeText={this.updateFirstName.bind(this)}/>
-          </Item>
-          <Item floatingLabel>
-            <Label>Last Name</Label>
-            <Input onChangeText={this.updateLastName.bind(this)}/>
-          </Item>
-          <Item floatingLabel>
-            <Label>Golden Ticket #</Label>
-            <Input onChangeText={this.updateGoldenTicket.bind(this)}/>
-          </Item>
-        </View>;
-
-      // Put these in own component
-      const errorBanner = 
-        <View style={{backgroundColor: '#C00', marginTop: 10}}>
-          <Text style={{paddingLeft: 10, color: 'white'}}>{this.state.errorMessage}</Text>
-        </View>;
-      const successBanner = 
-        <View style={{backgroundColor: '#0C0', marginTop: 10}}>
-          <Text style={{paddingLeft: 10, color: 'white'}}>{this.state.successMessage}</Text>
-        </View>;
-
-      return (
-        <ImageBackground 
-          style={{width: Dimensions.get('window').width, height: Dimensions.get('window').height}}
-          source={{uri: 'http://backgroundcheckall.com/wp-content/uploads/2017/12/tumblr-hipster-background-12.jpg'}}
-        >
-          <Container>
-            <Content contentContainerStyle={{ justifyContent: 'center', flex: 0.8, marginLeft: 50, marginRight: 50 }}>
-              <Title>Grapp</Title>
-              <Form>
-                <Item floatingLabel>
-                  <Label>User Name</Label>
-                  <Input onChangeText={this.updateUsername.bind(this)}/>
-                </Item>
-                <Item floatingLabel>
-                  <Label>Password</Label>
-                  <Input secureTextEntry onChangeText={this.updatePassword.bind(this)}/>
-                </Item>
-                {this.state.registering ? registerFields : null}
-              </Form>
-              {this.state.errorMessage ? errorBanner : null}
-              {this.state.successMessage ? successBanner : null}
-              <View style={{marginTop: 10}}>
-                <Button transparent dark onPress={this.submitForm.bind(this)}>
-                  <Text>{this.state.registering ? 'Register' : 'Login'}</Text>
-                </Button>
-                <Button transparent light onPress={this.toggleRegistering.bind(this)}>
-                  <Text>{this.state.registering ? 'Login' : 'Register'}</Text>
-                </Button>
-              </View>
-            </Content>
-          </Container>
-        </ImageBackground>
-      );
-    }
+      </ImageBackground>
+    );
   }
 }
