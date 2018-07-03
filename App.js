@@ -1,56 +1,21 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { createStackNavigator } from 'react-navigation';
-import { Font, AppLoading } from 'expo';
-import { Container, Text, View } from 'native-base';
+import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
 import LoginView from './views/login';
 import TestView from './views/test';
+import ChannelView from './views/Channel';
+//import PostView from './view/Post';
 
-const RootStack = createStackNavigator({
-    Login: LoginView,
-    Test: TestView,
-  },
+const AppStack = createStackNavigator(
   {
-    initialRouteName: 'Login',
+    Test: TestView,
+    Channel: ChannelView,
   }
-);
+)
 
-export default class App extends React.Component {
-  // This junk is just to avoid a bug with expo fonts...
-  constructor(props) {
-    super(props);
-    this.state = { 
-      loading: true,
-    };
-  }
-
-  async componentWillMount() {
-    await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
-    });
-    this.setState({ loading: false });
-  }
-
-  render() {
-    if (this.state.loading) {
-      return (
-        <Container>
-          <AppLoading/>
-        </Container>
-      );
-    }
-    else {
-      return <RootStack/>;
-    }
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+export default createSwitchNavigator(
+  {
+    Auth: LoginView,
+    App: AppStack,
+    //Post: PostView,
   },
-});
+  { initialRouteName: 'Auth' }
+)
