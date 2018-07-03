@@ -11,13 +11,13 @@ export default class NavBar extends React.Component {
   render() {
     return (
       <NavBar>
-        <NavigationButton onPress={() => alert("Going back!")}>
+        <NavButton onPress={() => alert("Going back!")}>
           <NavButtonText>
             {"Back"}
           </NavButtonText>
-        </NavigationButton>
+        </NavButton>
         <NavTitle>
-          {"Channel Name"}
+          {"All Feed"}
         </NavTitle>
         <NavButton onPress={() => alert("Saving subscription...")}>
           <NavButtonText>

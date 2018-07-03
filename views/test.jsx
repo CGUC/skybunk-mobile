@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Content, Text } from 'native-base';
+import { Container, Content, Text, Button } from 'native-base';
 import { Font, AppLoading } from "expo";
 
 export default class TestView extends React.Component {
@@ -21,6 +21,11 @@ export default class TestView extends React.Component {
     this.setState({ loading: false });
   }
 
+  next = () => {
+    // How to pass props to specify which tags to view?
+    this.props.navigation.navigate('Channel');
+  }
+
   render() {
     if (this.state.loading) {
       return (
@@ -31,9 +36,11 @@ export default class TestView extends React.Component {
     }
     else {
       return (
-        <Container>
-          <Content contentContainerStyle={{ justifyContent: 'center', flex: 1, marginLeft: 50, marginRight: 50 }}>
-            <Text>HELLOO</Text>
+        <Container style={{ flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+          <Content contentContainerStyle={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+            <Button bordered dark onPress={this.next}>
+              <Text>Go to all feed</Text>
+            </Button>
           </Content>
         </Container>
       );
