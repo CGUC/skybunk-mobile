@@ -1,13 +1,12 @@
 import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
-import LoginView from './views/login';
-import feedView from './views/feed';
-import channelsView from './views/channels';
-//import PostView from './view/Post';
+import LoginView from './views/Login';
+import HomeView from './views/Home';
+import FeedView from './views/Feed';
 
 const AppStack = createStackNavigator(
   {
-    Channels: channelsView,
-    Feed: feedView,
+    Home: HomeView,
+    Feed: FeedView,
   }
 )
 
