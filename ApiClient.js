@@ -23,6 +23,10 @@ export default class ApiClient {
 				...headers,
 			},
 			body: JSON.stringify(body),
+		})
+		.catch(err => {
+			err = err.replace('<', '').replace('>', '');
+			console.error(err);
 		});
 	};
 
@@ -35,10 +39,18 @@ export default class ApiClient {
 				...headers,
 			},
 			body: JSON.stringify(body),
+		})
+		.catch(err => {
+			err = err.replace('<', '').replace('>', '');
+			console.error(err);
 		});
 	}
 
 	static delete(endpoint) {
-		return fetch(`${config.API_ADDRESS}${endpoint}`, { method: 'DELETE' });
+		return fetch(`${config.API_ADDRESS}${endpoint}`, { method: 'DELETE' })
+		.catch(err => {
+			err = err.replace('<', '').replace('>', '');
+			console.error(err);
+		});;
 	}
 }
