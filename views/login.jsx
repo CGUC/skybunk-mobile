@@ -34,19 +34,17 @@ export default class LoginView extends React.Component {
 
   toggleRegistering() {
     this.setState({
-      ...this.state,
       registering: !this.state.registering,
       errorMessage: null,
     });
   }
 
   updateFormStateFunc(key) {
-    return function (text) {
+    return (text) => {
       this.setState({
-        ...this.state,
         [key]: text,
       });
-    }
+    };
   }
 
   submitForm() {
@@ -59,28 +57,28 @@ export default class LoginView extends React.Component {
         lastName: this.state.lastName,
         goldenTicket: this.state.goldenTicket,
       })
-        .then(response => response.json())
-        .then(jsonResponse => {
-          if (jsonResponse.message) {
-            this.setState({
-              ...this.state,
-              errorMessage: jsonResponse.message // TODO: Fix error from server and update here
-            });
-          }
-          else {
-            this.setState({
-              firstName: null,
-              lastName: null,
-              password: null,
-              goldenTicket: null,
-              registering: false,
-              successMessage: 'Account successfully created'
-            });
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      .then(response => response.json())
+      .then(jsonResponse => {
+        if (jsonResponse.message) {
+          this.setState({
+            ...this.state,
+            errorMessage: jsonResponse.message // TODO: Fix error from server and update here
+          });
+        }
+        else {
+          this.setState({
+            firstName: null,
+            lastName: null,
+            password: null,
+            goldenTicket: null,
+            registering: false,
+            successMessage: 'Account successfully created'
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
     }
     // Login the user
     else {
@@ -88,45 +86,39 @@ export default class LoginView extends React.Component {
         username: this.state.username,
         password: this.state.password,
       })
-        .then(response => response.json())
-        .then(jsonResponse => {
-          if (jsonResponse.err) {
-            this.setState({
-              ...this.state,
-              errorMessage: jsonResponse.err.message
-            });
-          }
-          else {
-            // TODO: Save jsonResponse.token
-            this.props.navigation.navigate('App');
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      .then(response => response.json())
+      .then(jsonResponse => {
+        if (jsonResponse.err) {
+          this.setState({
+            ...this.state,
+            errorMessage: jsonResponse.err.message
+          });
+        }
+        else {
+          // TODO: Save jsonResponse.token
+          this.props.navigation.navigate('App');
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
     }
   }
 
   render() {
-    const updateUsername = this.updateFormStateFunc('username');
-    const updatePassword = this.updateFormStateFunc('password');
-    const updateFirstName = this.updateFormStateFunc('firstName');
-    const updateLastName = this.updateFormStateFunc('lastName');
-    const updateGoldenTicket = this.updateFormStateFunc('goldenTicket');
-
     const registerFields =
       <View>
         <Item floatingLabel>
           <Label>First Name</Label>
-          <Input onChangeText={updateFirstName.bind(this)} />
+          <Input onChangeText={(this.updateFormStateFunc('firstName'))} />
         </Item>
         <Item floatingLabel>
           <Label>Last Name</Label>
-          <Input onChangeText={updateLastName.bind(this)} />
+          <Input onChangeText={(this.updateFormStateFunc('lastName'))} />
         </Item>
         <Item floatingLabel>
           <Label>Golden Ticket #</Label>
-          <Input onChangeText={updateGoldenTicket.bind(this)} />
+          <Input onChangeText={(this.updateFormStateFunc('goldenTicket'))} />
         </Item>
       </View>;
 
@@ -149,11 +141,11 @@ export default class LoginView extends React.Component {
               <Form>
                 <Item floatingLabel>
                   <Label>User Name</Label>
-                  <Input onChangeText={updateUsername.bind(this)} />
+                  <Input onChangeText={(this.updateFormStateFunc('username'))} />
                 </Item>
                 <Item floatingLabel>
                   <Label>Password</Label>
-                  <Input secureTextEntry onChangeText={updatePassword.bind(this)} />
+                  <Input secureTextEntry onChangeText={(this.updateFormStateFunc('password'))} />
                 </Item>
                 {this.state.registering ? registerFields : null}
               </Form>
