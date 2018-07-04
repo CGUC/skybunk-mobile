@@ -9,7 +9,6 @@ export default class ApiClient {
 				return responseJSON;
 			})
 			.catch(err => {
-				err = err.replace('<', '').replace('>', '');
 				console.error(err);
 			});
 	}

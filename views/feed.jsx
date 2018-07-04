@@ -18,9 +18,13 @@ import NavBar from '../components/Navbar';
 import Post from '../components/Post';
 import api from '../ApiClient';
 
-export default class ChannelView extends React.Component {
+export default class FeedView extends React.Component {
 
-  static navigationOptions = { title: 'All Feed' };
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: navigation.getParam('channelName', 'Feed'),
+    };
+  };
 
   constructor(props) {
     super(props);
@@ -38,10 +42,17 @@ export default class ChannelView extends React.Component {
     });
 
     const {
-      channelId,
+      navigation,
     } = this.props;
 
-    await api.get(`/posts`)
+    const channelId = navigation.getParam('channelId', 'all');
+
+    // TODO: implement method of fetching posts for subscribed channels
+    var uri;
+    if (['all', 'subs'].includes(channelId)) uri = '/posts';
+    else uri = `/channels/${channelId}/posts`;
+
+    await api.get(uri)
       .then(response => {
         this.setState({ posts: response });
       })
@@ -62,18 +73,18 @@ export default class ChannelView extends React.Component {
       });
   }
 
-  onPressPost = () => {
-    // How to pass props to specify which post to view?
-    //this.props.navigation.navigate('Post');
+  onPressPost = (postId) => {
+    //this.props.navigation.navigate('Post', { postId: postId });
     alert('Post pressed')
   }
 
   render() {
     const {
-      posts
+      posts,
+      loading
     } = this.state;
 
-    if (this.state.loading) {
+    if (loading) {
       return (
         <Container>
           <Content>
@@ -113,6 +124,6 @@ export default class ChannelView extends React.Component {
   }
 }
 
-ChannelView.propTypes = {
-  channelId: PropTypes.string
+FeedView.propTypes = {
+  channelId: PropTypes.string // should be 'all', 'subs' or channel id
 }

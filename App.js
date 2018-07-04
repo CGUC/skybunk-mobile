@@ -1,21 +1,20 @@
 import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
-import LoginView from './views/Login';
-import ChannelView from './views/Channel';
-import HomeView from './views/Home';
+import LoginView from './views/login';
+import feedView from './views/feed';
+import channelsView from './views/channels';
 //import PostView from './view/Post';
 
 const AppStack = createStackNavigator(
   {
-  	Home: HomeView,
-    Channel: ChannelView,
+    Channels: channelsView,
+    Feed: feedView,
   }
 )
 
 export default createSwitchNavigator(
   {
     Auth: LoginView,
-    App: AppStack,
-    //Post: PostView,
+    App: AppStack
   },
   { initialRouteName: 'Auth' }
 )
