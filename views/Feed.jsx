@@ -37,7 +37,6 @@ export default class FeedView extends React.Component {
     this.state = {
       posts: [],
       loading: true,
-      channelId: 'Feed'
     }
   }
 
@@ -70,11 +69,16 @@ export default class FeedView extends React.Component {
         console.error(err);
       });
 
-    this.setState({ loading: false, channel });
+    this.setState({ loading: false });
   }
 
   addPost = async(data) => {
-    const { channel } = this.state;
+    const {
+      navigation,
+    } = this.props;
+
+    var channel = navigation.getParam('channel');
+    if (['all', 'subs'].includes(channel._id)) return console.error(`Can't add post to ${channel._id} feed`);
     // api call to create post
   }
 
@@ -94,7 +98,11 @@ export default class FeedView extends React.Component {
   }
 
   getFooterJSX() {
-    const { channel } = this.state;
+    const {
+      navigation,
+    } = this.props;
+
+    var channel = navigation.getParam('channel');
 
     if (!['all', 'subs'].includes(channel._id)) {
       return (
