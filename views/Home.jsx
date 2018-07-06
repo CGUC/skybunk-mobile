@@ -33,7 +33,13 @@ export default class HomeView extends React.Component {
   }
 
   onPressChannel = (channelId, channelName) => {
-    this.props.navigation.navigate('Feed', { channelId, channelName });
+    const { channels } = this.state;
+    var channel;
+
+    if (['all', 'subs'].includes(channelId)) channel = { _id: channelId, name: channelName };
+    else channel = _.head(_.filter(channels, { _id: channelId }));
+
+    this.props.navigation.navigate('Feed', { channel });
   }
 
   render() {

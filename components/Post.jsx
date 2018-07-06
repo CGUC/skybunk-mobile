@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, StyleSheet, Platform } from 'react-native';
-import { Container, Left, Right, Body, Content, Card, CardItem, Text, Button, Thumbnail, Icon, Image } from 'native-base';
+import {
+  Container, Left, Right, Body, Content, Card,
+  CardItem, Text, Button, Thumbnail, Icon, Image
+} from 'native-base';
 import _ from 'lodash';
 import { Font, AppLoading } from "expo";
-
 import date from 'date-fns';
 
 

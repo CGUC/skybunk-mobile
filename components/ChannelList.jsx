@@ -34,7 +34,6 @@ export default class ChannelList extends React.Component {
   }
 
   getChannelCardJSX(channels) {
-    var that = this;
 
     return (
       _.map(channels, (channel, key) => {

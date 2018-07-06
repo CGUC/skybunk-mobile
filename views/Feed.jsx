@@ -7,7 +7,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, ScrollView, Platform } from 'react-native';
 import {
-  Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon,
+  Container, Header, Footer, Content, Card, CardItem, Thumbnail, Text, Button, Icon,
   Left, Label, Body, Right, Title, Form, Input, Item, Spinner
 } from 'native-base';
 import { Font, AppLoading } from "expo";
@@ -15,6 +15,7 @@ import { Font, AppLoading } from "expo";
 import _ from 'lodash';
 
 import NavBar from '../components/Navbar';
+import ContentBar from '../components/ContentBar';
 import Post from '../components/Post';
 import NoData from '../components/NoData';
 import api from '../ApiClient';
@@ -22,8 +23,12 @@ import api from '../ApiClient';
 export default class FeedView extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
+    var channel = navigation.getParam('channel')
+    if (channel) title = channel.name;
+    else title = 'Feed';
+
     return {
-      title: navigation.getParam('channelName', 'Feed'),
+      title,
     };
   };
 
@@ -32,6 +37,7 @@ export default class FeedView extends React.Component {
     this.state = {
       posts: [],
       loading: true,
+      channelId: 'Feed'
     }
   }
 
@@ -46,7 +52,10 @@ export default class FeedView extends React.Component {
       navigation,
     } = this.props;
 
-    const channelId = navigation.getParam('channelId', 'all');
+    var channel = navigation.getParam('channel');
+    if (!channel) channel = { _id: 'all' };
+
+    var channelId = channel._id;
 
     // TODO: implement method of fetching posts for subscribed channels
     var uri;
@@ -61,7 +70,12 @@ export default class FeedView extends React.Component {
         console.error(err);
       });
 
-    this.setState({ loading: false });
+    this.setState({ loading: false, channel });
+  }
+
+  addPost = async(data) => {
+    const { channel } = this.state;
+    // api call to create post
   }
 
   updatePost = async (postId, data) => {
@@ -79,10 +93,26 @@ export default class FeedView extends React.Component {
     alert('Post pressed')
   }
 
+  getFooterJSX() {
+    const { channel } = this.state;
+
+    if (!['all', 'subs'].includes(channel._id)) {
+      return (
+        <Footer>
+          <ContentBar
+            channel={channel}
+            addResource={this.addPost}
+          />
+        </Footer>
+      )
+    }
+    return null;
+  }
+
   render() {
     const {
       posts,
-      loading
+      loading,
     } = this.state;
 
     if (loading) {
@@ -116,13 +146,13 @@ export default class FeedView extends React.Component {
               }
             </ScrollView>
           </Content>
-          {/* <Footer>
-            <ContentBar />
-          </Footer> */}
+
+          {this.getFooterJSX()}
+
         </Container>
       )
     } else {
-      return <NoData resourceName={'posts'} />
+      return <NoData resourceName={'posts'} addResource={this.addPost} />
     }
   }
 }

@@ -6,7 +6,6 @@ import {
   Left, Label, Body, Right, Title, Form, Input, Item
 } from 'native-base';
 
-import config from '../config';
 import Banner from '../components/Banner'
 import ApiClient from '../ApiClient'
 
@@ -107,22 +106,6 @@ export default class LoginView extends React.Component {
     }
   }
 
-  getBypassJSX() {
-    if (config.exposeLoginBypass) {
-      return (
-        <Footer>
-          <View style={{ paddingBottom: 30 }}>
-            <Button danger onPress={() => { this.props.navigation.navigate('App') }}>
-              <Text>Bypass Login</Text>
-            </Button>
-          </View>
-        </Footer>
-      )
-    } else {
-      return null;
-    }
-  }
-
   render() {
     const registerFields =
       <View>
@@ -181,9 +164,6 @@ export default class LoginView extends React.Component {
               </View>
 
             </Content>
-
-            {this.getBypassJSX()}
-
           </Container>
         </ImageBackground>
       );

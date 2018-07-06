@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Dimensions } from 'react-native';
-import { Container, Content, Text } from 'native-base';
+import { Container, Content, Footer, Text } from 'native-base';
 import { StyleSheet } from "react-native";
+
+import ContentBar from './ContentBar';
 
 const { height } = Dimensions.get('window');
 
@@ -22,7 +24,7 @@ var styles = StyleSheet.create({
 
 export default class NoDataCell extends React.Component {
   render() {
-    var { resourceName } = this.props;
+    var { resourceName, addResource } = this.props;
 
     return (
       <Container>
@@ -31,6 +33,9 @@ export default class NoDataCell extends React.Component {
             <Text style={styles.text}>No {resourceName} yet - you could be the first!</Text>
           </View>
         </Content>
+        <Footer>
+          <ContentBar addResource={addResource} />
+        </Footer>
       </Container>
     )
   }
