@@ -1,12 +1,14 @@
 import React from 'react';
 import { Dimensions, ImageBackground, View } from 'react-native';
+import { Font, AppLoading } from "expo";
 import {
-  Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon,
+  Container, Header, Content, Footer, Card, CardItem, Thumbnail, Text, Button, Icon,
   Left, Label, Body, Right, Title, Form, Input, Item
 } from 'native-base';
+
+import config from '../config';
 import Banner from '../components/Banner'
 import ApiClient from '../ApiClient'
-import { Font, AppLoading } from "expo";
 
 export default class LoginView extends React.Component {
   static navigationOptions = { header: null };
@@ -57,28 +59,28 @@ export default class LoginView extends React.Component {
         lastName: this.state.lastName,
         goldenTicket: this.state.goldenTicket,
       })
-      .then(response => response.json())
-      .then(jsonResponse => {
-        if (jsonResponse.message) {
-          this.setState({
-            ...this.state,
-            errorMessage: jsonResponse.message // TODO: Fix error from server and update here
-          });
-        }
-        else {
-          this.setState({
-            firstName: null,
-            lastName: null,
-            password: null,
-            goldenTicket: null,
-            registering: false,
-            successMessage: 'Account successfully created'
-          });
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
+        .then(response => response.json())
+        .then(jsonResponse => {
+          if (jsonResponse.message) {
+            this.setState({
+              ...this.state,
+              errorMessage: jsonResponse.message // TODO: Fix error from server and update here
+            });
+          }
+          else {
+            this.setState({
+              firstName: null,
+              lastName: null,
+              password: null,
+              goldenTicket: null,
+              registering: false,
+              successMessage: 'Account successfully created'
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
     // Login the user
     else {
@@ -86,22 +88,38 @@ export default class LoginView extends React.Component {
         username: this.state.username,
         password: this.state.password,
       })
-      .then(response => response.json())
-      .then(jsonResponse => {
-        if (jsonResponse.err) {
-          this.setState({
-            ...this.state,
-            errorMessage: jsonResponse.err.message
-          });
-        }
-        else {
-          // TODO: Save jsonResponse.token
-          this.props.navigation.navigate('App');
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
+        .then(response => response.json())
+        .then(jsonResponse => {
+          if (jsonResponse.err) {
+            this.setState({
+              ...this.state,
+              errorMessage: jsonResponse.err.message
+            });
+          }
+          else {
+            // TODO: Save jsonResponse.token
+            this.props.navigation.navigate('App');
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  }
+
+  getBypassJSX() {
+    if (config.exposeLoginBypass) {
+      return (
+        <Footer>
+          <View style={{ paddingBottom: 30 }}>
+            <Button danger onPress={() => { this.props.navigation.navigate('App') }}>
+              <Text>Bypass Login</Text>
+            </Button>
+          </View>
+        </Footer>
+      )
+    } else {
+      return null;
     }
   }
 
@@ -163,6 +181,9 @@ export default class LoginView extends React.Component {
               </View>
 
             </Content>
+
+            {this.getBypassJSX()}
+
           </Container>
         </ImageBackground>
       );

@@ -16,6 +16,7 @@ import _ from 'lodash';
 
 import NavBar from '../components/Navbar';
 import Post from '../components/Post';
+import NoData from '../components/NoData';
 import api from '../ApiClient';
 
 export default class FeedView extends React.Component {
@@ -92,7 +93,7 @@ export default class FeedView extends React.Component {
           </Content>
         </Container>
       );
-    } else {
+    } else if (posts.length) {
       return (
         <Container>
           {/* <Header>
@@ -120,6 +121,8 @@ export default class FeedView extends React.Component {
           </Footer> */}
         </Container>
       )
+    } else {
+      return <NoData resourceName={'posts'} />
     }
   }
 }
