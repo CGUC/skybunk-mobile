@@ -1,6 +1,11 @@
 import { StyleSheet } from "react-native";
 
 export default (styles = StyleSheet.create({
+  inputItem: {
+    backgroundColor: "white",
+    marginBottom: 10,
+  },
+
   container: {
     flex: 1,
     backgroundColor: "#fff",

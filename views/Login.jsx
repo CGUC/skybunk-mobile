@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dimensions, ImageBackground, View } from 'react-native';
 import { Font, AppLoading } from "expo";
+import styles from "../styles/styles";
 import {
   Container, Header, Content, Footer, Card, CardItem, Thumbnail, Text, Button, Icon,
   Left, Label, Body, Right, Title, Form, Input, Item
@@ -109,17 +110,14 @@ export default class LoginView extends React.Component {
   render() {
     const registerFields =
       <View>
-        <Item floatingLabel>
-          <Label>First Name</Label>
-          <Input onChangeText={(this.updateFormStateFunc('firstName'))} />
+        <Item regular style={styles.inputItem}>
+          <Input placeholder='First Name' onChangeText={(this.updateFormStateFunc('firstName'))} />
         </Item>
-        <Item floatingLabel>
-          <Label>Last Name</Label>
-          <Input onChangeText={(this.updateFormStateFunc('lastName'))} />
+        <Item regular style={styles.inputItem}>
+          <Input placeholder='Last Name' onChangeText={(this.updateFormStateFunc('lastName'))} />
         </Item>
-        <Item floatingLabel>
-          <Label>Golden Ticket #</Label>
-          <Input onChangeText={(this.updateFormStateFunc('goldenTicket'))} />
+        <Item regular style={styles.inputItem}>
+          <Input placeholder='Golden Ticket #' onChangeText={(this.updateFormStateFunc('goldenTicket'))} />
         </Item>
       </View>;
 
@@ -133,20 +131,16 @@ export default class LoginView extends React.Component {
       return (
         <ImageBackground
           style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }}
-          source={{ uri: 'http://backgroundcheckall.com/wp-content/uploads/2017/12/tumblr-hipster-background-12.jpg' }}
+          source={require('../assets/login-bg.png')}
         >
           <Container>
-            <Content contentContainerStyle={{ justifyContent: 'center', flex: 0.8, marginLeft: 50, marginRight: 50 }}>
-              <Title>Skybunk</Title>
-
+            <Content contentContainerStyle={{ justifyContent: 'center', flex: 1, marginLeft: 50, marginRight: 50 }}>
               <Form>
-                <Item floatingLabel>
-                  <Label>User Name</Label>
-                  <Input onChangeText={(this.updateFormStateFunc('username'))} />
+                <Item regular style={styles.inputItem}>
+                  <Input placeholder='Username' onChangeText={(this.updateFormStateFunc('username'))} />
                 </Item>
-                <Item floatingLabel>
-                  <Label>Password</Label>
-                  <Input secureTextEntry onChangeText={(this.updateFormStateFunc('password'))} />
+                <Item regular style={styles.inputItem}>
+                  <Input placeholder='Password' secureTextEntry onChangeText={(this.updateFormStateFunc('password'))} />
                 </Item>
                 {this.state.registering ? registerFields : null}
               </Form>
@@ -154,8 +148,8 @@ export default class LoginView extends React.Component {
               {this.state.errorMessage ? <Banner error message={this.state.errorMessage} /> : null}
               {this.state.successMessage ? <Banner error message={this.state.successMessage} /> : null}
 
-              <View style={{ marginTop: 10 }}>
-                <Button style={{ marginLeft: 15, marginTop: 5 }} bordered light onPress={this.submitForm.bind(this)}>
+              <View>
+                <Button onPress={this.submitForm.bind(this)}>
                   <Text>{this.state.registering ? 'Register' : 'Login'}</Text>
                 </Button>
                 <Button transparent dark onPress={this.toggleRegistering.bind(this)}>
