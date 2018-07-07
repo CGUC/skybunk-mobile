@@ -2,14 +2,23 @@ var config = require('./config');
 
 export default class ApiClient {
 
-	static get(endpoint) {
-		return fetch(`${config.API_ADDRESS}${endpoint}`)
-			.then(response => response.json())
+	static get(endpoint, headers) {
+		return fetch(`${config.API_ADDRESS}${endpoint}`, {
+				method: 'GET',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					...headers,
+				},
+			})
+			.then(response => {
+				return response.json();
+			})
 			.then(responseJSON => {
 				return responseJSON;
 			})
 			.catch(err => {
-				err = err.replace('<', '').replace('>', '');
+				//err = err.replace('<', '').replace('>', '');
 				console.error(err);
 			});
 	}
@@ -25,7 +34,6 @@ export default class ApiClient {
 			body: JSON.stringify(body),
 		})
 		.catch(err => {
-			err = err.replace('<', '').replace('>', '');
 			console.error(err);
 		});
 	};
@@ -40,8 +48,12 @@ export default class ApiClient {
 			},
 			body: JSON.stringify(body),
 		})
+		.then(response => console.log(response))
+		.then(responseJSON => {
+			console.log(responseJSON)
+			return responseJSON;
+		})
 		.catch(err => {
-			err = err.replace('<', '').replace('>', '');
 			console.error(err);
 		});
 	}
@@ -49,7 +61,6 @@ export default class ApiClient {
 	static delete(endpoint) {
 		return fetch(`${config.API_ADDRESS}${endpoint}`, { method: 'DELETE' })
 		.catch(err => {
-			err = err.replace('<', '').replace('>', '');
 			console.error(err);
 		});;
 	}

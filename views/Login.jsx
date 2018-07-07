@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, ImageBackground, View } from 'react-native';
+import { Dimensions, ImageBackground, View, AsyncStorage } from 'react-native';
 import { Font, AppLoading } from "expo";
 import styles from "../styles/styles";
 import {
@@ -59,28 +59,27 @@ export default class LoginView extends React.Component {
         lastName: this.state.lastName,
         goldenTicket: this.state.goldenTicket,
       })
-        .then(response => response.json())
-        .then(jsonResponse => {
-          if (jsonResponse.message) {
-            this.setState({
-              ...this.state,
-              errorMessage: jsonResponse.message // TODO: Fix error from server and update here
-            });
-          }
-          else {
-            this.setState({
-              firstName: null,
-              lastName: null,
-              password: null,
-              goldenTicket: null,
-              registering: false,
-              successMessage: 'Account successfully created'
-            });
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      .then(response => response.json())
+      .then(jsonResponse => {
+        if (jsonResponse.message) {
+          this.setState({
+            errorMessage: jsonResponse.message // TODO: Fix error from server and update here
+          });
+        }
+        else {
+          this.setState({
+            firstName: null,
+            lastName: null,
+            password: null,
+            goldenTicket: null,
+            registering: false,
+            successMessage: 'Account successfully created'
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
     }
     // Login the user
     else {
@@ -88,22 +87,27 @@ export default class LoginView extends React.Component {
         username: this.state.username,
         password: this.state.password,
       })
-        .then(response => response.json())
-        .then(jsonResponse => {
-          if (jsonResponse.err) {
-            this.setState({
-              ...this.state,
-              errorMessage: jsonResponse.err.message
-            });
-          }
-          else {
-            // TODO: Save jsonResponse.token
+      .then(response => response.json())
+      .then(jsonResponse => {
+        if (jsonResponse.err) {
+          console.log(jsonResponse);
+          this.setState({
+            errorMessage: jsonResponse.err.message
+          });
+        }
+        else {
+          AsyncStorage.setItem('@Skybunk:token', jsonResponse.token).then(() => {
             this.props.navigation.navigate('App');
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+          }).catch(error => {
+            this.setState({
+              errorMessage: 'Sorry, there was an error logging you in',
+            });
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
     }
   }
 
