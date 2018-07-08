@@ -46,7 +46,7 @@ export default class Post extends React.Component {
     const { updatePost, data } = this.props;
     var postId = data._id;
 
-    updatePost(postId, { content: newContent });
+    updatePost && updatePost(postId, { content: newContent });
   }
 
   toggleLike = () => {
@@ -71,8 +71,8 @@ export default class Post extends React.Component {
 
   onPressPost = () => {
     // Call parent to navigate
-    var { onPressPost } = this.props;
-    if (onPressPost) onPressPost();
+    var { onPressPost, data } = this.props;
+    if (onPressPost) onPressPost(data);
   }
 
   render() {
@@ -94,8 +94,11 @@ export default class Post extends React.Component {
 
     // In case author account is deleted
     var authorName;
-    if (!author) authorName = "Unknown";
+    if (!author) authorName = "Ghost";
     else authorName = `${author.firstName} ${author.lastName}`;
+
+    // TODO: implement
+    var authorPhoto = author.profilePicture;
 
     createdAt = date.format(createdAt, 'ddd MMM Do [at] h:ma');
     var numComments = comments ? comments.length : 0;
@@ -114,7 +117,7 @@ export default class Post extends React.Component {
             </Body>
           </Left>
           {/* <Right> */}
-            {/* Three dots to edit */}
+          {/* Three dots to edit */}
           {/* </Right> */}
         </CardItem>
 
@@ -133,10 +136,9 @@ export default class Post extends React.Component {
             <Text>{`${likes} likes`}</Text>
           </Left>
           <Right>
-            <Text>{`${numComments} comments`}</Text>
-            {/* <Button onPress={this.onPressPost}> <-- give this some slop
-              <Icon name='comment' />
-            </Button> */}
+            <Button transparent onPress={this.onPressPost}>
+              <Text>{`${numComments} ${numComments !== 1 ? 'comments' : 'comment'}`}</Text>
+            </Button>
           </Right>
         </CardItem>
 
