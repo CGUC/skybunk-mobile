@@ -14,6 +14,7 @@ export default class Banner extends React.Component {
       backgroundColor: bgColor,
       marginTop: 10,
       paddingLeft: 10,
+      marginBottom:10,
     }
   }
 

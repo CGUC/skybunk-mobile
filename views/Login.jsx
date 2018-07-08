@@ -1,10 +1,10 @@
 import React from 'react';
-import { Dimensions, ImageBackground, View } from 'react-native';
+import { Dimensions, ImageBackground, View, AsyncStorage } from 'react-native';
 import { Font, AppLoading } from "expo";
 import styles from "../styles/styles";
 import {
   Container, Header, Content, Footer, Card, CardItem, Thumbnail, Text, Button, Icon,
-  Left, Label, Body, Right, Title, Form, Input, Item
+  Left, Label, Body, Right, Title, Form, Input, Item, Spinner
 } from 'native-base';
 
 import Banner from '../components/Banner'
@@ -22,7 +22,8 @@ export default class LoginView extends React.Component {
       firstName: null,
       lastName: null,
       goldenTicket: null,
-      loading: true
+      loading: true,
+      processing: false,
     };
   }
 
@@ -52,6 +53,7 @@ export default class LoginView extends React.Component {
   submitForm() {
     // Register the user
     if (this.state.registering) {
+      this.setState({processing:true});
       ApiClient.post('/users', {}, {
         username: this.state.username,
         password: this.state.password,
@@ -59,51 +61,57 @@ export default class LoginView extends React.Component {
         lastName: this.state.lastName,
         goldenTicket: this.state.goldenTicket,
       })
-        .then(response => response.json())
-        .then(jsonResponse => {
-          if (jsonResponse.message) {
-            this.setState({
-              ...this.state,
-              errorMessage: jsonResponse.message // TODO: Fix error from server and update here
-            });
-          }
-          else {
-            this.setState({
-              firstName: null,
-              lastName: null,
-              password: null,
-              goldenTicket: null,
-              registering: false,
-              successMessage: 'Account successfully created'
-            });
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      .then(response => response.json())
+      .then(jsonResponse => {
+        if (jsonResponse.message) {
+          this.setState({
+            errorMessage: jsonResponse.message, // TODO: Fix error from server and update here
+            processing: false,
+          });
+        }
+        else {
+          this.setState({
+            firstName: null,
+            lastName: null,
+            password: null,
+            goldenTicket: null,
+            registering: false,
+            processing: false,
+            successMessage: 'Account successfully created'
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
     }
     // Login the user
     else {
+      this.setState({processing:true});
       ApiClient.post('/users/login', {}, {
         username: this.state.username,
         password: this.state.password,
       })
-        .then(response => response.json())
-        .then(jsonResponse => {
-          if (jsonResponse.err) {
-            this.setState({
-              ...this.state,
-              errorMessage: jsonResponse.err.message
-            });
-          }
-          else {
-            // TODO: Save jsonResponse.token
+      .then(response => response.json())
+      .then(jsonResponse => {
+        if (jsonResponse.err) {
+          this.setState({
+            errorMessage: jsonResponse.err.message
+          });
+        }
+        else {
+          AsyncStorage.setItem('@Skybunk:token', jsonResponse.token).then(() => {
             this.props.navigation.navigate('App');
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+          }).catch(error => {
+            this.setState({
+              errorMessage: 'Sorry, there was an error logging you in',
+            });
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
     }
   }
 
@@ -146,7 +154,8 @@ export default class LoginView extends React.Component {
               </Form>
 
               {this.state.errorMessage ? <Banner error message={this.state.errorMessage} /> : null}
-              {this.state.successMessage ? <Banner error message={this.state.successMessage} /> : null}
+              {this.state.successMessage ? <Banner success message={this.state.successMessage} /> : null}
+              {this.state.processing ? <Spinner color='blue' /> : null}
 
               <View>
                 <Button onPress={this.submitForm.bind(this)}>

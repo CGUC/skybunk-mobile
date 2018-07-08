@@ -17,7 +17,7 @@ export default class UserChannels extends React.Component {
 
   componentWillMount() {
     let self = this;
-    ApiClient.get('/channels').then(response => {
+    ApiClient.get('/channels', {}).then(response => {
       self.setState(previousState => {
         return { channels: previousState.channels.concat(response) };
       });
