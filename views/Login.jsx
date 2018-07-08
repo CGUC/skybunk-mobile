@@ -59,28 +59,28 @@ export default class LoginView extends React.Component {
         lastName: this.state.lastName,
         goldenTicket: this.state.goldenTicket,
       })
-        .then(response => response.json())
-        .then(jsonResponse => {
-          if (jsonResponse.message) {
-            this.setState({
-              ...this.state,
-              errorMessage: jsonResponse.message // TODO: Fix error from server and update here
-            });
-          }
-          else {
-            this.setState({
-              firstName: null,
-              lastName: null,
-              password: null,
-              goldenTicket: null,
-              registering: false,
-              successMessage: 'Account successfully created'
-            });
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      .then(response => response.json())
+      .then(jsonResponse => {
+        if (jsonResponse.message) {
+          this.setState({
+            errorMessage: jsonResponse.message, // TODO: Fix error from server and update here
+            processing: false,
+          });
+        }
+        else {
+          this.setState({
+            firstName: null,
+            lastName: null,
+            goldenTicket: null,
+            registering: false,
+            processing: false,
+            successMessage: 'Account successfully created'
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
     }
     // Login the user
     else {
