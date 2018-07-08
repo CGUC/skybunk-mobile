@@ -4,7 +4,7 @@ import { Font, AppLoading } from "expo";
 import styles from "../styles/styles";
 import {
   Container, Header, Content, Footer, Card, CardItem, Thumbnail, Text, Button, Icon,
-  Left, Label, Body, Right, Title, Form, Input, Item
+  Left, Label, Body, Right, Title, Form, Input, Item, Spinner
 } from 'native-base';
 
 import Banner from '../components/Banner'
@@ -22,7 +22,8 @@ export default class LoginView extends React.Component {
       firstName: null,
       lastName: null,
       goldenTicket: null,
-      loading: true
+      loading: true,
+      processing: false,
     };
   }
 
@@ -52,6 +53,7 @@ export default class LoginView extends React.Component {
   submitForm() {
     // Register the user
     if (this.state.registering) {
+      this.setState({processing:true});
       ApiClient.post('/users', {}, {
         username: this.state.username,
         password: this.state.password,
@@ -63,7 +65,8 @@ export default class LoginView extends React.Component {
       .then(jsonResponse => {
         if (jsonResponse.message) {
           this.setState({
-            errorMessage: jsonResponse.message // TODO: Fix error from server and update here
+            errorMessage: jsonResponse.message, // TODO: Fix error from server and update here
+            processing: false,
           });
         }
         else {
@@ -73,6 +76,7 @@ export default class LoginView extends React.Component {
             password: null,
             goldenTicket: null,
             registering: false,
+            processing: false,
             successMessage: 'Account successfully created'
           });
         }
@@ -83,6 +87,7 @@ export default class LoginView extends React.Component {
     }
     // Login the user
     else {
+      this.setState({processing:true});
       ApiClient.post('/users/login', {}, {
         username: this.state.username,
         password: this.state.password,
@@ -90,7 +95,6 @@ export default class LoginView extends React.Component {
       .then(response => response.json())
       .then(jsonResponse => {
         if (jsonResponse.err) {
-          console.log(jsonResponse);
           this.setState({
             errorMessage: jsonResponse.err.message
           });
@@ -150,7 +154,8 @@ export default class LoginView extends React.Component {
               </Form>
 
               {this.state.errorMessage ? <Banner error message={this.state.errorMessage} /> : null}
-              {this.state.successMessage ? <Banner error message={this.state.successMessage} /> : null}
+              {this.state.successMessage ? <Banner success message={this.state.successMessage} /> : null}
+              {this.state.processing ? <Spinner color='blue' /> : null}
 
               <View>
                 <Button onPress={this.submitForm.bind(this)}>

@@ -1,5 +1,6 @@
 import React from "react";
 import { Text, View, Image, TouchableHighlight, AsyncStorage } from "react-native";
+import { Icon } from "native-base"
 import { ImagePicker } from 'expo';
 import styles from "../styles/styles";
 import ApiClient from '../ApiClient';
@@ -11,42 +12,42 @@ export default class ProfileHeader extends React.Component {
     super(props);
     this.state = {
     	token: null,
-    	user: {
-    		profilePicture: null,
-    	},
+    	user: null,
+    	profilePicture: null,
   	};
   }
 
-  componentDidMount() {
+  componentWillMount() {
   	AsyncStorage.getItem('@Skybunk:token').then(value => {
   		this.setState({
   			token: value,
-  		})
+  		});
   		ApiClient.get('/users/loggedInUser', { 'Authorization': 'Bearer ' + value}).then(user => {
 	    	this.setState({
 	    		user: user,
-	    	});	
-  		})
+	    	});
+  			ApiClient.get(`/users/${user._id}/profilePicture`, {}).then(pic => {
+  				this.setState({
+	    			profilePicture: pic,
+	    		});	
+  			});
+  		});
     }).catch(error => {
     	this.props.navigation.navigate('Auth');
     });
   }
 
-  render() {
-  	const defaultImage = <Image style={styles.profilePicture} source={require('../assets/default-user.png')} />;
-  	const userImage = 
-  		<Image 
-  			style={styles.profilePicture} 
-  			source={{ uri: `data:image/png;base64,` }} 
-  		/>;
-
+  render() {  		
     return (
       <View style={styles.profileHeader}>
-        <Text style={styles.profileText}>⚙</Text>
-        <TouchableHighlight onPress={this.pickImage}>
-        	{this.state.user ? userImage : defaultImage}
+			<Icon name='star-half' style={styles.profileText}/>
+			<TouchableHighlight onPress={this.pickImage}>
+        	<Image 
+  				style={styles.profilePicture} 
+  				source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }} 
+  			/>
         </TouchableHighlight>
-        <Text style={styles.profileText}>?</Text>
+        <Icon name='cog' style={styles.profileText}/>
       </View>
     );
   }
@@ -57,16 +58,23 @@ export default class ProfileHeader extends React.Component {
       base64: true,
       aspect: [1, 1],
       quality: 0.2,
-    });
+    });    
 
-    let user = this.state.user;
-    user.profilePicture = result.base64;
-    ApiClient.put(`/users/${this.state.user._id}`, 
-    	{ 'Authorization': 'Bearer ' + this.state.token },
-    	{ ...user }
-    )
-    .catch(err => {
-    	console.log(err);
-    });
-  };
+    if (!result.cancelled) {
+	    ApiClient.uploadPhoto(
+	    	`/users/${this.state.user._id}/profilePicture`, 
+	    	{ 'Authorization': 'Bearer ' + this.state.token },
+	    	result.uri,
+	    	'profilePicture'
+	    )
+	    .then(pic => {
+	    	this.setState({
+	    		profilePicture: pic,
+	    	});
+	    })
+	    .catch(err => {
+	    	console.log(err);
+	    });
+	  }
+	}
 }

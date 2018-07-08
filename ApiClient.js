@@ -58,6 +58,35 @@ export default class ApiClient {
 		});
 	}
 
+	static uploadPhoto(endpoint, headers, uri, name) {
+		let uriParts = uri.split('.');
+		let fileType = uriParts[uriParts.length - 1];
+
+		let formData = new FormData();
+		formData.append(name, {
+			uri,
+			name: `${name}.${fileType}`,
+			type: `image/${fileType}`,
+		});
+
+		return fetch(`${config.API_ADDRESS}${endpoint}`, {
+			method: 'PUT',
+			headers: {
+				Accept: 'application/json',
+				...headers,
+			},
+			body: formData,
+		})
+		.then(response => response.json())
+		.then(responseJSON => {
+			console.log(responseJSON)
+			return responseJSON;
+		})
+		.catch(err => {
+			console.error(err);
+		});
+	}
+
 	static delete(endpoint) {
 		return fetch(`${config.API_ADDRESS}${endpoint}`, { method: 'DELETE' })
 		.catch(err => {

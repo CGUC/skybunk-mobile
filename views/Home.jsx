@@ -49,7 +49,6 @@ export default class HomeView extends React.Component {
       return (
         <Container>
           <Content>
-            <ProfileHeader />
             <Spinner color='#cd8500' />
           </Content>
         </Container>
