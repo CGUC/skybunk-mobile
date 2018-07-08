@@ -28,7 +28,10 @@ export default class CreateResourceModal extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { isModalOpen: props.isModalOpen };
+    this.state = {
+      isModalOpen: props.isModalOpen,
+      resourceText: ""
+    };
   }
 
   async componentWillReceiveProps(nextProps) {
@@ -46,6 +49,8 @@ export default class CreateResourceModal extends React.Component {
   saveResource = () => {
     const { addResource } = this.props;
     this.closeModal()
+
+    // If changing the parameter to this function, make sure to update it upstream
     return addResource && addResource(this.state.resourceText);
   }
 
