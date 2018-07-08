@@ -11,14 +11,12 @@ export default class ApiClient {
 					...headers,
 				},
 			})
-			.then(response => {
-				return response.json();
-			})
+			.then(response => response.json())
 			.then(responseJSON => {
 				return responseJSON;
 			})
 			.catch(err => {
-				//err = err.replace('<', '').replace('>', '');
+				err = err.replace('<', '').replace('>', '');
 				console.error(err);
 			});
 	}
@@ -48,11 +46,8 @@ export default class ApiClient {
 			},
 			body: JSON.stringify(body),
 		})
-		.then(response => console.log(response))
-		.then(responseJSON => {
-			console.log(responseJSON)
-			return responseJSON;
-		})
+		.then(response => response.json())
+		.then(responseJSON => responseJSON)
 		.catch(err => {
 			console.error(err);
 		});
@@ -78,10 +73,7 @@ export default class ApiClient {
 			body: formData,
 		})
 		.then(response => response.json())
-		.then(responseJSON => {
-			console.log(responseJSON)
-			return responseJSON;
-		})
+		.then(responseJSON => responseJSON)
 		.catch(err => {
 			console.error(err);
 		});
