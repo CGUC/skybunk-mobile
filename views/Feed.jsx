@@ -5,7 +5,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, ScrollView, Platform } from 'react-native';
+import { View, ScrollView, Platform, AsyncStorage } from 'react-native';
 import {
   Container, Header, Footer, Content, Card, CardItem, Thumbnail, Text, Button, Icon,
   Left, Label, Body, Right, Title, Form, Input, Item, Spinner
@@ -72,14 +72,34 @@ export default class FeedView extends React.Component {
     this.setState({ loading: false });
   }
 
-  addPost = async(data) => {
+  addPost = (data) => {
+    /**
+     * Currently data is just a string of text
+     */
     const {
       navigation,
     } = this.props;
 
     var channel = navigation.getParam('channel');
     if (['all', 'subs'].includes(channel._id)) return console.error(`Can't add post to ${channel._id} feed`);
-    // api call to create post
+
+    var tags = channel.tags;
+
+    AsyncStorage.getItem('@Skybunk:token')
+      .then(value => {
+        api.get('/users/loggedInUser', { 'Authorization': 'Bearer ' + value }).then(user => {
+          var postContent = {
+            author: user._id,
+            content: data,
+            tags: tags
+          }
+
+          api.post('/posts', { 'Authorization': 'Bearer ' + value }, postContent)
+        });
+      })
+      .catch(error => {
+        this.props.navigation.navigate('Auth');
+      });
   }
 
   updatePost = async (postId, data) => {
@@ -138,7 +158,7 @@ export default class FeedView extends React.Component {
           <Content>
             <ScrollView>
               {
-                _.map(_.sortBy(posts, post => post.createdAt.valueOf()),
+                _.map(_.orderBy(posts, post => post.createdAt.valueOf(), ['desc']),
                   (post, key) => {
                     return (
                       <Post
