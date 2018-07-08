@@ -138,7 +138,7 @@ export default class FeedView extends React.Component {
             <NavBar />
           </Header> */}
           <Content>
-            <ScrollView>
+            {/* <ScrollView>
               {
                 _.map(_.sortBy(posts, post => post.createdAt.valueOf()),
                   (post, key) => {
@@ -152,7 +152,7 @@ export default class FeedView extends React.Component {
                     )
                   })
               }
-            </ScrollView>
+            </ScrollView> */}
           </Content>
 
           {this.getFooterJSX()}

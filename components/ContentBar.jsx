@@ -7,7 +7,9 @@ import {
 } from 'native-base';
 import { StyleSheet } from "react-native";
 
-const { height } = Dimensions.get('window');
+import CreateResourceModal from './CreateResourceModal';
+
+const { height, width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   bar: {
@@ -16,26 +18,45 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'gainsboro',
-    height: height/8
+    height: height/8,
+    width: width
   }
 })
 
-// TODO: Add modal-type input that will call saveResource with the entered data when the user saves.
-// Will likely only use this for writing posts, but could potentially be an expansion for commenting as well.
-
 export default class ContentBar extends React.Component {
 
-  saveResource = (data) => {
-    const { addResource } = this.props;
-    return addResource && addResource(data);
+  async componentWillMount() {
+    this.setState({ isModalOpen: false});
+  }
+
+  openModal = () => {
+    this.setState({ isModalOpen: true })
+  }
+
+  closeModal = () => {
+    this.setState({ isModalOpen: false })
+  }
+
+  saveResource = () => {
+    this.closeModal()
+  }
+
+  textUpdate = (text) => {
+    this.setState({ newText: text})
   }
 
   render() {
     return (
-      <View style={styles.bar}>
-        <Button transparent>
-          <Icon type='Feather' name='plus-square' />
-        </Button>
+      <View style={styles.asdf}>
+        <View style={styles.bar}>
+          <Button transparent onPress={this.openModal}>
+            <Icon type='Feather' name='plus-square' />
+          </Button>
+        </View>
+        <CreateResourceModal 
+          isModalOpen={this.state.isModalOpen} 
+          addResource={this.props.addResource}
+        />
       </View>
     )
   }
