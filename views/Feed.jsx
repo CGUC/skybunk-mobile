@@ -92,9 +92,8 @@ export default class FeedView extends React.Component {
       });
   }
 
-  onPressPost = (postId) => {
-    //this.props.navigation.navigate('Post', { postId: postId });
-    alert('Post pressed')
+  onPressPost = (postData) => {
+    this.props.navigation.navigate('Comments', { postData });
   }
 
   getFooterJSX() {
@@ -108,7 +107,6 @@ export default class FeedView extends React.Component {
       return (
         <Footer>
           <ContentBar
-            channel={channel}
             addResource={this.addPost}
           />
         </Footer>
