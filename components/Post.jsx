@@ -92,16 +92,15 @@ export default class Post extends React.Component {
       createdAt,
     } = data;
 
+    // In case author account is deleted
+    var authorName;
+    if (!author) authorName = "Unknown";
+    else authorName = `${author.firstName} ${author.lastName}`;
+
     createdAt = date.format(createdAt, 'ddd MMM Do [at] h:ma');
     var numComments = comments ? comments.length : 0;
     var likes = likes ? likes : 0;
     if (likeGiven) likes++;
-
-    var {
-      firstName,
-      lastName,
-      username
-    } = author;
 
     return (
       <Card style={{ flex: 0 }}>
@@ -110,7 +109,7 @@ export default class Post extends React.Component {
           <Left>
             {/* <Thumbnail source={profilePic} /> */}
             <Body>
-              <Text>{`${username} (${firstName})`}</Text>
+              <Text>{authorName}</Text>
               <Text note>{createdAt}</Text>
             </Body>
           </Left>
