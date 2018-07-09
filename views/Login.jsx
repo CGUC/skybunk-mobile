@@ -67,6 +67,7 @@ export default class LoginView extends React.Component {
           this.setState({
             errorMessage: jsonResponse.message, // TODO: Fix error from server and update here
             processing: false,
+            successMessage: null,
           });
         }
         else {
@@ -76,6 +77,7 @@ export default class LoginView extends React.Component {
             goldenTicket: null,
             registering: false,
             processing: false,
+            errorMessage: null,
             successMessage: 'Account successfully created'
           });
         }
@@ -95,7 +97,9 @@ export default class LoginView extends React.Component {
       .then(jsonResponse => {
         if (jsonResponse.err) {
           this.setState({
-            errorMessage: jsonResponse.err.message
+            errorMessage: jsonResponse.err.message,
+            succesMessage: null,
+            processing: false,
           });
         }
         else {
@@ -104,6 +108,8 @@ export default class LoginView extends React.Component {
           }).catch(error => {
             this.setState({
               errorMessage: 'Sorry, there was an error logging you in',
+              successMessage: null,
+              processing: false,
             });
           });
         }
