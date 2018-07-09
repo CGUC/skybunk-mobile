@@ -167,21 +167,20 @@ export default class LoginView extends React.Component {
                     <Input placeholder='Password' secureTextEntry onChangeText={(this.updateFormStateFunc('password'))} />
                   </Item>
                   {this.state.registering ? registerFields : null}
-
-                  {this.state.errorMessage ? <Banner error message={this.state.errorMessage} /> : null}
-                  {this.state.successMessage ? <Banner success message={this.state.successMessage} /> : null}
-                  {this.state.processing ? <Spinner color='blue' /> : null}
               </KeyboardAvoidingView>
               <View 
                 style={styles.loginButtonsGroup}
                 flex={this.state.registering ? 0.2 : 0.35}
               >
+                {this.state.errorMessage ? <Banner error message={this.state.errorMessage} /> : null}
+                {this.state.successMessage ? <Banner success message={this.state.successMessage} /> : null}
                 <Button block onPress={this.submitForm.bind(this)} style={styles.loginButton}>
                   <Text>{this.state.registering ? 'Register' : 'Login'}</Text>
                 </Button>
                 <Button transparent block dark onPress={this.toggleRegistering.bind(this)}>
                   <Text>{this.state.registering ? 'Already have an account?' : "Don't have an account?"}</Text>
                 </Button>
+                {this.state.processing ? <Spinner color='blue' /> : null}
               </View>
             </Content>
           </Container>
