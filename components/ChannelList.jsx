@@ -80,7 +80,7 @@ export default class ChannelList extends React.Component {
           opacity = 0;
         }
         else if (subIndex !== -1) {
-          icon = require('../assets/bell-ON.png');
+          icon = require('../assets/Bell-ON.png');
         }
         
         return (
