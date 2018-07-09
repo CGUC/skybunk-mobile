@@ -1,11 +1,36 @@
 import { StyleSheet } from "react-native";
 
 export default (styles = StyleSheet.create({
+  loginLogo: {
+    width: 300,
+    height: 200,
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  loginInputGroup: {
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
+  loginButtonsGroup: {
+    flex:0.4,
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  loginButton: {
+    marginLeft: 100,
+    marginRight: 100,
+  },
+  loginTitle: {
+    fontSize: 30,
+    color: 'white',
+    marginBottom: 10,
+    fontFamily: "Roboto",
+  },
   inputItem: {
     backgroundColor: "white",
     marginBottom: 10,
+    width: 300,
   },
-
   container: {
     flex: 1,
     backgroundColor: "#fff",

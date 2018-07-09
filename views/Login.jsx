@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, ImageBackground, View, AsyncStorage } from 'react-native';
+import { Dimensions, ImageBackground, View, AsyncStorage, Image, KeyboardAvoidingView } from 'react-native';
 import { Font, AppLoading } from "expo";
 import styles from "../styles/styles";
 import {
@@ -147,30 +147,42 @@ export default class LoginView extends React.Component {
           source={require('../assets/login-bg.png')}
         >
           <Container>
-            <Content contentContainerStyle={{ justifyContent: 'center', flex: 1, marginLeft: 50, marginRight: 50 }}>
-              <Form>
-                <Item regular style={styles.inputItem}>
-                  <Input placeholder='Username' onChangeText={(this.updateFormStateFunc('username'))} />
-                </Item>
-                <Item regular style={styles.inputItem}>
-                  <Input placeholder='Password' secureTextEntry onChangeText={(this.updateFormStateFunc('password'))} />
-                </Item>
-                {this.state.registering ? registerFields : null}
-              </Form>
+            <Content contentContainerStyle={{flex: 1}}>
+              <KeyboardAvoidingView
+                style={styles.loginInputGroup}
+                flex={this.state.registering ? 0.8 : 0.65}
+                behavior='padding'
+                enabled
+              >
+                  <Image 
+                    source={require('../assets/skybunk_logo.png')}
+                    style={styles.loginLogo}
+                    marginBottom={this.state.registering ? 16 : 80}
+                  /> 
+                  <Text style={styles.loginTitle}>{this.state.registering ? 'Register' : 'Sign In' }</Text>
+                  <Item regular last style={styles.inputItem}>
+                    <Input placeholder='Username' onChangeText={(this.updateFormStateFunc('username'))} />
+                  </Item>
+                  <Item regular style={styles.inputItem}>
+                    <Input placeholder='Password' secureTextEntry onChangeText={(this.updateFormStateFunc('password'))} />
+                  </Item>
+                  {this.state.registering ? registerFields : null}
 
-              {this.state.errorMessage ? <Banner error message={this.state.errorMessage} /> : null}
-              {this.state.successMessage ? <Banner success message={this.state.successMessage} /> : null}
-              {this.state.processing ? <Spinner color='blue' /> : null}
-
-              <View>
-                <Button onPress={this.submitForm.bind(this)}>
+                  {this.state.errorMessage ? <Banner error message={this.state.errorMessage} /> : null}
+                  {this.state.successMessage ? <Banner success message={this.state.successMessage} /> : null}
+                  {this.state.processing ? <Spinner color='blue' /> : null}
+              </KeyboardAvoidingView>
+              <View 
+                style={styles.loginButtonsGroup}
+                flex={this.state.registering ? 0.2 : 0.35}
+              >
+                <Button block onPress={this.submitForm.bind(this)} style={styles.loginButton}>
                   <Text>{this.state.registering ? 'Register' : 'Login'}</Text>
                 </Button>
-                <Button transparent dark onPress={this.toggleRegistering.bind(this)}>
+                <Button transparent block dark onPress={this.toggleRegistering.bind(this)}>
                   <Text>{this.state.registering ? 'Already have an account?' : "Don't have an account?"}</Text>
                 </Button>
               </View>
-
             </Content>
           </Container>
         </ImageBackground>
