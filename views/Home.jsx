@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView, AsyncStorage } from 'react-native';
 import {
   Container, Header, Content, Text, Spinner
 } from 'native-base';
@@ -12,24 +12,42 @@ import api from '../ApiClient';
 
 export default class HomeView extends React.Component {
 
-  static navigationOptions = { title: 'Home' };
+  static navigationOptions = { header: null };
 
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
       channels: [],
+      user: {},
+      token: null,
     }
   }
 
-  async componentWillMount() {
-    await api.get('/channels')
+  componentWillMount() {
+    Promise.all(
+    [
+      api.get('/channels')
       .then(response => {
         this.setState({ channels: response });
       })
-      .catch(err => console.error(err));
+      .catch(err => console.error(err)),
 
-    this.setState({ loading: false });
+      AsyncStorage.getItem('@Skybunk:token').then(value => {
+        this.setState({
+          token: value,
+        });
+        return api.get('/users/loggedInUser', { 'Authorization': 'Bearer ' + value}).then(user => {
+          this.setState({
+            user: user,
+          });
+        });
+      })
+      .catch(err => console.error(err))
+    ])
+    .then(() => {
+      this.setState({ loading: false });
+    });
   }
 
   onPressChannel = (channelId, channelName) => {
@@ -43,8 +61,7 @@ export default class HomeView extends React.Component {
   }
 
   render() {
-    const { channels, loading } = this.state;
-
+    const { channels, loading, user, token } = this.state;
     if (loading) {
       return (
         <Container>
@@ -58,10 +75,12 @@ export default class HomeView extends React.Component {
         <Container>
           <Content>
             <ScrollView>
-              <ProfileHeader />
+              <ProfileHeader user={user} token={token} />
               <ChannelList
                 channels={channels}
                 onPressChannel={this.onPressChannel}
+                user={user}
+                token={token}
               />
             </ScrollView>
           </Content>
