@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, Image, TouchableHighlight, AsyncStorage } from "react-native";
+import { Text, View, Image, TouchableHighlight, ImageBackground } from "react-native";
 import { Icon } from "native-base"
 import { ImagePicker } from 'expo';
 import styles from "../styles/styles";
@@ -11,27 +11,15 @@ export default class ProfileHeader extends React.Component {
 	constructor(props) {
     super(props);
     this.state = {
-    	token: null,
-    	user: null,
     	profilePicture: null,
   	};
   }
 
-  componentWillMount() {
-  	AsyncStorage.getItem('@Skybunk:token').then(value => {
-  		this.setState({
-  			token: value,
-  		});
-  		ApiClient.get('/users/loggedInUser', { 'Authorization': 'Bearer ' + value}).then(user => {
-	    	this.setState({
-	    		user: user,
-	    	});
-  			ApiClient.get(`/users/${user._id}/profilePicture`, {}).then(pic => {
-  				this.setState({
-	    			profilePicture: pic,
-	    		});	
-  			});
-  		});
+  componentDidMount() {
+		ApiClient.get(`/users/${this.props.user._id}/profilePicture`, {}).then(pic => {
+			this.setState({
+  			profilePicture: pic,
+  		});	
     }).catch(error => {
     	this.props.navigation.navigate('Auth');
     });
@@ -39,16 +27,24 @@ export default class ProfileHeader extends React.Component {
 
   render() {  		
     return (
-      <View style={styles.profileHeader}>
-			<Icon name='star-half' style={styles.profileText}/>
-			<TouchableHighlight onPress={this.pickImage}>
-        	<Image 
-  				style={styles.profilePicture} 
-  				source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }} 
-  			/>
-        </TouchableHighlight>
-        <Icon name='cog' style={styles.profileText}/>
-      </View>
+      <ImageBackground
+        style={styles.profileHeader}
+        source={require('../assets/Menu-Header.png')}
+      >
+			  <Image source={require('../assets/settings-with-word-icon.png')} style={styles.settingsIcon}/>
+        <View>
+  			  <TouchableHighlight onPress={this.pickImage}>
+          	<Image 
+  	  				style={styles.profilePicture} 
+  	  				source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }} 
+    				/>
+          </TouchableHighlight>
+          <Text style={styles.profileNameText}>
+            {this.props.user.firstName} {this.props.user.lastName}
+          </Text>
+        </View>
+        <Image source={require('../assets/help-with-words-icon.png')} style={styles.helpIcon}/>
+      </ImageBackground>
     );
   }
   
@@ -62,8 +58,8 @@ export default class ProfileHeader extends React.Component {
 
     if (!result.cancelled) {
 	    ApiClient.uploadPhoto(
-	    	`/users/${this.state.user._id}/profilePicture`, 
-	    	{ 'Authorization': 'Bearer ' + this.state.token },
+	    	`/users/${this.props.user._id}/profilePicture`, 
+	    	{ 'Authorization': 'Bearer ' + this.props.token },
 	    	result.uri,
 	    	'profilePicture'
 	    )

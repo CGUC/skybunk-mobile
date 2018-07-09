@@ -27,18 +27,26 @@ export default (styles = StyleSheet.create({
   },
   profileHeader: {
     alignSelf: "stretch",
-    height: 150,
+    height: 180,
     backgroundColor: "#00ff99",
     flex: 1,
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     alignItems: "center"
   },
   profilePicture: {
     alignSelf: "center",
     width: 100,
     height: 100,
-    borderRadius: 50
+    borderRadius: 50,
+    borderColor: '#fc4970',
+    borderWidth: 5,
+  },
+  profileNameText: {
+    color: "#ffffff",
+    fontFamily: "Roboto",
+    fontSize: 20,
+    textAlign: 'center'
   },
   profileText: {
     padding: 50,
@@ -47,18 +55,38 @@ export default (styles = StyleSheet.create({
     fontFamily: "Roboto"
   },
   channelCard: {
+    flex: 1,
+    flexDirection: "row",
     alignSelf: "stretch",
+    justifyContent: "space-between",
     alignItems: "center",
-    justifyContent: "center",
     height: 60,
     // borderWidth: 1,
     // borderColor: "#000",
     // borderRadius: 5,
     marginTop: 5,
     marginLeft: 5,
-    marginRight: 5
+    marginRight: 5,
+    paddingLeft: 5,
   },
   channelText: {
-    fontSize: 25
+    fontSize: 22,
+    textAlign:'left',
+  },
+  notificationBell: {
+    width: 70,
+    height: 70,
+  },
+  rightArrow: {
+    width: 50,
+    height: 50,
+  },
+  settingsIcon: {
+    width: 50,
+    height: 50,
+  },
+  helpIcon: {
+    width: 50,
+    height: 50,
   }
 }));
