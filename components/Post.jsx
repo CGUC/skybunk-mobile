@@ -8,7 +8,8 @@ import {
 import _ from 'lodash';
 import { Font, AppLoading } from "expo";
 import date from 'date-fns';
-
+import ApiClient from '../ApiClient';
+import styles from "../styles/styles";
 
 export default class Post extends React.Component {
 
@@ -17,6 +18,7 @@ export default class Post extends React.Component {
 
     this.state = {
       likeGiven: false,
+      profilePicture: null,
     }
   }
 
@@ -24,6 +26,14 @@ export default class Post extends React.Component {
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+    });
+
+    ApiClient.get(`/users/${this.props.data.author._id}/profilePicture`, {}).then(pic => {
+      this.setState({
+        profilePicture: pic,
+      }); 
+    }).catch(error => {
+      console.log(error);
     });
   }
 
@@ -110,7 +120,7 @@ export default class Post extends React.Component {
 
         <CardItem>
           <Left>
-            {/* <Thumbnail source={profilePic} /> */}
+            <Thumbnail style={styles.profilePicThumbnail} source={{uri: `data:image/png;base64,${this.state.profilePicture}`}} />
             <Body>
               <Text>{authorName}</Text>
               <Text note>{createdAt}</Text>

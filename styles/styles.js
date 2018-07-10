@@ -57,7 +57,8 @@ export default (styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-evenly",
-    alignItems: "center"
+    alignItems: "center",
+    elevation: 3,
   },
   profilePicture: {
     alignSelf: "center",
@@ -65,7 +66,7 @@ export default (styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     borderColor: '#fc4970',
-    borderWidth: 5,
+    borderWidth: 2,
   },
   profileNameText: {
     color: "#ffffff",
@@ -85,18 +86,15 @@ export default (styles = StyleSheet.create({
     alignSelf: "stretch",
     justifyContent: "space-between",
     alignItems: "center",
+    borderBottomColor: '#CCCCCC',
+    borderBottomWidth: 1,
     height: 60,
-    // borderWidth: 1,
-    // borderColor: "#000",
-    // borderRadius: 5,
-    marginTop: 5,
-    marginLeft: 5,
-    marginRight: 5,
     paddingLeft: 5,
   },
   channelText: {
     fontSize: 22,
     textAlign:'left',
+    marginTop: 15,
   },
   notificationBell: {
     width: 70,
@@ -113,5 +111,14 @@ export default (styles = StyleSheet.create({
   helpIcon: {
     width: 50,
     height: 50,
+  },
+  profilePicThumbnail: {
+    borderWidth: 2,
+    borderColor: "#71d3d1"
+  },
+  profilePicThumbnailComment: {
+    borderWidth: 1,
+    borderColor: "#71d3d1",
+    marginRight: 5,
   }
 }));

@@ -29,6 +29,9 @@ export default class FeedView extends React.Component {
 
     return {
       title,
+      headerStyle: {
+        backgroundColor: '#fc4970'
+      },
     };
   };
 

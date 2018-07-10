@@ -120,7 +120,7 @@ export default class ChannelList extends React.Component {
       );
     } else {
       return (
-        <View marginTop={10}>
+        <View>
           {channelCards}
         </View>
       );

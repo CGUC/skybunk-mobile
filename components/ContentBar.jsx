@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'gainsboro',
+    backgroundColor: '#FFFFFF',
     height: height/8,
     width: width
   }
@@ -50,7 +50,7 @@ export default class ContentBar extends React.Component {
       <View style={styles.asdf}>
         <View style={styles.bar}>
           <Button transparent onPress={this.openModal}>
-            <Icon type='Feather' name='plus-square' />
+            <Icon style={{color: '#fc4970'}} type='Feather' name='plus-square' />
           </Button>
         </View>
         <CreateResourceModal 

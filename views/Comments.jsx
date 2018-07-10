@@ -26,6 +26,9 @@ export default class CommentsView extends React.Component {
 
     return {
       title,
+      headerStyle: {
+        backgroundColor: '#fc4970'
+      },
     };
   };
 
