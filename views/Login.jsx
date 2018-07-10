@@ -147,7 +147,7 @@ export default class LoginView extends React.Component {
           source={require('../assets/login-bg.png')}
         >
           <Container>
-            <Content contentContainerStyle={{flex: 1}}>
+            <Content contentContainerStyle={{flex: 1, alignItems: 'center'}}>
               <KeyboardAvoidingView
                 style={styles.loginInputGroup}
                 flex={this.state.registering ? 0.8 : 0.65}

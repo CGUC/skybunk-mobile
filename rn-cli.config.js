@@ -1,3 +1,3 @@
 module.exports = {
-  getSourceExts: () => ['jsx', 'js'],
+  getSourceExts: () => ['jsx', 'js', 'json'],
 }
