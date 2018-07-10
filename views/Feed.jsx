@@ -14,7 +14,6 @@ import { Font, AppLoading } from "expo";
 
 import _ from 'lodash';
 
-import NavBar from '../components/Navbar';
 import ContentBar from '../components/ContentBar';
 import Post from '../components/Post';
 import NoData from '../components/NoData';

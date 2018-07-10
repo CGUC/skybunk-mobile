@@ -76,7 +76,7 @@ export default class CreateResourceModal extends React.Component {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={this.state.isModalOpen}
+          visible={isModalOpen}
           onRequestClose={onClose}
         >
           <TouchableOpacity 

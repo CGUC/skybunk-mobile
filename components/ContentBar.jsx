@@ -25,6 +25,13 @@ const styles = StyleSheet.create({
 
 export default class ContentBar extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      isModalOpen: false,
+    }
+  }
+
   async componentWillMount() {
     this.setState({ isModalOpen: false});
   }
