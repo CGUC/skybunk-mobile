@@ -173,6 +173,7 @@ export default class FeedView extends React.Component {
                       <Post
                         key={`post${key}`}
                         data={post}
+                        maxLines={10}
                         onPressPost={this.onPressPost}
                         updatePost={this.updatePost}
                       />

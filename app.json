@@ -1,5 +1,11 @@
 {
   "expo": {
-    "sdkVersion": "27.0.0"
+    "sdkVersion": "27.0.0",
+    "name": "Skybunk",
+    "icon": "./assets/cookie-icon.png",
+    "version": "0.1",
+    "android": {
+    	"package": "com.conradgrebel.skybunk"
+    }
   }
 }
