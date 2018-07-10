@@ -64,7 +64,7 @@ export default class HomeView extends React.Component {
     if (loading) {
       return (
         <Container>
-          <Content>
+          <Content contentContainerStyle={{flex: 1, justifyContent:'center'}}>
             <Spinner color='#cd8500' />
           </Content>
         </Container>
@@ -74,7 +74,7 @@ export default class HomeView extends React.Component {
         <Container>
           <Content>
             <ScrollView>
-              <ProfileHeader user={user} token={token} />
+              <ProfileHeader user={user} token={token} navigation={this.props.navigation}/>
               <ChannelList
                 channels={channels}
                 onPressChannel={this.onPressChannel}

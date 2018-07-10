@@ -90,7 +90,9 @@ export default class ChannelList extends React.Component {
             <Button block transparent dark onPress={() => this.onPressChannel(channel.id, channel.name)}>
               <Text style={styles.channelText}>{channel.name}</Text>
             </Button>
-            <Image source={require('../assets/arrowright.png')} style={styles.rightArrow}/>
+            <TouchableOpacity onPress={() => this.onPressChannel(channel.id, channel.name)} activeOpacity={0.5}>
+              <Image source={require('../assets/arrowright.png')} style={styles.rightArrow}/>
+            </TouchableOpacity>
           </View>
         )
       })

@@ -17,8 +17,8 @@ export default (styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   loginButton: {
-    marginLeft: 100,
-    marginRight: 100,
+    width: 300,
+    backgroundColor: "#71d3d1",
   },
   loginTitle: {
     fontSize: 30,
