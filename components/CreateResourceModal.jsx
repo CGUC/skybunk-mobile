@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, ScrollView, Platform, Dimensions, Modal, TextInput } from 'react-native';
+import { View, ScrollView, Platform, Dimensions, Modal, TextInput, TouchableOpacity } from 'react-native';
 import {
   Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon,
-  Left, Label, Body, Right, Title, Form, Input, Item, Spinner
+  Left, Label, Body, Right, Title, Form, Input, Item, Spinner, Textarea
 } from 'native-base';
 import { StyleSheet } from "react-native";
 
@@ -11,16 +11,37 @@ const { height, width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   modal: {
-    marginTop: 22,
-    justifyContent: 'center',
+    flex: 1,
+    justifyContent: 'flex-end',
     alignItems: 'center',
+    backgroundColor: '#00000050'
+  },
+  view: {
+    width: width,
+    height: 300,
+    backgroundColor: '#DDDDDD',
   },
   textBox: {
-    width: width * 0.8,
-    height: height * 0.6,
+    width: width-10,
+    height: 200,
+    backgroundColor: '#FFFFFF',
+    paddingTop: 5,
     borderRadius: 4,
     borderWidth: 0.8,
     borderColor: '#d6d7da',
+    marginLeft: 5,
+    marginRight: 5,
+  },
+  buttonGroup: {
+    height: 100,
+    flex: 1
+  },
+  button: {
+    marginTop: 5,
+    height: 40,
+    marginLeft: 5,
+    marginRight: 5,
+    backgroundColor: '#71d3d1',
   }
 })
 
@@ -63,25 +84,32 @@ export default class CreateResourceModal extends React.Component {
       <View>
         <Modal
           animationType="slide"
-          transparent={false}
+          transparent={true}
           visible={this.state.isModalOpen}
-          onRequestClose={this.closeModal}>
-          <View style={styles.modal}>
-            <View>
-              <TextInput
+          onRequestClose={this.closeModal}
+        >
+          <TouchableOpacity 
+            activeOpacity={1}
+            style={styles.modal} 
+            onPress={this.closeModal}
+          >
+            <View style={styles.view}>
+              <Textarea
+                bordered 
+                placeholder="What's on your mind?"
                 style={styles.textBox}
                 onChangeText={this.textUpdate}
-                multiline={true}
               />
-
-              <Button onPress={this.saveResource}>
-                <Text>Save</Text>
-              </Button>
-              <Button onPress={this.closeModal}>
-                <Text>Cancel</Text>
-              </Button>
+              <View style={styles.buttonGroup}>
+                <Button block style={styles.button} onPress={this.saveResource}>
+                  <Text>Post</Text>
+                </Button>
+                <Button block style={styles.button} onPress={this.closeModal}>
+                  <Text>Cancel</Text>
+                </Button>
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
         </Modal>
       </View>
     )
