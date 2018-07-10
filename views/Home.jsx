@@ -4,7 +4,6 @@ import {
   Container, Header, Content, Text, Spinner
 } from 'native-base';
 
-import NavBar from '../components/Navbar';
 import ProfileHeader from "../components/ProfileHeader";
 import ChannelList from "../components/ChannelList";
 import styles from "../styles/styles";

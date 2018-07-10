@@ -50,29 +50,15 @@ export default class CreateResourceModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isModalOpen: props.isModalOpen,
       resourceText: ""
     };
   }
 
-  async componentWillReceiveProps(nextProps) {
-    this.setState({ isModalOpen: nextProps.isModalOpen });
-  }
-
-  openModal = () => {
-    this.setState({ isModalOpen: true })
-  }
-
-  closeModal = () => {
-    this.setState({ isModalOpen: false })
-  }
-
   saveResource = () => {
-    const { addResource } = this.props;
-    this.closeModal()
+    const { saveResource } = this.props;
 
     // If changing the parameter to this function, make sure to update it upstream
-    return addResource && addResource(this.state.resourceText);
+    return saveResource && saveResource(this.state.resourceText);
   }
 
   textUpdate = (text) => {
@@ -80,18 +66,23 @@ export default class CreateResourceModal extends React.Component {
   }
 
   render() {
+    const {
+      onClose,
+      isModalOpen
+    } = this.props;
+
     return (
       <View>
         <Modal
           animationType="slide"
           transparent={true}
-          visible={this.state.isModalOpen}
-          onRequestClose={this.closeModal}
+          visible={isModalOpen}
+          onRequestClose={onClose}
         >
           <TouchableOpacity 
             activeOpacity={1}
             style={styles.modal} 
-            onPress={this.closeModal}
+            onPress={onClose}
           >
             <View style={styles.view}>
               <Textarea
@@ -104,7 +95,7 @@ export default class CreateResourceModal extends React.Component {
                 <Button block style={styles.button} onPress={this.saveResource}>
                   <Text>Post</Text>
                 </Button>
-                <Button block style={styles.button} onPress={this.closeModal}>
+                <Button block style={styles.button} onPress={onClose}>
                   <Text>Cancel</Text>
                 </Button>
               </View>

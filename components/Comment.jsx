@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet, Platform, Dimensions } from 'react-native';
 import {
   Container, Left, Right, Body, Content, Card,
   CardItem, Text, Button, Thumbnail, Icon, Image, ListItem
@@ -10,6 +10,8 @@ import { Font, AppLoading } from "expo";
 import date from 'date-fns';
 import ApiClient from '../ApiClient';
 import styles from "../styles/styles";
+
+const { height, width } = Dimensions.get('window');
 
 export default class Comment extends React.Component {
 
@@ -57,7 +59,7 @@ export default class Comment extends React.Component {
     return (
       <ListItem>
         <Thumbnail small style={styles.profilePicThumbnailComment} source={{uri: `data:image/png;base64,${this.state.profilePicture}`}} />
-        <Text>
+        <Text style={{paddingLeft: 5, width: width * 0.8}}>
           {`${authorName}: ${content}`}
         </Text>
       </ListItem>

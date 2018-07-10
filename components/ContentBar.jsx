@@ -25,6 +25,13 @@ const styles = StyleSheet.create({
 
 export default class ContentBar extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      isModalOpen: false,
+    }
+  }
+
   async componentWillMount() {
     this.setState({ isModalOpen: false});
   }
@@ -37,8 +44,11 @@ export default class ContentBar extends React.Component {
     this.setState({ isModalOpen: false })
   }
 
-  saveResource = () => {
-    this.closeModal()
+  saveResource = (data) => {
+    const { addResource } = this.props;
+    addResource && addResource(data);
+
+    this.closeModal();
   }
 
   textUpdate = (text) => {
@@ -53,9 +63,10 @@ export default class ContentBar extends React.Component {
             <Icon style={{color: '#fc4970'}} type='Feather' name='plus-square' />
           </Button>
         </View>
-        <CreateResourceModal 
+        <CreateResourceModal
+          onClose={this.closeModal}
           isModalOpen={this.state.isModalOpen} 
-          addResource={this.props.addResource}
+          saveResource={this.saveResource}
         />
       </View>
     )

@@ -34,8 +34,10 @@ export default class CommentsView extends React.Component {
 
   constructor(props) {
     super(props);
+
     this.state = {
       loading: true,
+      comments: [],
     }
   }
 
@@ -45,12 +47,24 @@ export default class CommentsView extends React.Component {
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
 
-    const { navigation } = this.props;
-    var postData = navigation.getParam('postData');
+    await this.loadData();
 
-    var comments = postData.comments;
+    this.setState({ loading: false });
+  }
 
-    this.setState({ comments, loading: false });
+  async loadData() {
+
+    let postData = this.props.navigation.getParam('postData');
+
+    var uri = `/posts/${postData._id}/comments`;
+
+    await api.get(uri)
+      .then(response => {
+        this.setState({ comments: response });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   addComment = (data) => {
@@ -58,7 +72,8 @@ export default class CommentsView extends React.Component {
       navigation,
     } = this.props;
 
-    var post = navigation.getParam('postData');
+    var reloadParent = navigation.getParam('reloadParent');
+    var postData = navigation.getParam('postData');
 
     AsyncStorage.getItem('@Skybunk:token')
       .then(value => {
@@ -68,7 +83,11 @@ export default class CommentsView extends React.Component {
             content: data,
           }
 
-          api.post(`/posts/${post._id}/comment`, { 'Authorization': 'Bearer ' + value }, commentContent)
+          api.post(`/posts/${postData._id}/comment`, { 'Authorization': 'Bearer ' + value }, commentContent)
+            .then(() => {
+              this.loadData();
+              reloadParent();
+            });
         });
       })
       .catch(error => {
@@ -80,14 +99,15 @@ export default class CommentsView extends React.Component {
   render() {
     const {
       loading,
+      comments,
     } = this.state;
 
-    const {
-      navigation
-    } = this.props;
+    var postData = this.props.navigation.getParam('postData');
 
-    const post = navigation.getParam('postData');
-    var comments = post.comments;
+    var previewPostData = {
+      ...postData,
+      comments: comments
+    }
 
     if (loading) {
       return (
@@ -102,7 +122,7 @@ export default class CommentsView extends React.Component {
         <Container>
           <Content>
             <Post
-              data={post}
+              data={previewPostData}
             />
             <ScrollView>
               <List>
