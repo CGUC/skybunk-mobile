@@ -27,23 +27,23 @@ export default class ProfileHeader extends React.Component {
 
   render() {  		
     return (
+			//<Image source={require('../assets/settings-with-word-icon.png')} style={styles.settingsIcon}/>
+      //<Image source={require('../assets/help-with-words-icon.png')} style={styles.helpIcon}/>
       <ImageBackground
         style={styles.profileHeader}
         source={require('../assets/Menu-Header.png')}
       >
-			  <Image source={require('../assets/settings-with-word-icon.png')} style={styles.settingsIcon}/>
         <View>
-  			  <TouchableHighlight onPress={this.pickImage}>
-          	<Image 
-  	  				style={styles.profilePicture} 
-  	  				source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }} 
-    				/>
+          <TouchableHighlight onPress={this.pickImage}>
+            <Image 
+              style={styles.profilePicture} 
+              source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }} 
+            />
           </TouchableHighlight>
           <Text style={styles.profileNameText}>
             {this.props.user.firstName} {this.props.user.lastName}
           </Text>
         </View>
-        <Image source={require('../assets/help-with-words-icon.png')} style={styles.helpIcon}/>
       </ImageBackground>
     );
   }
