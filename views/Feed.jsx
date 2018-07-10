@@ -50,6 +50,12 @@ export default class FeedView extends React.Component {
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
 
+    await this.loadData();
+
+    this.setState({ loading: false });
+  }
+
+  loadData = async () => {
     const {
       navigation,
     } = this.props;
@@ -76,8 +82,6 @@ export default class FeedView extends React.Component {
       .catch((err) => {
         console.error(err);
       });
-
-    this.setState({ loading: false });
   }
 
   addPost = (data) => {
@@ -102,7 +106,7 @@ export default class FeedView extends React.Component {
             tags: tags
           }
 
-          api.post('/posts', { 'Authorization': 'Bearer ' + value }, postContent)
+          api.post('/posts', { 'Authorization': 'Bearer ' + value }, postContent).then(() => this.loadData());
         });
       })
       .catch(error => {
@@ -121,7 +125,8 @@ export default class FeedView extends React.Component {
   }
 
   onPressPost = (postData) => {
-    this.props.navigation.navigate('Comments', { postData });
+    var reloadParent = this.loadData;
+    this.props.navigation.navigate('Comments', { postData, reloadParent });
   }
 
   getFooterJSX() {
@@ -160,9 +165,6 @@ export default class FeedView extends React.Component {
     } else if (posts.length) {
       return (
         <Container>
-          {/* <Header>
-            <NavBar />
-          </Header> */}
           <Content>
             <ScrollView>
               {
@@ -189,8 +191,4 @@ export default class FeedView extends React.Component {
       return <NoData resourceName={'posts'} addResource={this.addPost} />
     }
   }
-}
-
-FeedView.propTypes = {
-  channelId: PropTypes.string // should be 'all', 'subs' or channel id
 }
