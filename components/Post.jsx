@@ -134,7 +134,7 @@ export default class Post extends React.Component {
         <CardItem button onPress={this.onPressPost}>
           <Body>
             {/* {this.getImageJSX()} */}
-            <Text>{content}</Text>
+            <Text numberOfLines={this.props.maxLines} ellipsizeMode='tail'>{content}</Text>
           </Body>
         </CardItem>
 

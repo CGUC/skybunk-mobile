@@ -117,27 +117,41 @@ export default class CommentsView extends React.Component {
           </Content>
         </Container>
       );
-    } else if (comments.length) {
+    } else {
       return (
         <Container>
           <Content>
             <Post
               data={previewPostData}
+              maxLines={1000}
             />
             <ScrollView>
-              <List>
-                {
-                  _.map(_.orderBy(comments, comment => comment.createdAt.valueOf()),
-                    (comment, key) => {
-                      return (
-                        <Comment
-                          key={`comment${key}`}
-                          data={comment}
-                        />
-                      )
-                    })
-                }
-              </List>
+              {comments.length ? 
+                <List>
+                  {
+                    _.map(_.orderBy(comments, comment => comment.createdAt.valueOf()),
+                      (comment, key) => {
+                        return (
+                          <Comment
+                            key={`comment${key}`}
+                            data={comment}
+                          />
+                        )
+                      })
+                  }
+                </List> :
+                <Text style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  fontSize: 18,
+                  fontStyle: 'italic',
+                  marginTop: 20,
+                  marginBottom: 20,
+                  textAlign: 'center' 
+                }}>
+                  No comments yet - You could be the first!
+                </Text>
+              }
             </ScrollView>
           </Content>
           <Footer>
@@ -146,10 +160,6 @@ export default class CommentsView extends React.Component {
             />
           </Footer>
         </Container>
-      )
-    } else {
-      return (
-        <NoData resourceName={'comments'} addResource={this.addComment} />
       )
     }
   }
