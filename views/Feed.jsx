@@ -57,8 +57,13 @@ export default class FeedView extends React.Component {
     var channelId = channel._id;
 
     // TODO: implement method of fetching posts for subscribed channels
-    var uri;
-    if (['all', 'subs'].includes(channelId)) uri = '/posts';
+    let uri;
+    if ('all' === channelId) {
+      uri = '/posts'
+    }
+    else if ('subs' === channelId) {
+      uri = `/users/${navigation.getParam('userId')}/subscribedChannels/posts`;
+    }
     else uri = `/channels/${channelId}/posts`;
 
     await api.get(uri)
