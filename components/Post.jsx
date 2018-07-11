@@ -110,7 +110,7 @@ export default class Post extends React.Component {
     // TODO: implement
     var authorPhoto = author.profilePicture;
 
-    createdAt = date.format(createdAt, 'ddd MMM Do [at] h:ma');
+    createdAt = date.format(createdAt, 'ddd MMM Do [at] h:mma');
     var numComments = comments ? comments.length : 0;
     var likes = likes ? likes : 0;
     if (likeGiven) likes++;
