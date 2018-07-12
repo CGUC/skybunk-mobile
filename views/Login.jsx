@@ -6,7 +6,7 @@ import {
   Container, Header, Content, Footer, Card, CardItem, Thumbnail, Text, Button, Icon,
   Left, Label, Body, Right, Title, Form, Input, Item, Spinner
 } from 'native-base';
-
+import notificationToken from '../helpers/notificationToken';
 import Banner from '../components/Banner'
 import ApiClient from '../ApiClient'
 
@@ -104,8 +104,14 @@ export default class LoginView extends React.Component {
         }
         else {
           AsyncStorage.setItem('@Skybunk:token', jsonResponse.token).then(() => {
+            ApiClient.get('/users/loggedInUser', { 'Authorization': 'Bearer ' + jsonResponse.token }).then(user => {
+              notificationToken.registerForPushNotificationsAsync(user, jsonResponse.token);
+            })
+            .catch(err => console.log(err));
+
             this.props.navigation.navigate('App');
           }).catch(error => {
+            console.log(error);
             this.setState({
               errorMessage: 'Sorry, there was an error logging you in',
               successMessage: null,
