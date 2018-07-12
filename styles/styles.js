@@ -88,17 +88,23 @@ export default (styles = StyleSheet.create({
     alignItems: "center",
     borderBottomColor: '#CCCCCC',
     borderBottomWidth: 1,
-    height: 60,
+    height: 50,
     paddingLeft: 5,
   },
+  channelListButton: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginLeft: 10,
+  },
   channelText: {
-    fontSize: 22,
+    fontSize: 20,
     textAlign:'left',
-    marginTop: 15,
   },
   notificationBell: {
-    width: 70,
-    height: 70,
+    width: 60,
+    height: 60,
   },
   rightArrow: {
     width: 50,

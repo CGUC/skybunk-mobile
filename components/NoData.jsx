@@ -33,9 +33,10 @@ export default class NoDataCell extends React.Component {
             <Text style={styles.text}>No {resourceName} yet - you could be the first!</Text>
           </View>
         </Content>
+        {!this.props.hideFooter ?
         <Footer>
           <ContentBar addResource={addResource} />
-        </Footer>
+        </Footer> : null}
       </Container>
     )
   }

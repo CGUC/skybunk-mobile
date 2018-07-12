@@ -100,6 +100,7 @@ export default class Post extends React.Component {
       likes,
       comments,
       createdAt,
+      tags,
     } = data;
 
     // In case author account is deleted
@@ -126,9 +127,9 @@ export default class Post extends React.Component {
               <Text note>{createdAt}</Text>
             </Body>
           </Left>
-          {/* <Right> */}
-          {/* Three dots to edit */}
-          {/* </Right> */}
+          <Right>
+          {this.props.showTag ? <Text>in {tags[0]}</Text> : null}
+          </Right>
         </CardItem>
 
         <CardItem button onPress={this.onPressPost}>
