@@ -177,6 +177,7 @@ export default class FeedView extends React.Component {
                         maxLines={10}
                         onPressPost={this.onPressPost}
                         updatePost={this.updatePost}
+                        showTag={'all' === this.props.navigation.getParam('channel')._id}
                       />
                     )
                   })
@@ -189,7 +190,13 @@ export default class FeedView extends React.Component {
         </Container>
       )
     } else {
-      return <NoData resourceName={'posts'} addResource={this.addPost} />
+      return (
+        <NoData 
+          resourceName={'posts'}
+          addResource={this.addPost} 
+          hideFooter={'subs' === this.props.navigation.getParam('channel')._id}
+        />
+      );
     }
   }
 }

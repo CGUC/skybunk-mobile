@@ -87,10 +87,8 @@ export default class ChannelList extends React.Component {
             <TouchableOpacity onPress={this.updateSubscription(channel.id, subIndex)} activeOpacity={0.5}>
               <Image opacity={opacity} source={icon} style={styles.notificationBell}/>
             </TouchableOpacity>
-            <Button block transparent dark onPress={() => this.onPressChannel(channel.id, channel.name)}>
+            <TouchableOpacity style={styles.channelListButton} onPress={() => this.onPressChannel(channel.id, channel.name)}>
               <Text style={styles.channelText}>{channel.name}</Text>
-            </Button>
-            <TouchableOpacity onPress={() => this.onPressChannel(channel.id, channel.name)} activeOpacity={0.5}>
               <Image source={require('../assets/arrowright.png')} style={styles.rightArrow}/>
             </TouchableOpacity>
           </View>
@@ -121,7 +119,7 @@ export default class ChannelList extends React.Component {
       );
     } else {
       return (
-        <View>
+        <View style={{backgroundColor: '#FFFFFF'}}>
           {channelCards}
         </View>
       );
