@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Skybunk",
-    "icon": "./assets/temp-icon.png",
+    "icon": "./assets/app-icon.png",
     "primaryColor": "#71d3d1",
     "version": "0.0.1",
     "sdkVersion": "27.0.0",
