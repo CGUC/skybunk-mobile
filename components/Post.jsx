@@ -117,29 +117,26 @@ export default class Post extends React.Component {
     if (likeGiven) likes++;
 
     return (
-      <Card style={{ flex: 0 }}>
+      <Card style={{ flex: 0, elevation: 0, marginTop: 0, marginBottom: 4 }}>
 
         <CardItem>
           <Left>
             <Thumbnail style={styles.profilePicThumbnail} source={{uri: `data:image/png;base64,${this.state.profilePicture}`}} />
             <Body>
-              <Text>{authorName}</Text>
+              <Text>{authorName} {this.props.showTag ? `► ${tags[0]}` : null}</Text>
               <Text note>{createdAt}</Text>
             </Body>
           </Left>
-          <Right>
-          {this.props.showTag ? <Text>in {tags[0]}</Text> : null}
-          </Right>
         </CardItem>
 
-        <CardItem button onPress={this.onPressPost}>
+        <CardItem button onPress={this.onPressPost} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0}}>
           <Body>
             {/* {this.getImageJSX()} */}
             <Text numberOfLines={this.props.maxLines} ellipsizeMode='tail'>{content}</Text>
           </Body>
         </CardItem>
 
-        <CardItem>
+        <CardItem style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 3}}>
           <Left>
             {/* <Button transparent onPress={this.toggleLike}>
               <Icon name='give-cookie-icon' />
