@@ -63,7 +63,9 @@ export default class Post extends React.Component {
     const { enableEditing } = this.props;
 
     if (enableEditing) return (
-      <Text>Edit Me!</Text>
+      <Right>
+        <Text>Edit Me!</Text>
+      </Right>
     )
     return null;
   }
@@ -120,32 +122,30 @@ export default class Post extends React.Component {
               <Text note>{createdAt}</Text>
             </Body>
           </Left>
-          <Right>
-            {this.getEditJSX()}
-          </Right>
+          {/* {this.getEditJSX()} */}
         </CardItem>
 
-        <CardItem button onPress={this.onPressPost} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0}}>
+        <CardItem button onPress={this.onPressPost} style={{ marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}>
           <Body>
             {/* {this.getImageJSX()} */}
             <Text numberOfLines={this.props.maxLines} ellipsizeMode='tail'>{content}</Text>
           </Body>
         </CardItem>
 
-        <CardItem style={{marginTop: 3, marginBottom: 3}}>
+        <CardItem style={{ marginTop: 3, marginBottom: 3 }}>
           <Left>
             <TouchableOpacity onPress={this.toggleLike}>
-              <View style={{flexDirection: 'row', marginRight: 20}}>
+              <View style={{ flexDirection: 'row', marginRight: 20 }}>
                 <Thumbnail small square source={require('../assets/cookie-icon.png')}
-                  style={{width:25, height:25, marginRight: 0, paddingRight: 0}}
+                  style={{ width: 25, height: 25, marginRight: 0, paddingRight: 0 }}
                 />
                 <Text>{`${likes}`}</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={this.onPressPost}>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <Thumbnail small square source={require('../assets/comments-icon.png')}
-                  style={{width:25, height:25, marginRight: 0, paddingRight: 0}}
+                  style={{ width: 25, height: 25, marginRight: 0, paddingRight: 0 }}
                 />
                 <Text>{`${numComments}`}</Text>
               </View>
