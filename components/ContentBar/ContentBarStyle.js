@@ -9,6 +9,6 @@ export default (styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     height: height/8,
-    width: width,
+    width: width
   }
 }));

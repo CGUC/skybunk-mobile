@@ -1,22 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, ScrollView, Platform, Dimensions, StyleSheet } from 'react-native';
-import { Button, Icon } from 'native-base';
+import { View, ScrollView, Platform, Dimensions } from 'react-native';
+import {
+  Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon,
+  Left, Label, Body, Right, Title, Form, Input, Item, Spinner
+} from 'native-base';
+import { StyleSheet } from "react-native";
+
 import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
+
 const { height, width } = Dimensions.get('window');
 
-styles = StyleSheet.create({
+const styles = StyleSheet.create({
   bar: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    color: '#FFFFFF',
     height: height/8,
-    width: width,
+    width: width
   }
-});
+})
 
 export default class ContentBar extends React.Component {
 
@@ -52,7 +57,7 @@ export default class ContentBar extends React.Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.asdf}>
         <View style={styles.bar}>
           <Button transparent onPress={this.openModal}>
             <Icon style={{color: '#fc4970'}} type='Feather' name='plus-square' />
