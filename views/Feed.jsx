@@ -40,6 +40,7 @@ export default class FeedView extends React.Component {
     this.state = {
       posts: [],
       loading: true,
+      user: {},
     }
   }
 
@@ -65,7 +66,6 @@ export default class FeedView extends React.Component {
 
     var channelId = channel._id;
 
-    // TODO: implement method of fetching posts for subscribed channels
     let uri;
     if ('all' === channelId) {
       uri = '/posts'
@@ -92,6 +92,8 @@ export default class FeedView extends React.Component {
       navigation,
     } = this.props;
 
+    const userId = navigation.getParam('userId');
+
     var channel = navigation.getParam('channel');
     if (['all', 'subs'].includes(channel._id)) return console.error(`Can't add post to ${channel._id} feed`);
 
@@ -99,34 +101,67 @@ export default class FeedView extends React.Component {
 
     AsyncStorage.getItem('@Skybunk:token')
       .then(value => {
-        api.get('/users/loggedInUser', { 'Authorization': 'Bearer ' + value }).then(user => {
-          var postContent = {
-            author: user._id,
-            content: data,
-            tags: tags
-          }
-
-          api.post('/posts', { 'Authorization': 'Bearer ' + value }, postContent).then(() => this.loadData());
-        });
+        var postContent = {
+          author: userId,
+          content: data,
+          tags: tags
+        }
+        api.post('/posts', { 'Authorization': 'Bearer ' + value }, postContent).then(() => this.loadData());
       })
       .catch(error => {
         this.props.navigation.navigate('Auth');
       });
   }
 
-  updatePost = async (postId, data) => {
-    await api.put(`/posts/${postId}`, {}, data)
-      .then(() => {
-        alert("Post updated");
+  updatePost = async (postId, data, type) => {
+
+    const {
+      navigation,
+    } = this.props;
+
+    const userId = navigation.getParam('userId');
+
+    AsyncStorage.getItem('@Skybunk:token')
+      .then(value => {
+
+        if (type === 'toggleLike') {
+
+          // Data should be post object
+
+          /**
+           * Toggle likes; if user has already liked post, this would be 'unliking' it.
+           * TODO: set like icon to 'liked' state so user knows whether they have liked post
+           */
+          if (data.usersLiked.includes(userId)) {
+            data.likes--;
+            data.usersLiked = _.filter(data.usersLiked, user => user !== userId);
+          } else {
+            data.likes++;
+            data.usersLiked.push(userId);
+          }
+        }
+
+        if (data.likes < 0) data.likes = 0; // (Grebel's a positive community, come on!)
+
+        api.put(`/posts/${postId}`, { 'Authorization': 'Bearer ' + value }, data)
+          .then(() => {
+            this.loadData();
+          })
+          .catch(err => {
+            alert("Error updating post");
+          });
       })
-      .catch(err => {
-        alert("Error updating post");
+      .catch(error => {
+        this.props.navigation.navigate('Auth');
       });
   }
 
   onPressPost = (postData) => {
+    const { navigation } = this.props;
+    const userId = navigation.getParam('userId');
+
     var reloadParent = this.loadData;
-    this.props.navigation.navigate('Comments', { postData, reloadParent });
+    this.props.navigation.navigate('Comments', { postData, reloadParent, userId });
   }
 
   getFooterJSX() {
@@ -154,6 +189,13 @@ export default class FeedView extends React.Component {
       loading,
     } = this.state;
 
+    const {
+      navigation,
+    } = this.props;
+
+    const userId = navigation.getParam('userId');
+    const channelId = navigation.getParam('channel')._id;
+
     if (loading) {
       return (
         <Container>
@@ -170,6 +212,10 @@ export default class FeedView extends React.Component {
               {
                 _.map(_.orderBy(posts, post => post.createdAt.valueOf(), ['desc']),
                   (post, key) => {
+
+                    // Allow editing/deleting if logged in user is author of post
+                    var enableEditing = post.author === userId;
+
                     return (
                       <Post
                         key={`post${key}`}
@@ -177,7 +223,8 @@ export default class FeedView extends React.Component {
                         maxLines={10}
                         onPressPost={this.onPressPost}
                         updatePost={this.updatePost}
-                        showTag={'all' === this.props.navigation.getParam('channel')._id}
+                        showTag={['all', 'subs'].includes(channelId)}
+                        enableEditing={enableEditing}
                       />
                     )
                   })
@@ -194,7 +241,7 @@ export default class FeedView extends React.Component {
         <NoData 
           resourceName={'posts'}
           addResource={this.addPost} 
-          hideFooter={'subs' === this.props.navigation.getParam('channel')._id}
+          hideFooter={'subs' === channelId}
         />
       );
     }

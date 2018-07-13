@@ -16,7 +16,7 @@ export default class ApiClient {
 				return responseJSON;
 			})
 			.catch(err => {
-				err = err.replace('<', '').replace('>', '');
+				err = err.replace(/</g, '').replace(/>/g, '');
 				console.error(err);
 			});
 	}
@@ -32,6 +32,7 @@ export default class ApiClient {
 			body: JSON.stringify(body),
 		})
 		.catch(err => {
+			err = err.replace(/</g, '').replace(/>/g, '');
 			console.error(err);
 		});
 	};
@@ -46,9 +47,14 @@ export default class ApiClient {
 			},
 			body: JSON.stringify(body),
 		})
-		.then(response => response.json())
-		.then(responseJSON => responseJSON)
+		.then(response => {
+			return response.json()
+		})
+		.then(responseJSON => {
+			return responseJSON
+		})
 		.catch(err => {
+			err = err.replace(/</g, '').replace(/>/g, '');
 			console.error(err);
 		});
 	}
@@ -75,6 +81,7 @@ export default class ApiClient {
 		.then(response => response.json())
 		.then(responseJSON => responseJSON)
 		.catch(err => {
+			err = err.replace(/</g, '').replace(/>/g, '');
 			console.error(err);
 		});
 	}
@@ -82,6 +89,7 @@ export default class ApiClient {
 	static delete(endpoint) {
 		return fetch(`${config.API_ADDRESS}${endpoint}`, { method: 'DELETE' })
 		.catch(err => {
+			err = err.replace(/</g, '').replace(/>/g, '');
 			console.error(err);
 		});;
 	}
