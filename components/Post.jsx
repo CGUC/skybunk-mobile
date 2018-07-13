@@ -17,7 +17,6 @@ export default class Post extends React.Component {
     super(props);
 
     this.state = {
-      likeGiven: false,
       profilePicture: null,
     }
   }
@@ -31,24 +30,10 @@ export default class Post extends React.Component {
     ApiClient.get(`/users/${this.props.data.author._id}/profilePicture`, {}).then(pic => {
       this.setState({
         profilePicture: pic,
-      }); 
+      });
     }).catch(error => {
       console.log(error);
     });
-  }
-
-  componentWillUnmount() {
-    /**
-     * Update likes only when component unmounts to prevent excessive
-     * network calls from spamming the like button
-    */
-    const { likeGiven } = this.state;
-    const { updatePost, data } = this.props;
-
-    var postId = data._id;
-    var currentLikes = data.likes || 0;
-
-    //if (likeGiven) updatePost(postId, { likes: currentLikes + 1 });
   }
 
   // TODO: implement editing
@@ -57,11 +42,6 @@ export default class Post extends React.Component {
     var postId = data._id;
 
     updatePost && updatePost(postId, { content: newContent });
-  }
-
-  toggleLike = () => {
-    const { likeGiven } = this.state;
-    this.setState({ likeGiven: !likeGiven });
   }
 
   getImageJSX() {
@@ -79,17 +59,31 @@ export default class Post extends React.Component {
     }
   }
 
+  getEditJSX() {
+    const { enableEditing } = this.props;
+
+    if (enableEditing) return (
+      <Text>Edit Me!</Text>
+    )
+    return null;
+  }
+
   onPressPost = () => {
     // Call parent to navigate
     var { onPressPost, data } = this.props;
     if (onPressPost) onPressPost(data);
   }
 
-  render() {
+  toggleLike = () => {
     const {
-      likeGiven
-    } = this.state;
+      updatePost,
+      data: postData
+    } = this.props;
 
+    updatePost && updatePost(postData._id, postData, 'toggleLike');
+  }
+
+  render() {
     const {
       data
     } = this.props;
@@ -114,19 +108,21 @@ export default class Post extends React.Component {
     createdAt = date.format(createdAt, 'ddd MMM Do [at] h:mma');
     var numComments = comments ? comments.length : 0;
     var likes = likes ? likes : 0;
-    if (likeGiven) likes++;
 
     return (
       <Card style={{ flex: 0, elevation: 0, marginTop: 0, marginBottom: 4 }}>
 
         <CardItem>
           <Left>
-            <Thumbnail style={styles.profilePicThumbnail} source={{uri: `data:image/png;base64,${this.state.profilePicture}`}} />
+            <Thumbnail style={styles.profilePicThumbnail} source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }} />
             <Body>
               <Text>{authorName} {this.props.showTag ? ` ►  ${tags[0]}` : null}</Text>
               <Text note>{createdAt}</Text>
             </Body>
           </Left>
+          <Right>
+            {this.getEditJSX()}
+          </Right>
         </CardItem>
 
         <CardItem button onPress={this.onPressPost} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0}}>
@@ -138,7 +134,7 @@ export default class Post extends React.Component {
 
         <CardItem style={{marginTop: 3, marginBottom: 3}}>
           <Left>
-            <TouchableOpacity onPress={this.onPressPost}>
+            <TouchableOpacity onPress={this.toggleLike}>
               <View style={{flexDirection: 'row', marginRight: 20}}>
                 <Thumbnail small square source={require('../assets/cookie-icon.png')}
                   style={{width:25, height:25, marginRight: 0, paddingRight: 0}}

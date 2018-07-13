@@ -38,7 +38,7 @@ export default class CommentsView extends React.Component {
 
     this.state = {
       loading: true,
-      comments: [],
+      postData: {},
     }
   }
 
@@ -55,16 +55,61 @@ export default class CommentsView extends React.Component {
 
   async loadData() {
 
-    let postData = this.props.navigation.getParam('postData');
+    // This post data is used initally, but we save our own version in state so it can update
+    const postData = this.props.navigation.getParam('postData');
 
-    var uri = `/posts/${postData._id}/comments`;
+    var postUri = `/posts/${postData._id}`;
+    var commentsUri = `/posts/${postData._id}/comments`;
 
-    await api.get(uri)
+    await api.get(postUri)
       .then(response => {
-        this.setState({ comments: response });
+        this.setState({ postData: response });
       })
-      .catch((err) => {
+      .catch(err => {
         console.error(err);
+      });
+  }
+
+  /**
+   * TODO This is completely replicated logic from Feed's updatePost,
+   * should be reused from somehwere else
+   */
+  updatePost = async (postId, data, type) => {
+
+    const {
+      navigation,
+    } = this.props;
+
+    const userId = navigation.getParam('userId');
+    const reloadParent = navigation.getParam('reloadParent');
+
+    AsyncStorage.getItem('@Skybunk:token')
+      .then(value => {
+
+        if (type === 'toggleLike') {
+
+          if (data.usersLiked.includes(userId)) {
+            data.likes--;
+            data.usersLiked = _.filter(data.usersLiked, user => user !== userId);
+          } else {
+            data.likes++;
+            data.usersLiked.push(userId);
+          }
+        }
+
+        if (data.likes < 0) data.likes = 0;
+
+        api.put(`/posts/${postId}`, { 'Authorization': 'Bearer ' + value }, data)
+          .then(() => {
+            this.loadData();
+            reloadParent();
+          })
+          .catch(err => {
+            alert("Error updating post");
+          });
+      })
+      .catch(error => {
+        this.props.navigation.navigate('Auth');
       });
   }
 
@@ -75,21 +120,20 @@ export default class CommentsView extends React.Component {
 
     var reloadParent = navigation.getParam('reloadParent');
     var postData = navigation.getParam('postData');
+    var userId = navigation.getParam('userId');
 
     AsyncStorage.getItem('@Skybunk:token')
       .then(value => {
-        api.get('/users/loggedInUser', { 'Authorization': 'Bearer ' + value }).then(user => {
-          var commentContent = {
-            author: user._id,
-            content: data,
-          }
+        var commentContent = {
+          author: userId,
+          content: data,
+        }
 
-          api.post(`/posts/${postData._id}/comment`, { 'Authorization': 'Bearer ' + value }, commentContent)
-            .then(() => {
-              this.loadData();
-              reloadParent();
-            });
-        });
+        api.post(`/posts/${postData._id}/comment`, { 'Authorization': 'Bearer ' + value }, commentContent)
+          .then(() => {
+            this.loadData();
+            reloadParent();
+          });
       })
       .catch(error => {
         console.error(error);
@@ -100,16 +144,11 @@ export default class CommentsView extends React.Component {
   render() {
     const {
       loading,
-      comments,
+      postData,
     } = this.state;
 
-    var postData = this.props.navigation.getParam('postData');
-
-    var previewPostData = {
-      ...postData,
-      comments: comments
-    }
-
+    var comments = postData.comments;
+    
     if (loading) {
       return (
         <Container>
@@ -123,11 +162,12 @@ export default class CommentsView extends React.Component {
         <Container>
           <Content>
             <Post
-              data={previewPostData}
+              data={postData}
               maxLines={1000}
+              updatePost={this.updatePost}
             />
             <ScrollView>
-              {comments.length ? 
+              {comments.length ?
                 <List>
                   {
                     _.map(_.orderBy(comments, comment => comment.createdAt.valueOf()),
@@ -148,7 +188,7 @@ export default class CommentsView extends React.Component {
                   fontStyle: 'italic',
                   marginTop: 20,
                   marginBottom: 20,
-                  textAlign: 'center' 
+                  textAlign: 'center'
                 }}>
                   No comments yet - You could be the first!
                 </Text>
