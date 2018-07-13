@@ -53,12 +53,12 @@ export default (styles = StyleSheet.create({
   profileHeader: {
     alignSelf: "stretch",
     height: 180,
-    backgroundColor: "#00ff99",
+    backgroundColor: "#71d3d1",
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
-    elevation: 3,
+    elevation: 5,
   },
   profilePicture: {
     alignSelf: "center",
