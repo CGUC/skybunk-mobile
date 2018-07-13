@@ -5,19 +5,14 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, ScrollView, Platform, AsyncStorage } from 'react-native';
-import {
-  Container, Header, Footer, Content, Card, CardItem, Thumbnail, Text, Button, Icon,
-  Left, Label, Body, Right, Title, Form, Input, Item, Spinner
-} from 'native-base';
-import { Font, AppLoading } from "expo";
-
 import _ from 'lodash';
-
-import ContentBar from '../components/ContentBar';
-import Post from '../components/Post';
-import NoData from '../components/NoData';
-import api from '../ApiClient';
+import { ScrollView, AsyncStorage } from 'react-native';
+import { Container, Footer, Content, Spinner } from 'native-base';
+import { Font, AppLoading } from "expo";
+import ContentBar from '../../components/ContentBar/ContentBar';
+import Post from '../../components/Post/Post';
+import NoData from '../../components/NoData/NoData';
+import api from '../../ApiClient';
 
 export default class FeedView extends React.Component {
 

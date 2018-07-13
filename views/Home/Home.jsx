@@ -1,13 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, ScrollView, AsyncStorage } from 'react-native';
-import {
-  Container, Header, Content, Text, Spinner
-} from 'native-base';
-
-import ProfileHeader from "../components/ProfileHeader";
-import ChannelList from "../components/ChannelList";
-import styles from "../styles/styles";
-import api from '../ApiClient';
+import { View, ScrollView, AsyncStorage } from 'react-native';
+import { Container, Header, Content, Text, Spinner } from 'native-base';
+import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
+import ChannelList from "../../components/ChannelList/ChannelList";
+import style from "./HomeStyle";
+import api from '../../ApiClient';
 
 export default class HomeView extends React.Component {
 
@@ -64,7 +61,7 @@ export default class HomeView extends React.Component {
     if (loading) {
       return (
         <Container>
-          <Content contentContainerStyle={{flex: 1, justifyContent:'center'}}>
+          <Content contentContainerStyle={style.contentContainer}>
             <Spinner color='#cd8500' />
           </Content>
         </Container>

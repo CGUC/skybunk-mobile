@@ -1,10 +1,10 @@
 import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
-import LoginView from './views/Login';
-import HomeView from './views/Home';
-import FeedView from './views/Feed';
-import CommentsView from './views/Comments';
-import SplashScreen from './views/Splash';
-import SettingsView from './views/Settings';
+import LoginView from './views/Login/Login';
+import HomeView from './views/Home/Home';
+import FeedView from './views/Feed/Feed';
+import CommentsView from './views/Comments/Comments';
+import SplashScreen from './views/Splash/Splash';
+import SettingsView from './views/Settings/Settings';
 
 const AppStack = createStackNavigator(
   {

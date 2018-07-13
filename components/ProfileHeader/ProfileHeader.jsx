@@ -2,9 +2,9 @@ import React from "react";
 import { Alert, Text, View, Image, TouchableOpacity, ImageBackground } from "react-native";
 import { Icon } from "native-base"
 import { ImagePicker } from 'expo';
-import styles from "../styles/styles";
-import ApiClient from '../ApiClient';
-import config from '../config';
+import styles from "./ProfileHeaderStyle";
+import ApiClient from '../../ApiClient';
+import config from '../../config';
 
 export default class ProfileHeader extends React.Component {
 	static navigationOptions = { header: null };
@@ -30,10 +30,10 @@ export default class ProfileHeader extends React.Component {
     return (
       <ImageBackground
         style={styles.profileHeader}
-        source={require('../assets/Menu-Header.png')}
+        source={require('../../assets/Menu-Header.png')}
       >
         <TouchableOpacity onPress={() => {this.props.navigation.navigate('Settings')}}>
-          <Image source={require('../assets/settings-with-word-icon.png')} style={styles.settingsIcon}/>
+          <Image source={require('../../assets/settings-with-word-icon.png')} style={styles.settingsIcon}/>
         </TouchableOpacity>
         <View>
           <TouchableOpacity onPress={this.pickImage}>
@@ -47,7 +47,7 @@ export default class ProfileHeader extends React.Component {
           </Text>
         </View>
         <TouchableOpacity onPress={() => {Alert.alert('Help',`Version: ${config.VERSION}`)} }>
-          <Image source={require('../assets/help-with-words-icon.png')} style={styles.helpIcon}/>
+          <Image source={require('../../assets/help-with-words-icon.png')} style={styles.helpIcon}/>
         </TouchableOpacity>
       </ImageBackground>
     );
