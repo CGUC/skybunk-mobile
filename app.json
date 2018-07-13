@@ -12,7 +12,7 @@
       "package": "com.grebel.skybunk"
     },
     "notification": {
-      "icon": "./assets/notification-icon.png",
+      "icon": "./assets/notif-icon.png",
       "color": "#71d3d1",
       "androidMode": "collapse",
       "androidCollapsedTitle": "#{unread_notifications} new posts!"
