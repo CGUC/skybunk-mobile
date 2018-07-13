@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import {
   Container, Left, Right, Body, Content, Card,
   CardItem, Text, Button, Thumbnail, Icon, Image
@@ -123,7 +123,7 @@ export default class Post extends React.Component {
           <Left>
             <Thumbnail style={styles.profilePicThumbnail} source={{uri: `data:image/png;base64,${this.state.profilePicture}`}} />
             <Body>
-              <Text>{authorName} {this.props.showTag ? `► ${tags[0]}` : null}</Text>
+              <Text>{authorName} {this.props.showTag ? ` ►  ${tags[0]}` : null}</Text>
               <Text note>{createdAt}</Text>
             </Body>
           </Left>
@@ -136,18 +136,25 @@ export default class Post extends React.Component {
           </Body>
         </CardItem>
 
-        <CardItem style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 3}}>
+        <CardItem style={{marginTop: 3, marginBottom: 3}}>
           <Left>
-            {/* <Button transparent onPress={this.toggleLike}>
-              <Icon name='give-cookie-icon' />
-            </Button> */}
-            <Text>{`${likes} likes`}</Text>
+            <TouchableOpacity onPress={this.onPressPost}>
+              <View style={{flexDirection: 'row', marginRight: 20}}>
+                <Thumbnail small square source={require('../assets/cookie-icon.png')}
+                  style={{width:25, height:25, marginRight: 0, paddingRight: 0}}
+                />
+                <Text>{`${likes}`}</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.onPressPost}>
+              <View style={{flexDirection: 'row'}}>
+                <Thumbnail small square source={require('../assets/comments-icon.png')}
+                  style={{width:25, height:25, marginRight: 0, paddingRight: 0}}
+                />
+                <Text>{`${numComments}`}</Text>
+              </View>
+            </TouchableOpacity>
           </Left>
-          <Right>
-            <Button transparent onPress={this.onPressPost}>
-              <Text>{`${numComments} ${numComments !== 1 ? 'comments' : 'comment'}`}</Text>
-            </Button>
-          </Right>
         </CardItem>
 
       </Card>
