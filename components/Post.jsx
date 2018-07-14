@@ -94,10 +94,13 @@ export default class Post extends React.Component {
       author,
       content,
       likes,
+      isLiked,
       comments,
       createdAt,
       tags,
     } = data;
+
+    var likeIcon = isLiked ? require('../assets/liked-cookie.png') : require('../assets/cookie-icon.png');
 
     // In case author account is deleted
     var authorName;
@@ -136,7 +139,7 @@ export default class Post extends React.Component {
           <Left>
             <TouchableOpacity onPress={this.toggleLike}>
               <View style={{ flexDirection: 'row', marginRight: 20 }}>
-                <Thumbnail small square source={require('../assets/cookie-icon.png')}
+                <Thumbnail small square source={likeIcon}
                   style={{ width: 25, height: 25, marginRight: 0, paddingRight: 0 }}
                 />
                 <Text>{`${likes}`}</Text>

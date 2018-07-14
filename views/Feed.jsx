@@ -62,8 +62,9 @@ export default class FeedView extends React.Component {
     } = this.props;
 
     var channel = navigation.getParam('channel');
-    if (!channel) channel = { _id: 'all' };
+    const userId = navigation.getParam('userId');
 
+    if (!channel) channel = { _id: 'all' };
     var channelId = channel._id;
 
     let uri;
@@ -71,13 +72,21 @@ export default class FeedView extends React.Component {
       uri = '/posts'
     }
     else if ('subs' === channelId) {
-      uri = `/users/${navigation.getParam('userId')}/subscribedChannels/posts`;
+      uri = `/users/${userId}/subscribedChannels/posts`;
     }
     else uri = `/channels/${channelId}/posts`;
 
     await api.get(uri)
       .then(response => {
-        this.setState({ posts: response });
+        // Track if each post has been liked by user
+        var posts = _.map(response, post => {
+          if (post.usersLiked.includes(userId)){
+            post.isLiked = true;
+          } else post.isLiked = false;
+          return post;
+        });
+
+        this.setState({ posts });
       })
       .catch((err) => {
         console.error(err);
@@ -238,9 +247,9 @@ export default class FeedView extends React.Component {
       )
     } else {
       return (
-        <NoData 
+        <NoData
           resourceName={'posts'}
-          addResource={this.addPost} 
+          addResource={this.addPost}
           hideFooter={'subs' === channelId}
         />
       );

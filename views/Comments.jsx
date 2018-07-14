@@ -36,9 +36,11 @@ export default class CommentsView extends React.Component {
   constructor(props) {
     super(props);
 
+    const postData = props.navigation.getParam('postData');
+
     this.state = {
       loading: true,
-      postData: {},
+      postData,
     }
   }
 
@@ -55,14 +57,18 @@ export default class CommentsView extends React.Component {
 
   async loadData() {
 
-    // This post data is used initally, but we save our own version in state so it can update
-    const postData = this.props.navigation.getParam('postData');
+    const { navigation } = this.props;
+    const { postData } = this.state;
+
+    const userId = navigation.getParam('userId');
 
     var postUri = `/posts/${postData._id}`;
-    var commentsUri = `/posts/${postData._id}/comments`;
 
     await api.get(postUri)
       .then(response => {
+        if (response.usersLiked.includes(userId)) {
+          response.isLiked = true;
+        } else response.isLiked = false;
         this.setState({ postData: response });
       })
       .catch(err => {
