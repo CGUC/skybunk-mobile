@@ -161,7 +161,7 @@ export default class LoginView extends React.Component {
                 enabled
               >
                   <Image 
-                    source={require('../assets/skybunk_logo.png')}
+                    source={require('../assets/logo.png')}
                     style={styles.loginLogo}
                     marginBottom={this.state.registering ? 16 : 80}
                   /> 
