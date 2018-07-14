@@ -1,17 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, ScrollView, Platform, AsyncStorage } from 'react-native';
-import {
-  Container, Header, Footer, Content, Card, CardItem, Thumbnail, Text, Button, Icon,
-  Left, Label, Body, Right, Title, Form, Input, Item, Spinner, List
-} from 'native-base';
+import { Container, Footer, Content, Text, Spinner, List } from 'native-base';
 import { Font, AppLoading } from "expo";
-
-import Post from '../components/Post';
-import Comment from '../components/Comment';
-import NoData from '../components/NoData';
-import ContentBar from '../components/ContentBar';
-import api from '../ApiClient';
+import Post from '../../components/Post/Post';
+import Comment from '../../components/Comment/Comment';
+import NoData from '../../components/NoData/NoData';
+import ContentBar from '../../components/ContentBar/ContentBar';
+import api from '../../ApiClient';
+import style from './CommentsStyle';
 
 export default class CommentsView extends React.Component {
 
@@ -187,15 +184,7 @@ export default class CommentsView extends React.Component {
                       })
                   }
                 </List> :
-                <Text style={{
-                  flex: 1,
-                  flexDirection: "row",
-                  fontSize: 18,
-                  fontStyle: 'italic',
-                  marginTop: 20,
-                  marginBottom: 20,
-                  textAlign: 'center'
-                }}>
+                <Text style={style.noDataText}>
                   No comments yet - You could be the first!
                 </Text>
               }

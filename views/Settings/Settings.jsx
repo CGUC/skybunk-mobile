@@ -1,7 +1,7 @@
 import React from 'react';
 import { AsyncStorage, ImageBackground, Dimensions, Text } from 'react-native';
 import { Container, Content, List, ListItem } from 'native-base';
-import api from '../ApiClient';
+import api from '../../ApiClient';
 
 export default class SettingsView extends React.Component {
 

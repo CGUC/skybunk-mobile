@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { View, Platform, TouchableOpacity } from 'react-native';
 import {
   Container, Left, Right, Body, Content, Card,
-  CardItem, Text, Button, Thumbnail, Icon, Image
+  CardItem, Text, Thumbnail
 } from 'native-base';
 import _ from 'lodash';
 import { Font, AppLoading } from "expo";
 import date from 'date-fns';
-import ApiClient from '../ApiClient';
-import styles from "../styles/styles";
+import ApiClient from '../../ApiClient';
+import styles from "./PostStyle";
 
 export default class Post extends React.Component {
 
@@ -42,21 +42,6 @@ export default class Post extends React.Component {
     var postId = data._id;
 
     updatePost && updatePost(postId, { content: newContent });
-  }
-
-  getImageJSX() {
-    var {
-      data
-    } = this.props
-
-    var image = data.image ? data.image : null;
-
-    if (image) {
-      // TODO: figure out how images work
-      return <Image source={image} style={{ height: 200, width: 200, flex: 1 }} />
-    } else {
-      return null;
-    }
   }
 
   getEditJSX() {
@@ -100,7 +85,7 @@ export default class Post extends React.Component {
       tags,
     } = data;
 
-    var likeIcon = isLiked ? require('../assets/liked-cookie.png') : require('../assets/cookie-icon.png');
+    var likeIcon = isLiked ? require('../../assets/liked-cookie.png') : require('../../assets/cookie-icon.png');
 
     // In case author account is deleted
     var authorName;
@@ -115,7 +100,7 @@ export default class Post extends React.Component {
     var likes = likes ? likes : 0;
 
     return (
-      <Card style={{ flex: 0, elevation: 0, marginTop: 0, marginBottom: 4 }}>
+      <Card style={styles.card}>
 
         <CardItem>
           <Left>
@@ -128,28 +113,25 @@ export default class Post extends React.Component {
           {/* {this.getEditJSX()} */}
         </CardItem>
 
-        <CardItem button onPress={this.onPressPost} style={{ marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}>
+        <CardItem button onPress={this.onPressPost} style={styles.postContent}>
           <Body>
             {/* {this.getImageJSX()} */}
             <Text numberOfLines={this.props.maxLines} ellipsizeMode='tail'>{content}</Text>
           </Body>
         </CardItem>
 
-        <CardItem style={{ marginTop: 3, marginBottom: 3 }}>
+        <CardItem style={styles.postFooter}>
           <Left>
             <TouchableOpacity onPress={this.toggleLike}>
-              <View style={{ flexDirection: 'row', marginRight: 20 }}>
-                <Thumbnail small square source={likeIcon}
-                  style={{ width: 25, height: 25, marginRight: 0, paddingRight: 0 }}
-                />
+              <View style={styles.iconContainer}>
+                <Thumbnail small square source={likeIcon} style={styles.icon}/>
                 <Text>{`${likes}`}</Text>
               </View>
             </TouchableOpacity>
+
             <TouchableOpacity onPress={this.onPressPost}>
-              <View style={{ flexDirection: 'row' }}>
-                <Thumbnail small square source={require('../assets/comments-icon.png')}
-                  style={{ width: 25, height: 25, marginRight: 0, paddingRight: 0 }}
-                />
+              <View style={styles.iconContainer}>
+                <Thumbnail small square source={require('../../assets/comments-icon.png')} style={styles.icon}/>
                 <Text>{`${numComments}`}</Text>
               </View>
             </TouchableOpacity>

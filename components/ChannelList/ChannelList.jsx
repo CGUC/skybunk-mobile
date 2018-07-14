@@ -4,9 +4,9 @@ import { Container, Text, Button } from 'native-base';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Font, AppLoading } from "expo";
-import ApiClient from '../ApiClient';
+import ApiClient from '../../ApiClient';
 
-import styles from "../styles/styles";
+import styles from "./ChannelListStyle";
 
 const DEFAULT_CHANNELS = [
   { name: 'All Feed', id: 'all' },
@@ -69,17 +69,17 @@ export default class ChannelList extends React.Component {
 
     return (
       _.map(channels, (channel, key) => {
-        let icon = require('../assets/bell-OFF.png');
+        let icon = require('../../assets/bell-OFF.png');
         let opacity = 1;
         const subIndex = this.state.subscribedChannels.indexOf(channel.id);
         if (channel.id === 'subs') {
-          icon = require('../assets/my-subs-bell-Icon.png');
+          icon = require('../../assets/my-subs-bell-Icon.png');
         }
         else if (channel.id === 'all') {
           opacity = 0;
         }
         else if (subIndex !== -1) {
-          icon = require('../assets/Bell-ON.png');
+          icon = require('../../assets/Bell-ON.png');
         }
         
         return (
@@ -89,7 +89,7 @@ export default class ChannelList extends React.Component {
             </TouchableOpacity>
             <TouchableOpacity style={styles.channelListButton} onPress={() => this.onPressChannel(channel.id, channel.name)}>
               <Text style={styles.channelText}>{channel.name}</Text>
-              <Image source={require('../assets/arrowright.png')} style={styles.rightArrow}/>
+              <Image source={require('../../assets/arrowright.png')} style={styles.rightArrow}/>
             </TouchableOpacity>
           </View>
         )

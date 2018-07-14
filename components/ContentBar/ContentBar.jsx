@@ -7,7 +7,7 @@ import {
 } from 'native-base';
 import { StyleSheet } from "react-native";
 
-import CreateResourceModal from './CreateResourceModal';
+import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
 
 const { height, width } = Dimensions.get('window');
 

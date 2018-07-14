@@ -1,7 +1,8 @@
 import React from 'react';
 import { AsyncStorage, ImageBackground, Dimensions } from 'react-native';
 import { Spinner, Container, Content } from 'native-base';
-import api from '../ApiClient';
+import api from '../../ApiClient';
+import style from './SplashStyle';
 
 export default class SplashScreen extends React.Component {
 
@@ -28,11 +29,11 @@ export default class SplashScreen extends React.Component {
   render() {
     return (
       <ImageBackground
-        style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }}
-        source={require('../assets/login-bg.png')}
+        style={style.background}
+        source={require('../../assets/login-bg.png')}
       >
         <Container>
-          <Content contentContainerStyle={{flex: 1, justifyContent:'center'}}>
+          <Content contentContainerStyle={style.contentContainer}>
             <Spinner color='#cd8500' />
           </Content>
         </Container>
