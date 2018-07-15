@@ -5,7 +5,7 @@ import { Container, Content, Text, Button, Input, Item, Spinner } from 'native-b
 import notificationToken from '../../helpers/notificationToken';
 import Banner from '../../components/Banner/Banner';
 import ApiClient from '../../ApiClient';
-import style from './LoginStyle';
+import styles from './LoginStyle';
 
 export default class LoginView extends React.Component {
   static navigationOptions = { header: null };
@@ -146,7 +146,7 @@ export default class LoginView extends React.Component {
     } else {
       return (
         <ImageBackground
-          style={style.background}
+          style={styles.background}
           source={require('../../assets/login-bg.png')}
         >
           <Container>
@@ -158,9 +158,9 @@ export default class LoginView extends React.Component {
                 enabled
               >
                   <Image 
-                    source={require('../../assets/logo.png')}
+                    source={require('../../assets/full-logo.png')}
                     style={styles.loginLogo}
-                    marginBottom={this.state.registering ? 16 : 80}
+                    //marginBottom={this.state.registering ? 16 : 80}
                   /> 
 
                   <Text style={styles.loginTitle}>

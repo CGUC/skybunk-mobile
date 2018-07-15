@@ -9,7 +9,7 @@ export default (styles = StyleSheet.create({
 	    width: 300,
 	    height: 200,
 	    marginTop: 20,
-	    marginBottom: 20,
+	    marginBottom: 10,
 	},
 	loginInputGroup: {
 		alignItems: "center",
