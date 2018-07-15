@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { View, Platform, TouchableOpacity } from 'react-native';
 import {
   Container, Left, Right, Body, Content, Card,
-  CardItem, Text, Thumbnail
+  CardItem, Text, Thumbnail, Button, Icon
 } from 'native-base';
 import _ from 'lodash';
 import { Font, AppLoading } from "expo";
@@ -48,9 +48,11 @@ export default class Post extends React.Component {
     const { enableEditing } = this.props;
 
     if (enableEditing) return (
-      <Right>
-        <Text>Edit Me!</Text>
-      </Right>
+      <View style={styles.headerRight}>
+        <TouchableOpacity onPress={this.onClickEdit} hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}>
+          <Icon style={styles.icon} type='MaterialIcons' name='more-vert' />
+        </TouchableOpacity>
+      </View>
     )
     return null;
   }
@@ -103,14 +105,22 @@ export default class Post extends React.Component {
       <Card style={styles.card}>
 
         <CardItem>
-          <Left>
-            <Thumbnail style={styles.profilePicThumbnail} source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }} />
-            <Body>
-              <Text>{authorName} {this.props.showTag ? ` ►  ${tags[0]}` : null}</Text>
-              <Text note>{createdAt}</Text>
-            </Body>
-          </Left>
-          {/* {this.getEditJSX()} */}
+          {/* Using flexbox here because NativeBase's Left/Body/Right isn't as customizable */}
+          <View style={styles.headerContainer}>
+            <View style={styles.headerLeft}>
+              <View>
+                <Thumbnail style={styles.profilePicThumbnail} source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }} />
+              </View>
+              <View style={styles.headerBody}>
+                <View style={styles.authorDetails}>
+                  <Text>{authorName}</Text>
+                  <Text>{this.props.showTag ? ` ►  ${tags[0]}` : null}</Text>
+                </View>
+                <Text note>{createdAt}</Text>
+              </View>
+            </View>
+            {this.getEditJSX()}
+          </View>
         </CardItem>
 
         <CardItem button onPress={this.onPressPost} style={styles.postContent}>
@@ -124,14 +134,14 @@ export default class Post extends React.Component {
           <Left>
             <TouchableOpacity onPress={this.toggleLike}>
               <View style={styles.iconContainer}>
-                <Thumbnail small square source={likeIcon} style={styles.icon}/>
+                <Thumbnail small square source={likeIcon} style={styles.icon} />
                 <Text>{`${likes}`}</Text>
               </View>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={this.onPressPost}>
               <View style={styles.iconContainer}>
-                <Thumbnail small square source={require('../../assets/comments-icon.png')} style={styles.icon}/>
+                <Thumbnail small square source={require('../../assets/comments-icon.png')} style={styles.icon} />
                 <Text>{`${numComments}`}</Text>
               </View>
             </TouchableOpacity>
