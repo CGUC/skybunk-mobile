@@ -143,9 +143,9 @@ export default class FeedView extends React.Component {
             data.likes++;
             data.usersLiked.push(userId);
           }
-        }
 
-        if (data.likes < 0) data.likes = 0; // (Grebel's a positive community, come on!)
+          if (data.likes < 0) data.likes = 0; // (Grebel's a positive community, come on!)
+        }
 
         api.put(`/posts/${postId}`, { 'Authorization': 'Bearer ' + value }, data)
           .then(() => {
@@ -180,6 +180,7 @@ export default class FeedView extends React.Component {
         <Footer>
           <ContentBar
             addResource={this.addPost}
+            submitButtonText='Post'
           />
         </Footer>
       )
@@ -218,7 +219,7 @@ export default class FeedView extends React.Component {
                   (post, key) => {
 
                     // Allow editing/deleting if logged in user is author of post
-                    var enableEditing = post.author === userId;
+                    var enableEditing = post.author._id === userId;
 
                     return (
                       <Post
@@ -241,11 +242,15 @@ export default class FeedView extends React.Component {
         </Container>
       )
     } else {
+      var message = channelId === 'subs' ? 
+        'Nothing here - try subscribing to a channel!' 
+        : 'No posts yet - you could be the first!';
+        
       return (
         <NoData
-          resourceName={'posts'}
+          message={message}
           addResource={this.addPost}
-          hideFooter={'subs' === channelId}
+          hideFooter={channelId === 'subs'}
         />
       );
     }

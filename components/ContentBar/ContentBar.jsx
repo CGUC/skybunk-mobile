@@ -67,6 +67,7 @@ export default class ContentBar extends React.Component {
           onClose={this.closeModal}
           isModalOpen={this.state.isModalOpen} 
           saveResource={this.saveResource}
+          submitButtonText={this.props.submitButtonText}
         />
       </View>
     )

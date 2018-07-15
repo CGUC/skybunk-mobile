@@ -150,6 +150,9 @@ export default class CommentsView extends React.Component {
       postData,
     } = this.state;
 
+    const userId = this.props.navigation.getParam('userId');
+    var enableEditing = postData.author._id === userId;
+
     var comments = postData.comments;
     
     if (loading) {
@@ -168,6 +171,7 @@ export default class CommentsView extends React.Component {
               data={postData}
               maxLines={1000}
               updatePost={this.updatePost}
+              enableEditing={enableEditing}
             />
             <ScrollView>
               {comments.length ?
@@ -193,6 +197,7 @@ export default class CommentsView extends React.Component {
           <Footer>
             <ContentBar
               addResource={this.addComment}
+              submitButtonText='Comment'
             />
           </Footer>
         </Container>

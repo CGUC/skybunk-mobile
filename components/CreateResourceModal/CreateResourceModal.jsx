@@ -8,15 +8,18 @@ export default class CreateResourceModal extends React.Component {
 
   constructor(props) {
     super(props);
+    var existingText = props.existing;
+
     this.state = {
-      resourceText: ""
+      resourceText: existingText || ""
     };
   }
 
   saveResource = () => {
     const { saveResource } = this.props;
 
-    // If changing the parameter to this function, make sure to update it upstream
+    this.textUpdate("");
+
     return saveResource && saveResource(this.state.resourceText);
   }
 
@@ -24,11 +27,20 @@ export default class CreateResourceModal extends React.Component {
     this.setState({ resourceText: text })
   }
 
+  onCancel = () => {
+    const { onClose } = this.props;
+    this.textUpdate("");
+    onClose();
+  }
+
   render() {
-    const {
+    var {
       onClose,
-      isModalOpen
+      isModalOpen,
+      submitButtonText
     } = this.props;
+
+    if (!submitButtonText) submitButtonText = 'Submit';
 
     return (
       <View>
@@ -49,12 +61,13 @@ export default class CreateResourceModal extends React.Component {
                 placeholder="What's on your mind?"
                 style={styles.textBox}
                 onChangeText={this.textUpdate}
+                value={this.state.resourceText}
               />
               <View style={styles.buttonGroup}>
                 <Button block style={styles.button} onPress={this.saveResource}>
-                  <Text>Post</Text>
+                  <Text>{submitButtonText}</Text>
                 </Button>
-                <Button block style={styles.button} onPress={onClose}>
+                <Button block style={styles.button} onPress={this.onCancel}>
                   <Text>Cancel</Text>
                 </Button>
               </View>
