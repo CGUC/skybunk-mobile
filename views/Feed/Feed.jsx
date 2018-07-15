@@ -218,7 +218,7 @@ export default class FeedView extends React.Component {
                   (post, key) => {
 
                     // Allow editing/deleting if logged in user is author of post
-                    var enableEditing = post.author === userId;
+                    var enableEditing = post.author._id === userId;
 
                     return (
                       <Post
@@ -241,11 +241,15 @@ export default class FeedView extends React.Component {
         </Container>
       )
     } else {
+      var message = channelId === 'subs' ? 
+        'Nothing here - try subscribing to a channel!' 
+        : 'No posts yet - you could be the first!';
+        
       return (
         <NoData
-          resourceName={'posts'}
+          message={message}
           addResource={this.addPost}
-          hideFooter={'subs' === channelId}
+          hideFooter={channelId === 'subs'}
         />
       );
     }
