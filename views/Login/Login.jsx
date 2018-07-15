@@ -50,7 +50,7 @@ export default class LoginView extends React.Component {
   submitForm() {
     // Register the user
     if (this.state.registering) {
-      this.setState({processing:true});
+      this.setState({ processing: true });
       ApiClient.post('/users', {}, {
         username: this.state.username,
         password: this.state.password,
@@ -58,68 +58,68 @@ export default class LoginView extends React.Component {
         lastName: this.state.lastName,
         goldenTicket: this.state.goldenTicket,
       })
-      .then(response => response.json())
-      .then(jsonResponse => {
-        if (jsonResponse.message) {
-          this.setState({
-            errorMessage: jsonResponse.message, // TODO: Fix error from server and update here
-            processing: false,
-            successMessage: null,
-          });
-        }
-        else {
-          this.setState({
-            firstName: null,
-            lastName: null,
-            goldenTicket: null,
-            registering: false,
-            processing: false,
-            errorMessage: null,
-            successMessage: 'Account successfully created'
-          });
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
+        .then(response => response.json())
+        .then(jsonResponse => {
+          if (jsonResponse.message) {
+            this.setState({
+              errorMessage: jsonResponse.message, // TODO: Fix error from server and update here
+              processing: false,
+              successMessage: null,
+            });
+          }
+          else {
+            this.setState({
+              firstName: null,
+              lastName: null,
+              goldenTicket: null,
+              registering: false,
+              processing: false,
+              errorMessage: null,
+              successMessage: 'Account successfully created'
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
     // Login the user
     else {
-      this.setState({processing:true});
+      this.setState({ processing: true });
       ApiClient.post('/users/login', {}, {
         username: this.state.username,
         password: this.state.password,
       })
-      .then(response => response.json())
-      .then(jsonResponse => {
-        if (jsonResponse.err) {
-          this.setState({
-            errorMessage: jsonResponse.err.message,
-            succesMessage: null,
-            processing: false,
-          });
-        }
-        else {
-          AsyncStorage.setItem('@Skybunk:token', jsonResponse.token).then(() => {
-            ApiClient.get('/users/loggedInUser', { 'Authorization': 'Bearer ' + jsonResponse.token }).then(user => {
-              notificationToken.registerForPushNotificationsAsync(user, jsonResponse.token);
-            })
-            .catch(err => console.log(err));
-
-            this.props.navigation.navigate('App');
-          }).catch(error => {
-            console.log(error);
+        .then(response => response.json())
+        .then(jsonResponse => {
+          if (jsonResponse.err) {
             this.setState({
-              errorMessage: 'Sorry, there was an error logging you in',
-              successMessage: null,
+              errorMessage: jsonResponse.err.message,
+              succesMessage: null,
               processing: false,
             });
-          });
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
+          }
+          else {
+            AsyncStorage.setItem('@Skybunk:token', jsonResponse.token).then(() => {
+              ApiClient.get('/users/loggedInUser', { 'Authorization': 'Bearer ' + jsonResponse.token }).then(user => {
+                notificationToken.registerForPushNotificationsAsync(user, jsonResponse.token);
+              })
+                .catch(err => console.log(err));
+
+              this.props.navigation.navigate('App');
+            }).catch(error => {
+              console.log(error);
+              this.setState({
+                errorMessage: 'Sorry, there was an error logging you in',
+                successMessage: null,
+                processing: false,
+              });
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 
@@ -150,55 +150,55 @@ export default class LoginView extends React.Component {
           source={require('../../assets/login-bg.png')}
         >
           <Container>
-            <Content contentContainerStyle={{flex: 1, alignItems: 'center'}}>
+            <Content contentContainerStyle={{ flex: 1, alignItems: 'center' }}>
               <KeyboardAvoidingView
                 style={styles.loginInputGroup}
                 flex={this.state.registering ? 0.8 : 0.65}
                 behavior='padding'
                 enabled
               >
-                  <Image 
-                    source={require('../../assets/full-logo.png')}
-                    style={styles.loginLogo}
-                    //marginBottom={this.state.registering ? 16 : 80}
-                  /> 
+                <Image
+                  source={require('../../assets/full-logo.png')}
+                  style={styles.loginLogo}
+                //marginBottom={this.state.registering ? 16 : 80}
+                />
 
-                  <Text style={styles.loginTitle}>
-                    {this.state.registering ? 'Register' : 'Sign In' }
-                  </Text>
+                <Text style={styles.loginTitle}>
+                  {this.state.registering ? 'Register' : 'Sign In'}
+                </Text>
 
-                  <Item regular last style={styles.inputItem}>
-                    <Input 
-                      placeholder='Username' 
-                      onChangeText={(this.updateFormStateFunc('username'))}
-                    />
-                  </Item>
-                  <Item regular style={styles.inputItem}>
-                    <Input
-                      placeholder='Password'
-                      secureTextEntry 
-                      onChangeText={(this.updateFormStateFunc('password'))}
-                    />
-                  </Item>
+                <Item regular last style={styles.inputItem}>
+                  <Input
+                    placeholder='Username'
+                    onChangeText={(this.updateFormStateFunc('username'))}
+                  />
+                </Item>
+                <Item regular style={styles.inputItem}>
+                  <Input
+                    placeholder='Password'
+                    secureTextEntry
+                    onChangeText={(this.updateFormStateFunc('password'))}
+                  />
+                </Item>
 
-                  {this.state.registering ? registerFields : null}
+                {this.state.registering ? registerFields : null}
               </KeyboardAvoidingView>
 
-              <View 
+              <View
                 style={styles.loginButtonsGroup}
                 flex={this.state.registering ? 0.2 : 0.35}
               >
                 {this.state.errorMessage ? <Banner error message={this.state.errorMessage} /> : null}
                 {this.state.successMessage ? <Banner success message={this.state.successMessage} /> : null}
 
-                <Button 
-                  block 
+                <Button
+                  block
                   onPress={this.submitForm.bind(this)}
                   style={styles.loginButton}
                 >
                   <Text>{this.state.registering ? 'Register' : 'Login'}</Text>
                 </Button>
-                <Button 
+                <Button
                   transparent
                   block
                   dark

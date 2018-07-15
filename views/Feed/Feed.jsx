@@ -143,9 +143,9 @@ export default class FeedView extends React.Component {
             data.likes++;
             data.usersLiked.push(userId);
           }
-        }
 
-        if (data.likes < 0) data.likes = 0; // (Grebel's a positive community, come on!)
+          if (data.likes < 0) data.likes = 0; // (Grebel's a positive community, come on!)
+        }
 
         api.put(`/posts/${postId}`, { 'Authorization': 'Bearer ' + value }, data)
           .then(() => {
@@ -180,6 +180,7 @@ export default class FeedView extends React.Component {
         <Footer>
           <ContentBar
             addResource={this.addPost}
+            submitButtonText='Post'
           />
         </Footer>
       )

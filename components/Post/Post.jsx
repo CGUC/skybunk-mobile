@@ -8,6 +8,8 @@ import {
 import _ from 'lodash';
 import { Font, AppLoading } from "expo";
 import date from 'date-fns';
+
+import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
 import ApiClient from '../../ApiClient';
 import styles from "./PostStyle";
 
@@ -18,6 +20,7 @@ export default class Post extends React.Component {
 
     this.state = {
       profilePicture: null,
+      editing: false,
     }
   }
 
@@ -36,15 +39,7 @@ export default class Post extends React.Component {
     });
   }
 
-  // TODO: implement editing
-  editPost = (newContent) => {
-    const { updatePost, data } = this.props;
-    var postId = data._id;
-
-    updatePost && updatePost(postId, { content: newContent });
-  }
-
-  getEditJSX() {
+  getEditButtonJSX() {
     const { enableEditing } = this.props;
 
     if (enableEditing) return (
@@ -55,6 +50,27 @@ export default class Post extends React.Component {
       </View>
     )
     return null;
+  }
+
+  saveEdited = (newContent) => {
+    const { updatePost, data } = this.props;
+    var postId = data._id;
+    var postData = {
+      ...data,
+      content: newContent
+    }
+
+    this.closeModal();
+
+    updatePost && updatePost(postId, { content: newContent });
+  }
+
+  onClickEdit = () => {
+    this.setState({ editing: true });
+  }
+
+  closeModal = () => {
+    this.setState({ editing: false });
   }
 
   onPressPost = () => {
@@ -73,6 +89,10 @@ export default class Post extends React.Component {
   }
 
   render() {
+    const {
+      editing
+    } = this.state;
+
     const {
       data
     } = this.props;
@@ -102,53 +122,63 @@ export default class Post extends React.Component {
     var likes = likes ? likes : 0;
 
     return (
-      <Card style={styles.card}>
+      <View>
+        <Card style={styles.card}>
 
-        <CardItem>
-          {/* Using flexbox here because NativeBase's Left/Body/Right isn't as customizable */}
-          <View style={styles.headerContainer}>
-            <View style={styles.headerLeft}>
-              <View>
-                <Thumbnail style={styles.profilePicThumbnail} source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }} />
-              </View>
-              <View style={styles.headerBody}>
-                <View style={styles.authorDetails}>
-                  <Text>{authorName}</Text>
-                  <Text>{this.props.showTag ? ` ►  ${tags[0]}` : null}</Text>
+          <CardItem>
+            {/* Using flexbox here because NativeBase's Left/Body/Right isn't as customizable */}
+            <View style={styles.headerContainer}>
+              <View style={styles.headerLeft}>
+                <View>
+                  <Thumbnail style={styles.profilePicThumbnail} source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }} />
                 </View>
-                <Text note>{createdAt}</Text>
+                <View style={styles.headerBody}>
+                  <View style={styles.authorDetails}>
+                    <Text>{authorName}</Text>
+                    <Text>{this.props.showTag ? ` ►  ${tags[0]}` : null}</Text>
+                  </View>
+                  <Text note>{createdAt}</Text>
+                </View>
               </View>
+              {this.getEditButtonJSX()}
             </View>
-            {this.getEditJSX()}
-          </View>
-        </CardItem>
+          </CardItem>
 
-        <CardItem button onPress={this.onPressPost} style={styles.postContent}>
-          <Body>
-            {/* {this.getImageJSX()} */}
-            <Text numberOfLines={this.props.maxLines} ellipsizeMode='tail'>{content}</Text>
-          </Body>
-        </CardItem>
+          <CardItem button onPress={this.onPressPost} style={styles.postContent}>
+            <Body>
+              {/* {this.getImageJSX()} */}
+              <Text numberOfLines={this.props.maxLines} ellipsizeMode='tail'>{content}</Text>
+            </Body>
+          </CardItem>
 
-        <CardItem style={styles.postFooter}>
-          <Left>
-            <TouchableOpacity onPress={this.toggleLike}>
-              <View style={styles.iconContainer}>
-                <Thumbnail small square source={likeIcon} style={styles.icon} />
-                <Text>{`${likes}`}</Text>
-              </View>
-            </TouchableOpacity>
+          <CardItem style={styles.postFooter}>
+            <Left>
+              <TouchableOpacity onPress={this.toggleLike}>
+                <View style={styles.iconContainer}>
+                  <Thumbnail small square source={likeIcon} style={styles.icon} />
+                  <Text>{`${likes}`}</Text>
+                </View>
+              </TouchableOpacity>
 
-            <TouchableOpacity onPress={this.onPressPost}>
-              <View style={styles.iconContainer}>
-                <Thumbnail small square source={require('../../assets/comments-icon.png')} style={styles.icon} />
-                <Text>{`${numComments}`}</Text>
-              </View>
-            </TouchableOpacity>
-          </Left>
-        </CardItem>
+              <TouchableOpacity onPress={this.onPressPost}>
+                <View style={styles.iconContainer}>
+                  <Thumbnail small square source={require('../../assets/comments-icon.png')} style={styles.icon} />
+                  <Text>{`${numComments}`}</Text>
+                </View>
+              </TouchableOpacity>
+            </Left>
+          </CardItem>
 
-      </Card>
+        </Card>
+
+        <CreateResourceModal
+          onClose={this.closeModal}
+          isModalOpen={editing}
+          saveResource={this.saveEdited}
+          existing={content}
+          submitButtonText='Save'
+        />
+      </View>
     )
   }
 }
