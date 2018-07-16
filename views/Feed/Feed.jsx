@@ -75,7 +75,7 @@ export default class FeedView extends React.Component {
       .then(response => {
         // Track if each post has been liked by user
         var posts = _.map(response, post => {
-          if (post.usersLiked.includes(userId)){
+          if (post.usersLiked.includes(userId)) {
             post.isLiked = true;
           } else post.isLiked = false;
           return post;
@@ -145,6 +145,15 @@ export default class FeedView extends React.Component {
           }
 
           if (data.likes < 0) data.likes = 0; // (Grebel's a positive community, come on!)
+
+        } else if (type === 'deletePost') {
+          return api.delete(`/posts/${postId}`, { 'Authorization': 'Bearer ' + value })
+            .then(() => {
+              this.loadData();
+            })
+            .catch(err => {
+              alert("Error deleting post. Sorry about that!")
+            });
         }
 
         api.put(`/posts/${postId}`, { 'Authorization': 'Bearer ' + value }, data)
@@ -152,7 +161,7 @@ export default class FeedView extends React.Component {
             this.loadData();
           })
           .catch(err => {
-            alert("Error updating post");
+            alert("Error updating post. Sorry about that!");
           });
       })
       .catch(error => {
@@ -242,10 +251,10 @@ export default class FeedView extends React.Component {
         </Container>
       )
     } else {
-      var message = channelId === 'subs' ? 
-        'Nothing here - try subscribing to a channel!' 
+      var message = channelId === 'subs' ?
+        'Nothing here - try subscribing to a channel!'
         : 'No posts yet - you could be the first!';
-        
+
       return (
         <NoData
           message={message}

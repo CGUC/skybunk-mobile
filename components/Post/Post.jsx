@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Platform, TouchableOpacity } from 'react-native';
+import { View, Platform, TouchableOpacity, Modal } from 'react-native';
 import {
   Container, Left, Right, Body, Content, Card,
   CardItem, Text, Thumbnail, Button, Icon
@@ -20,6 +20,7 @@ export default class Post extends React.Component {
 
     this.state = {
       profilePicture: null,
+      showEditButtons: false,
       editing: false,
     }
   }
@@ -39,38 +40,40 @@ export default class Post extends React.Component {
     });
   }
 
-  getEditButtonJSX() {
-    const { enableEditing } = this.props;
+  onPressOptions = () => {
+    this.setState({ showEditButtons: true });
+  }
 
-    if (enableEditing) return (
-      <View style={styles.headerRight}>
-        <TouchableOpacity onPress={this.onClickEdit} hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}>
-          <Icon style={styles.icon} type='MaterialIcons' name='more-vert' />
-        </TouchableOpacity>
-      </View>
-    )
-    return null;
+  hideEditButtons = () => {
+    this.setState({ showEditButtons: false });
+  }
+
+  onPressEdit = () => {
+    this.setState({ editing: true })
+    this.hideEditButtons();
   }
 
   saveEdited = (newContent) => {
     const { updatePost, data } = this.props;
     var postId = data._id;
-    var postData = {
-      ...data,
-      content: newContent
-    }
 
-    this.closeModal();
+    this.closeEditingModal();
 
     updatePost && updatePost(postId, { content: newContent });
   }
 
-  onClickEdit = () => {
-    this.setState({ editing: true });
+  closeEditingModal = () => {
+    this.setState({ editing: false });
   }
 
-  closeModal = () => {
-    this.setState({ editing: false });
+  onPressDelete = () => {
+    const { updatePost, data } = this.props;
+
+    var postId = data._id;
+
+    this.hideEditButtons();
+
+    updatePost && updatePost(postId, {}, "deletePost");
   }
 
   onPressPost = () => {
@@ -88,8 +91,22 @@ export default class Post extends React.Component {
     updatePost && updatePost(postData._id, postData, 'toggleLike');
   }
 
+  getEditButtonJSX() {
+    const { enableEditing } = this.props;
+
+    if (enableEditing) return (
+      <View style={styles.headerRight}>
+        <TouchableOpacity onPress={this.onPressOptions} hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}>
+          <Icon style={styles.icon} type='MaterialIcons' name='more-vert' />
+        </TouchableOpacity>
+      </View>
+    )
+    return null;
+  }
+
   render() {
     const {
+      showEditButtons,
       editing
     } = this.state;
 
@@ -128,6 +145,7 @@ export default class Post extends React.Component {
           <CardItem>
             {/* Using flexbox here because NativeBase's Left/Body/Right isn't as customizable */}
             <View style={styles.headerContainer}>
+
               <View style={styles.headerLeft}>
                 <View>
                   <Thumbnail style={styles.profilePicThumbnail} source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }} />
@@ -140,7 +158,9 @@ export default class Post extends React.Component {
                   <Text note>{createdAt}</Text>
                 </View>
               </View>
+
               {this.getEditButtonJSX()}
+
             </View>
           </CardItem>
 
@@ -171,8 +191,32 @@ export default class Post extends React.Component {
 
         </Card>
 
+        <View>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={showEditButtons}
+            onRequestClose={this.hideEditButtons}
+          >
+            <TouchableOpacity
+              activeOpacity={1}
+              style={styles.editButtonsContainer}
+              onPress={this.hideEditButtons}
+            >
+              <View style={styles.view}>
+                <Button block style={styles.editButton} onPress={this.onPressEdit}>
+                  <Text>Edit Post</Text>
+                </Button>
+                <Button block style={styles.deleteButton} onPress={this.onPressDelete}>
+                  <Text>Delete Post</Text>
+                </Button>
+              </View>
+            </TouchableOpacity>
+          </Modal>
+        </View>
+
         <CreateResourceModal
-          onClose={this.closeModal}
+          onClose={this.closeEditingModal}
           isModalOpen={editing}
           saveResource={this.saveEdited}
           existing={content}
