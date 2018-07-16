@@ -73,11 +73,7 @@ export default class CommentsView extends React.Component {
       });
   }
 
-  /**
-   * TODO This is completely replicated logic from Feed's updatePost,
-   * should be reused from somehwere else
-   */
-  updatePost = async (postId, data, type) => {
+  updateResource = async (id, data, type) => {
 
     const {
       navigation,
@@ -85,6 +81,7 @@ export default class CommentsView extends React.Component {
 
     const userId = navigation.getParam('userId');
     const reloadParent = navigation.getParam('reloadParent');
+    const postData = navigation.getParam('postData');
 
     AsyncStorage.getItem('@Skybunk:token')
       .then(value => {
@@ -98,18 +95,38 @@ export default class CommentsView extends React.Component {
             data.likes++;
             data.usersLiked.push(userId);
           }
+
+          if (data.likes < 0) data.likes = 0;
+
+          api.put(`/posts/${id}`, { 'Authorization': 'Bearer ' + value }, data)
+            .then(() => {
+              this.loadData();
+              reloadParent();
+            })
+            .catch(err => {
+              alert("Error updating post. Sorry about that!");
+            });
+
+        } else if (type === 'updateComment') {
+          api.put(`/posts/${postData._id}/comment/${id}`, { 'Authorization': 'Bearer ' + value }, data)
+            .then(() => {
+              this.loadData();
+              reloadParent();
+            })
+            .catch(err => {
+              alert("Error updating comment. Sorry about that!");
+            });
+
+        } else if (type === 'deleteComment') {
+          api.delete(`/posts/${postData._id}/comment/${id}`,  { 'Authorization': 'Bearer ' + value })
+            .then(() => {
+              this.loadData();
+              reloadParent();
+            })
+            .catch(err => {
+              alert("Error deleting comment. Sorry about that!")
+            });
         }
-
-        if (data.likes < 0) data.likes = 0;
-
-        api.put(`/posts/${postId}`, { 'Authorization': 'Bearer ' + value }, data)
-          .then(() => {
-            this.loadData();
-            reloadParent();
-          })
-          .catch(err => {
-            alert("Error updating post");
-          });
       })
       .catch(error => {
         this.props.navigation.navigate('Auth');
@@ -151,10 +168,10 @@ export default class CommentsView extends React.Component {
     } = this.state;
 
     const userId = this.props.navigation.getParam('userId');
-    var enableEditing = postData.author._id === userId;
+    var enablePostEditing = postData.author._id === userId;
 
     var comments = postData.comments;
-    
+
     if (loading) {
       return (
         <Container>
@@ -170,24 +187,25 @@ export default class CommentsView extends React.Component {
             <Post
               data={postData}
               maxLines={1000}
-              updatePost={this.updatePost}
-              enableEditing={enableEditing}
+              updatePost={this.updateResource}
+              enableEditing={enablePostEditing}
             />
             <ScrollView>
               {comments.length ?
-                <List>
-                  {
-                    _.map(_.orderBy(comments, comment => comment.createdAt.valueOf()),
-                      (comment, key) => {
-                        return (
-                          <Comment
-                            key={`comment${key}`}
-                            data={comment}
-                          />
-                        )
-                      })
-                  }
-                </List> :
+                _.map(_.orderBy(comments, comment => comment.createdAt.valueOf()),
+                  (comment, key) => {
+                    var enableCommentEditing = comment.author._id === userId;
+
+                    return (
+                      <Comment
+                        key={`comment${key}`}
+                        data={comment}
+                        updateComment={this.updateResource}
+                        enableEditing={enableCommentEditing}
+                      />
+                    )
+                  })
+                :
                 <Text style={style.noDataText}>
                   No comments yet - You could be the first!
                 </Text>

@@ -1,4 +1,5 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
+const { height, width } = Dimensions.get('window');
 
 export default (styles = StyleSheet.create({
 	profilePicThumbnail: {
@@ -66,5 +67,30 @@ export default (styles = StyleSheet.create({
 	headerRight: {
 		alignSelf: 'flex-start',
 		paddingTop: 6
-	}
+	},
+	editButtonsContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: '#00000050'
+  },
+  view: {
+    width: width,
+    height: 100
+  },
+  editButton: {
+    marginTop: 5,
+    height: 40,
+    marginLeft: 5,
+    marginRight: 5,
+    backgroundColor: '#71d3d1',
+  },
+  deleteButton: {
+    marginTop: 5,
+    height: 40,
+    marginLeft: 5,
+    marginRight: 5,
+    backgroundColor: 'red',
+  }
 }));

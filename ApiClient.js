@@ -86,8 +86,15 @@ export default class ApiClient {
 		});
 	}
 
-	static delete(endpoint) {
-		return fetch(`${config.API_ADDRESS}${endpoint}`, { method: 'DELETE' })
+	static delete(endpoint, headers) {
+		return fetch(`${config.API_ADDRESS}${endpoint}`, {
+			method: 'DELETE',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+				...headers,
+			}
+		})
 		.catch(err => {
 			err = err.replace(/</g, '').replace(/>/g, '');
 			console.error(err);
