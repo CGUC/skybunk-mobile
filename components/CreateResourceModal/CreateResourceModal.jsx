@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Modal, TouchableOpacity } from 'react-native';
+import { View, Modal, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { Text, Button, Textarea } from 'native-base';
 import styles from './CreateResourceModalStyle';
 
@@ -50,14 +50,18 @@ export default class CreateResourceModal extends React.Component {
           visible={isModalOpen}
           onRequestClose={onClose}
         >
-          <TouchableOpacity 
+          <TouchableOpacity
             activeOpacity={1}
-            style={styles.modal} 
+            style={styles.modal}
             onPress={onClose}
           >
-            <View style={styles.view}>
+            <KeyboardAvoidingView
+              style={styles.view}
+              behavior='padding'
+              enabled
+            >
               <Textarea
-                bordered 
+                bordered
                 placeholder="What's on your mind?"
                 style={styles.textBox}
                 onChangeText={this.textUpdate}
@@ -71,7 +75,7 @@ export default class CreateResourceModal extends React.Component {
                   <Text>Cancel</Text>
                 </Button>
               </View>
-            </View>
+            </KeyboardAvoidingView>
           </TouchableOpacity>
         </Modal>
       </View>
