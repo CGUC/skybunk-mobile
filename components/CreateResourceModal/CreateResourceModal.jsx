@@ -43,23 +43,22 @@ export default class CreateResourceModal extends React.Component {
     if (!submitButtonText) submitButtonText = 'Submit';
 
     return (
-      <View>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={isModalOpen}
-          onRequestClose={onClose}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalOpen}
+        onRequestClose={onClose}
+      >
+        <TouchableOpacity
+          activeOpacity={1}
+          style={styles.modal}
+          onPress={onClose}
         >
-          <TouchableOpacity
-            activeOpacity={1}
-            style={styles.modal}
-            onPress={onClose}
+          <KeyboardAvoidingView
+            behavior='padding'
+            enabled
           >
-            <KeyboardAvoidingView
-              style={styles.view}
-              behavior='padding'
-              enabled
-            >
+            <View style={styles.view}>
               <Textarea
                 bordered
                 placeholder="What's on your mind?"
@@ -75,10 +74,10 @@ export default class CreateResourceModal extends React.Component {
                   <Text>Cancel</Text>
                 </Button>
               </View>
-            </KeyboardAvoidingView>
-          </TouchableOpacity>
-        </Modal>
-      </View>
+            </View>
+          </KeyboardAvoidingView>
+        </TouchableOpacity>
+      </Modal>
     )
   }
 }
