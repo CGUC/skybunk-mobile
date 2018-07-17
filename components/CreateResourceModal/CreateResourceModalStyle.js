@@ -34,5 +34,8 @@ export default (styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
     backgroundColor: '#71d3d1',
+  },
+  gestureRecognizer: {
+    backgroundColor: 'rgba(220, 20, 60, 60.0)',
   }
 }));
