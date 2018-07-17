@@ -1,15 +1,19 @@
-{
+  {
   "expo": {
     "name": "Skybunk",
-    "icon": "./assets/app-icon.png",
     "primaryColor": "#71d3d1",
     "version": "0.0.3",
     "sdkVersion": "27.0.0",
+    "icon": "./assets/ios-logo.png",
     "ios": {
       "bundleIdentifier": "com.grebel.skybunk"
     },
     "android": {
-      "package": "com.grebel.skybunk"
+      "package": "com.grebel.skybunk",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/android-fgd.png",
+        "backgroundImage": "./assets/android-bkg.png"
+      }
     },
     "notification": {
       "icon": "./assets/notif-icon.png",
