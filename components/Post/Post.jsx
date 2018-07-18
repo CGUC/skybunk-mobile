@@ -59,7 +59,7 @@ export default class Post extends React.Component {
 
     this.closeEditingModal();
 
-    updatePost && updatePost(postId, { content: newContent });
+    updatePost && updatePost(postId, { content: newContent }, 'editPost');
   }
 
   closeEditingModal = () => {

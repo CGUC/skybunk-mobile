@@ -126,44 +126,58 @@ export default class FeedView extends React.Component {
 
     const userId = navigation.getParam('userId');
 
+    if (type === 'toggleLike') {
+
+      // Data should be post object
+
+      /**
+       * Toggle likes; if user has already liked post, this would be 'unliking' it.
+       * TODO: set like icon to 'liked' state so user knows whether they have liked post
+       */
+      if (data.usersLiked.includes(userId)) {
+        data.likes--;
+        data.usersLiked = _.filter(data.usersLiked, user => user !== userId);
+        data.isLiked = false;
+      } else {
+        data.likes++;
+        data.usersLiked.push(userId);
+        data.isLiked = true;
+      }
+
+      if (data.likes < 0) data.likes = 0; // (Grebel's a positive community, come on!)
+
+      this.setState({
+        posts: this.state.posts.map(post => {
+          if (post._id === postId) return data;
+          return post;
+        })
+      });
+    }
+
     AsyncStorage.getItem('@Skybunk:token')
       .then(value => {
 
-        if (type === 'toggleLike') {
-
-          // Data should be post object
-
-          /**
-           * Toggle likes; if user has already liked post, this would be 'unliking' it.
-           * TODO: set like icon to 'liked' state so user knows whether they have liked post
-           */
-          if (data.usersLiked.includes(userId)) {
-            data.likes--;
-            data.usersLiked = _.filter(data.usersLiked, user => user !== userId);
-            data.isLiked = false;
-          } else {
-            data.likes++;
-            data.usersLiked.push(userId);
-            data.isLiked = true;
-          }
-
-          if (data.likes < 0) data.likes = 0; // (Grebel's a positive community, come on!)
-
-          this.setState({
-            posts: this.state.posts.map(post => {
-              if (post._id === postId) return data;
-              return post;
-            })
-          });
-
-        } else if (type === 'deletePost') {
+        if (type === 'deletePost') {
           return api.delete(`/posts/${postId}`, { 'Authorization': 'Bearer ' + value })
             .then(() => {
-              this.loadData();
+              this.setState({
+                posts: this.state.posts.filter(post => {
+                  return post._id !== postId;
+                })
+              });
             })
             .catch(err => {
               alert("Error deleting post. Sorry about that!")
             });
+        }
+        else if (type === 'editPost') {
+          this.setState({
+            posts: this.state.posts.map(post => {
+              if (post._id === postId) 
+                post.content = data.content;
+              return post;
+            })
+          });
         }
 
         api.put(`/posts/${postId}`, { 'Authorization': 'Bearer ' + value }, data)
