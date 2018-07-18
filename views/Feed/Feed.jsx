@@ -6,13 +6,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { ScrollView, AsyncStorage } from 'react-native';
-import { Container, Footer, Content, Spinner } from 'native-base';
+import { FlatList, AsyncStorage, View } from 'react-native';
+import { Container, Footer, Content, Spinner, Text } from 'native-base';
 import { Font, AppLoading } from "expo";
 import ContentBar from '../../components/ContentBar/ContentBar';
 import Post from '../../components/Post/Post';
 import NoData from '../../components/NoData/NoData';
 import api from '../../ApiClient';
+import styles from './FeedStyle';
 
 export default class FeedView extends React.Component {
 
@@ -36,6 +37,9 @@ export default class FeedView extends React.Component {
       posts: [],
       loading: true,
       user: {},
+      loadingPage: false,
+      page: 1,
+      loadedLastPage: false,
     }
   }
 
@@ -51,41 +55,38 @@ export default class FeedView extends React.Component {
     this.setState({ loading: false });
   }
 
-  loadData = async () => {
-    const {
-      navigation,
-    } = this.props;
-
-    var channel = navigation.getParam('channel');
-    const userId = navigation.getParam('userId');
-
+  getUri() {
+    var channel = this.props.navigation.getParam('channel');
     if (!channel) channel = { _id: 'all' };
-    var channelId = channel._id;
 
-    let uri;
-    if ('all' === channelId) {
-      uri = '/posts'
+    if ('all' === channel._id) {
+      return '/posts'
     }
-    else if ('subs' === channelId) {
-      uri = `/users/${userId}/subscribedChannels/posts`;
+    else if ('subs' === channel._id) {
+      return `/users/${this.props.navigation.getParam('userId')}/subscribedChannels/posts`;
     }
-    else uri = `/channels/${channelId}/posts`;
+    return `/channels/${channel._id}/posts`;
+  }
 
-    await api.get(uri)
-      .then(response => {
-        // Track if each post has been liked by user
-        var posts = _.map(response, post => {
-          if (post.usersLiked.includes(userId)) {
-            post.isLiked = true;
-          } else post.isLiked = false;
-          return post;
-        });
-
-        this.setState({ posts });
-      })
-      .catch((err) => {
-        console.error(err);
+  loadData = async () => {
+    this.setState({loading: true});
+    await api.get(this.getUri())
+    .then(response => {
+      var posts = _.map(response, post => {
+        if (post.usersLiked.includes(this.props.navigation.getParam('userId'))) {
+          post.isLiked = true;
+        } else post.isLiked = false;
+        return post;
       });
+
+      this.setState({
+        posts: response,
+        loading: false,
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+    });
   }
 
   addPost = (data) => {
@@ -197,6 +198,60 @@ export default class FeedView extends React.Component {
     return null;
   }
 
+  buildListItems() {
+    items = this.state.posts.map(post => {
+      post.key = post._id;
+      return post;
+    });
+    return items;
+  }
+
+  renderListItem = ({item}) => {
+    var enableEditing = item.author._id === this.props.navigation.getParam('userId');
+
+    return (
+      <Post
+        data={item}
+        maxLines={10}
+        key={item._id}
+        onPressPost={this.onPressPost}
+        updatePost={this.updatePost}
+        showTag={false}
+        enableEditing={enableEditing}
+      />
+    );
+  }
+
+  loadNextPage = async () => {
+    if (this.state.loadingPage || this.state.loadedLastPage) return;
+    this.setState({
+      page: this.state.page+1,
+      loadingPage: true,
+    }, state =>
+      api.get(this.getUri(), {'page': this.state.page}).then(response => {
+        this.setState({ 
+          posts: [...this.state.posts, ...response],
+          loadingPage: false,
+          loadedLastPage: response.length < 15
+        });
+      })
+      .catch((err) => {
+        console.log('Done Loading from error!');
+        console.error(err);
+      })
+    );
+  }
+
+  listFooter = () => {
+    if (this.state.loadingPage) {
+      return <Spinner color='#cd8500'/>;
+    }
+    else if (this.state.loadedLastPage) {
+      return <Text style={styles.noMorePosts}>No more posts!</Text>;
+    }
+    else return null;
+  }
+
   render() {
     const {
       posts,
@@ -221,30 +276,17 @@ export default class FeedView extends React.Component {
     } else if (posts.length) {
       return (
         <Container>
-          <Content>
-            <ScrollView>
-              {
-                _.map(_.orderBy(posts, post => post.createdAt.valueOf(), ['desc']),
-                  (post, key) => {
-
-                    // Allow editing/deleting if logged in user is author of post
-                    var enableEditing = post.author._id === userId;
-
-                    return (
-                      <Post
-                        key={`post${key}`}
-                        data={post}
-                        maxLines={10}
-                        onPressPost={this.onPressPost}
-                        updatePost={this.updatePost}
-                        showTag={['all', 'subs'].includes(channelId)}
-                        enableEditing={enableEditing}
-                      />
-                    )
-                  })
-              }
-            </ScrollView>
-          </Content>
+          <View>
+            <FlatList
+              data={this.buildListItems()}
+              renderItem={this.renderListItem}
+              onEndReached={this.loadNextPage}
+              ListFooterComponent={this.listFooter()}
+              refreshing={this.state.loading}
+              onRefresh={this.loadData}
+              onEndReachedThreshold={0.8}
+            />
+          </View>
 
           {this.getFooterJSX()}
 

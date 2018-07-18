@@ -31,7 +31,7 @@ export default class Post extends React.Component {
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
 
-    ApiClient.get(`/users/${this.props.data.author._id}/profilePicture`, {}).then(pic => {
+    await ApiClient.get(`/users/${this.props.data.author._id}/profilePicture`, {}).then(pic => {
       this.setState({
         profilePicture: pic,
       });
