@@ -140,12 +140,21 @@ export default class FeedView extends React.Component {
           if (data.usersLiked.includes(userId)) {
             data.likes--;
             data.usersLiked = _.filter(data.usersLiked, user => user !== userId);
+            data.isLiked = false;
           } else {
             data.likes++;
             data.usersLiked.push(userId);
+            data.isLiked = true;
           }
 
           if (data.likes < 0) data.likes = 0; // (Grebel's a positive community, come on!)
+
+          this.setState({
+            posts: this.state.posts.map(post => {
+              if (post._id === postId) return data;
+              return post;
+            })
+          });
 
         } else if (type === 'deletePost') {
           return api.delete(`/posts/${postId}`, { 'Authorization': 'Bearer ' + value })
@@ -159,13 +168,14 @@ export default class FeedView extends React.Component {
 
         api.put(`/posts/${postId}`, { 'Authorization': 'Bearer ' + value }, data)
           .then(() => {
-            this.loadData();
+            //this.loadData();
           })
           .catch(err => {
             alert("Error updating post. Sorry about that!");
           });
       })
       .catch(error => {
+        console.log(error);
         this.props.navigation.navigate('Auth');
       });
   }
