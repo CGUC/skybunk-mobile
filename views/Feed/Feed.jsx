@@ -207,7 +207,8 @@ export default class FeedView extends React.Component {
   }
 
   renderListItem = ({item}) => {
-    var enableEditing = item.author._id === this.props.navigation.getParam('userId');
+    const enableEditing = item.author._id === this.props.navigation.getParam('userId');
+    const channelId = this.props.navigation.getParam('channel')._id;
 
     return (
       <Post
@@ -216,7 +217,7 @@ export default class FeedView extends React.Component {
         key={item._id}
         onPressPost={this.onPressPost}
         updatePost={this.updatePost}
-        showTag={false}
+        showTag={channelId === 'all' || channelId === 'subs'}
         enableEditing={enableEditing}
       />
     );
@@ -236,7 +237,6 @@ export default class FeedView extends React.Component {
         });
       })
       .catch((err) => {
-        console.log('Done Loading from error!');
         console.error(err);
       })
     );
