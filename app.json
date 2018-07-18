@@ -3,7 +3,7 @@
     "name": "Skybunk",
     "icon": "./assets/app-icon.png",
     "primaryColor": "#71d3d1",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "sdkVersion": "27.0.0",
     "ios": {
       "bundleIdentifier": "com.grebel.skybunk"
