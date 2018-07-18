@@ -66,12 +66,25 @@ export default class ChannelList extends React.Component {
   }
 
   getChannelCardJSX(channels) {
+    const subs = this.state.subscribedChannels;
+    sortedChannels = channels.sort((c1, c2) => {
+      if (c1.id === 'all') return -1;
+      if (c2.id === 'all') return 1;
+      if (c1.id === 'subs') return -1;
+      if (c2.id === 'subs') return 1;
+
+      if (subs.includes(c1.id) && !subs.includes(c2.id)) return -1;
+      if (!subs.includes(c1.id) && subs.includes(c2.id)) return 1;
+
+      if (c1.name < c2.name) return -1;
+      return 1;
+    });
 
     return (
-      _.map(channels, (channel, key) => {
+      _.map(sortedChannels, (channel, key) => {
         let icon = require('../../assets/bell-OFF.png');
         let opacity = 1;
-        const subIndex = this.state.subscribedChannels.indexOf(channel.id);
+        const subIndex = subs.indexOf(channel.id);
         if (channel.id === 'subs') {
           icon = require('../../assets/my-subs-bell-Icon.png');
         }
