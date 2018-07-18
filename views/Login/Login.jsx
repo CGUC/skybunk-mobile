@@ -108,7 +108,7 @@ export default class LoginView extends React.Component {
             }).catch(error => {
               console.log(error);
               this.setState({
-                errorMessage: 'Sorry, there was an error logging you in',
+                errorMessage: String(error.message),
                 successMessage: null,
                 processing: false,
               });

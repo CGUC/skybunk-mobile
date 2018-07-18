@@ -14,7 +14,6 @@ export default class SettingsView extends React.Component {
   };
 
   logout = () => {
-    console.log('Pressed');
     AsyncStorage.removeItem('@Skybunk:token').then(() => {
       this.props.navigation.navigate('Auth');
     })
