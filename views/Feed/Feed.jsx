@@ -127,25 +127,6 @@ export default class FeedView extends React.Component {
     const userId = navigation.getParam('userId');
 
     if (type === 'toggleLike') {
-
-      // Data should be post object
-
-      /**
-       * Toggle likes; if user has already liked post, this would be 'unliking' it.
-       * TODO: set like icon to 'liked' state so user knows whether they have liked post
-       */
-      if (data.usersLiked.includes(userId)) {
-        data.likes--;
-        data.usersLiked = _.filter(data.usersLiked, user => user !== userId);
-        data.isLiked = false;
-      } else {
-        data.likes++;
-        data.usersLiked.push(userId);
-        data.isLiked = true;
-      }
-
-      if (data.likes < 0) data.likes = 0; // (Grebel's a positive community, come on!)
-
       this.setState({
         posts: this.state.posts.map(post => {
           if (post._id === postId) return data;
@@ -173,8 +154,7 @@ export default class FeedView extends React.Component {
         else if (type === 'editPost') {
           this.setState({
             posts: this.state.posts.map(post => {
-              if (post._id === postId) 
-                post.content = data.content;
+              if (post._id === postId) return data;
               return post;
             })
           });
@@ -198,7 +178,7 @@ export default class FeedView extends React.Component {
     const { navigation } = this.props;
     const userId = navigation.getParam('userId');
 
-    var reloadParent = this.loadData;
+    var reloadParent = this.updatePost;
     this.props.navigation.navigate('Comments', { postData, reloadParent, userId });
   }
 
@@ -236,6 +216,7 @@ export default class FeedView extends React.Component {
 
     return (
       <Post
+        userId={this.props.navigation.getParam('userId')}
         data={item}
         maxLines={10}
         key={item._id}
