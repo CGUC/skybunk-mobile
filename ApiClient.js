@@ -1,7 +1,6 @@
 var config = require('./config');
 
 export default class ApiClient {
-
 	static get(endpoint, headers) {
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 				method: 'GET',
@@ -100,4 +99,22 @@ export default class ApiClient {
 			console.error(err);
 		});;
 	}
+
+	static makeCancelable(promise) {
+	  let hasCanceled_ = false;
+
+	  const wrappedPromise = new Promise((resolve, reject) => {
+	    promise.then(
+	      val => hasCanceled_ ? reject({isCanceled: true}) : resolve(val),
+	      error => hasCanceled_ ? reject({isCanceled: true}) : reject(error)
+	    );
+	  });
+
+	  return {
+	    promise: wrappedPromise,
+	    cancel() {
+	      hasCanceled_ = true;
+	    },
+	  };
+	};
 }
