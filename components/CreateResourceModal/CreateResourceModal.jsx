@@ -69,13 +69,19 @@ export default class CreateResourceModal extends React.Component {
               style={styles.gestureRecognizer}
             >
               <View style={styles.view}>
-                <Textarea
-                  bordered
-                  placeholder="What's on your mind?"
-                  style={styles.textBox}
-                  onChangeText={this.textUpdate}
-                  value={this.state.resourceText}
-                />
+                {/* A bit hacky, but we need another GestureRecognizer to register swipe over the text box */}
+                <GestureRecognizer
+                  onSwipeDown={this.hideKeyboard}
+                  style={styles.gestureRecognizer}
+                >
+                  <Textarea
+                    bordered
+                    placeholder="What's on your mind?"
+                    style={styles.textBox}
+                    onChangeText={this.textUpdate}
+                    value={this.state.resourceText}
+                  />
+                </GestureRecognizer>
                 <View style={styles.buttonGroup}>
                   <Button block style={styles.button} onPress={this.saveResource}>
                     <Text>{submitButtonText}</Text>
