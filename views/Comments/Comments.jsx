@@ -1,11 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { View, ScrollView, Platform, AsyncStorage } from 'react-native';
-import { Container, Footer, Content, Text, Spinner, List } from 'native-base';
-import { Font, AppLoading } from "expo";
+import { ScrollView, AsyncStorage } from 'react-native';
+import { Container, Footer, Content, Text, Spinner } from 'native-base';
+import { Font } from "expo";
 import Post from '../../components/Post/Post';
 import Comment from '../../components/Comment/Comment';
-import NoData from '../../components/NoData/NoData';
 import ContentBar from '../../components/ContentBar/ContentBar';
 import api from '../../ApiClient';
 import style from './CommentsStyle';
@@ -67,7 +65,7 @@ export default class CommentsView extends React.Component {
         if (response.usersLiked.includes(userId)) {
           response.isLiked = true;
         } else response.isLiked = false;
-        
+
         this.setState({ postData: response });
 
         // Ensure feed view is up-to-date with current:
@@ -117,7 +115,6 @@ export default class CommentsView extends React.Component {
         }
 
         else if (type === 'addComment') {
-          console.log("Adding comment...")
           var commentContent = {
             author: userId,
             content: data,
@@ -174,38 +171,6 @@ export default class CommentsView extends React.Component {
         this.props.navigation.navigate('Auth');
       });
   }
-
-  // addComment = (data) => {
-  //   const {
-  //     navigation,
-  //   } = this.props;
-
-  //   var updateParentState = navigation.getParam('updateParentState');
-  //   var postData = navigation.getParam('postData');
-  //   var userId = navigation.getParam('userId');
-
-  //   AsyncStorage.getItem('@Skybunk:token')
-  //     .then(value => {
-  //       var commentContent = {
-  //         author: userId,
-  //         content: data,
-  //       }
-
-  //       api.post(`/posts/${postData._id}/comment`, { 'Authorization': 'Bearer ' + value }, commentContent)
-  //         .then((comment) => {
-  //           var updatedPost = {
-  //             ...postData,
-  //             comments: postData.comments.push(comment)
-  //           };
-  //           this.setState({ postData: updatedPost });
-  //           updateParentState('updatePost', updatedPost);
-  //         });
-  //     })
-  //     .catch(error => {
-  //       console.error(error);
-  //       this.props.navigation.navigate('Auth');
-  //     });
-  // }
 
   render() {
     const {
