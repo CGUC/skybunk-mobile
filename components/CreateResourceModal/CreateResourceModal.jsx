@@ -18,9 +18,6 @@ export default class CreateResourceModal extends React.Component {
 
   saveResource = () => {
     const { saveResource } = this.props;
-
-    this.textUpdate("");
-
     return saveResource && saveResource(this.state.resourceText);
   }
 
@@ -30,7 +27,6 @@ export default class CreateResourceModal extends React.Component {
 
   onCancel = () => {
     const { onClose } = this.props;
-    this.textUpdate("");
     onClose();
   }
 

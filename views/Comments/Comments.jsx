@@ -58,6 +58,7 @@ export default class CommentsView extends React.Component {
     const { postData } = this.state;
 
     const userId = navigation.getParam('userId');
+    const updateParentState = navigation.getParam('updateParentState');
 
     var postUri = `/posts/${postData._id}`;
 
@@ -66,7 +67,11 @@ export default class CommentsView extends React.Component {
         if (response.usersLiked.includes(userId)) {
           response.isLiked = true;
         } else response.isLiked = false;
+        
         this.setState({ postData: response });
+
+        // Ensure feed view is up-to-date with current:
+        updateParentState('updatePost', response);
       })
       .catch(err => {
         console.error(err);
@@ -79,36 +84,86 @@ export default class CommentsView extends React.Component {
       navigation,
     } = this.props;
 
-    const userId = navigation.getParam('userId');
-    const reloadParent = navigation.getParam('reloadParent');
-    const postData = navigation.getParam('postData');
-    if (type === 'toggleLike') {
-      reloadParent(id, data, type);
-    } else if (type === 'editPost') {
-      reloadParent(id, data, type);
-    } else if (type === 'deletePost') {
-      reloadParent(id, data, type);
-      navigation.goBack();
-    } 
-    else {
-      AsyncStorage.getItem('@Skybunk:token')
+    const {
+      postData
+    } = this.state;
+
+    const userId = this.props.navigation.getParam('userId');
+    const updateParentState = navigation.getParam('updateParentState');
+
+    AsyncStorage.getItem('@Skybunk:token')
       .then(value => {
 
-        if (type === 'updateComment') {
-          api.put(`/posts/${postData._id}/comment/${id}`, { 'Authorization': 'Bearer ' + value }, data)
+        if (['toggleLike', 'editPost'].includes(type)) {
+          api.put(`/posts/${postData._id}`, { 'Authorization': 'Bearer ' + value }, data)
+            .then(() => {
+              this.setState({ postData: data });
+              updateParentState('updatePost', data);
+            })
+            .catch(err => {
+              alert("Error updating post. Sorry about that!");
+            });
+        }
+
+        else if (type === 'deletePost') {
+          api.delete(`/posts/${postData._id}`, { 'Authorization': 'Bearer ' + value })
+            .then(() => {
+              updateParentState('deletePost', postData._id);
+            })
+            .catch(err => {
+              alert("Error deleting post. Sorry about that!")
+            });
+          navigation.goBack();
+        }
+
+        else if (type === 'addComment') {
+          console.log("Adding comment...")
+          var commentContent = {
+            author: userId,
+            content: data,
+          }
+          api.post(`/posts/${postData._id}/comment`, { 'Authorization': 'Bearer ' + value }, commentContent)
             .then(() => {
               this.loadData();
-              reloadParent();
+            })
+            .catch(err => {
+              alert("Error adding comment. Sorry about that!")
+            });
+        }
+
+        else if (type === 'updateComment') {
+          var commentContent = {
+            author: userId,
+            content: data,
+          }
+          api.put(`/posts/${postData._id}/comment/${id}`, { 'Authorization': 'Bearer ' + value }, data)
+            .then(() => {
+              var updatedPost = {
+                ...postData,
+                comments: postData.comments.map(comment => {
+                  if (comment._id === id) return data;
+                  return comment;
+                })
+              };
+              this.setState({ postData: updatedPost });
+              updateParentState('updatePost', updatedPost);
             })
             .catch(err => {
               alert("Error updating comment. Sorry about that!");
             });
+        }
 
-        } else if (type === 'deleteComment') {
-          api.delete(`/posts/${postData._id}/comment/${id}`,  { 'Authorization': 'Bearer ' + value })
+        else if (type === 'deleteComment') {
+          api.delete(`/posts/${postData._id}/comment/${id}`, { 'Authorization': 'Bearer ' + value })
             .then(() => {
-              this.loadData();
-              reloadParent(id, data);
+              var updatedPost = {
+                ...postData,
+                comments: postData.comments.filter(comments => {
+                  return comments._id !== id;
+                })
+              };
+              this.setState({ postData: updatedPost });
+              updateParentState('updatePost', updatedPost);
             })
             .catch(err => {
               alert("Error deleting comment. Sorry about that!")
@@ -118,36 +173,39 @@ export default class CommentsView extends React.Component {
       .catch(error => {
         this.props.navigation.navigate('Auth');
       });
-    }
   }
 
-  addComment = (data) => {
-    const {
-      navigation,
-    } = this.props;
+  // addComment = (data) => {
+  //   const {
+  //     navigation,
+  //   } = this.props;
 
-    var reloadParent = navigation.getParam('reloadParent');
-    var postData = navigation.getParam('postData');
-    var userId = navigation.getParam('userId');
+  //   var updateParentState = navigation.getParam('updateParentState');
+  //   var postData = navigation.getParam('postData');
+  //   var userId = navigation.getParam('userId');
 
-    AsyncStorage.getItem('@Skybunk:token')
-      .then(value => {
-        var commentContent = {
-          author: userId,
-          content: data,
-        }
+  //   AsyncStorage.getItem('@Skybunk:token')
+  //     .then(value => {
+  //       var commentContent = {
+  //         author: userId,
+  //         content: data,
+  //       }
 
-        api.post(`/posts/${postData._id}/comment`, { 'Authorization': 'Bearer ' + value }, commentContent)
-          .then(() => {
-            this.loadData();
-            reloadParent();
-          });
-      })
-      .catch(error => {
-        console.error(error);
-        this.props.navigation.navigate('Auth');
-      });
-  }
+  //       api.post(`/posts/${postData._id}/comment`, { 'Authorization': 'Bearer ' + value }, commentContent)
+  //         .then((comment) => {
+  //           var updatedPost = {
+  //             ...postData,
+  //             comments: postData.comments.push(comment)
+  //           };
+  //           this.setState({ postData: updatedPost });
+  //           updateParentState('updatePost', updatedPost);
+  //         });
+  //     })
+  //     .catch(error => {
+  //       console.error(error);
+  //       this.props.navigation.navigate('Auth');
+  //     });
+  // }
 
   render() {
     const {
@@ -203,7 +261,7 @@ export default class CommentsView extends React.Component {
           </Content>
           <Footer>
             <ContentBar
-              addResource={this.addComment}
+              addResource={(content) => this.updateResource(undefined, content, 'addComment')}
               submitButtonText='Comment'
             />
           </Footer>

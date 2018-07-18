@@ -69,24 +69,24 @@ export default class FeedView extends React.Component {
   }
 
   loadData = async () => {
-    this.setState({loading: true});
+    this.setState({ loading: true });
     await api.get(this.getUri())
-    .then(response => {
-      var posts = _.map(response, post => {
-        if (post.usersLiked.includes(this.props.navigation.getParam('userId'))) {
-          post.isLiked = true;
-        } else post.isLiked = false;
-        return post;
-      });
+      .then(response => {
+        var posts = _.map(response, post => {
+          if (post.usersLiked.includes(this.props.navigation.getParam('userId'))) {
+            post.isLiked = true;
+          } else post.isLiked = false;
+          return post;
+        });
 
-      this.setState({
-        posts: response,
-        loading: false,
+        this.setState({
+          posts: response,
+          loading: false,
+        });
+      })
+      .catch((err) => {
+        console.error(err);
       });
-    })
-    .catch((err) => {
-      console.error(err);
-    });
   }
 
   addPost = (data) => {
@@ -141,23 +141,14 @@ export default class FeedView extends React.Component {
         if (type === 'deletePost') {
           return api.delete(`/posts/${postId}`, { 'Authorization': 'Bearer ' + value })
             .then(() => {
-              this.setState({
-                posts: this.state.posts.filter(post => {
-                  return post._id !== postId;
-                })
-              });
+              this.updateState('deletePost', postId);
             })
             .catch(err => {
               alert("Error deleting post. Sorry about that!")
             });
         }
         else if (type === 'editPost') {
-          this.setState({
-            posts: this.state.posts.map(post => {
-              if (post._id === postId) return data;
-              return post;
-            })
-          });
+          this.updateState('updatePost', data);
         }
 
         api.put(`/posts/${postId}`, { 'Authorization': 'Bearer ' + value }, data)
@@ -174,12 +165,32 @@ export default class FeedView extends React.Component {
       });
   }
 
+  /**
+   * Allows sub views to update feed data
+   */
+  updateState = (type, data) => {
+    if (type === 'updatePost') {
+      this.setState({
+        posts: this.state.posts.map(post => {
+          if (post._id === data._id) return data;
+          return post;
+        })
+      });
+    } else if (type === 'deletePost') {
+      this.setState({
+        posts: this.state.posts.filter(post => {
+          return post._id !== data;
+        })
+      });
+    }
+  }
+
   onPressPost = (postData) => {
     const { navigation } = this.props;
     const userId = navigation.getParam('userId');
 
-    var reloadParent = this.updatePost;
-    this.props.navigation.navigate('Comments', { postData, reloadParent, userId });
+    var updateParentState = this.updateState;
+    this.props.navigation.navigate('Comments', { postData, updateParentState, userId });
   }
 
   getFooterJSX() {
@@ -210,7 +221,7 @@ export default class FeedView extends React.Component {
     return items;
   }
 
-  renderListItem = ({item}) => {
+  renderListItem = ({ item }) => {
     const enableEditing = item.author._id === this.props.navigation.getParam('userId');
     const channelId = this.props.navigation.getParam('channel')._id;
 
@@ -231,25 +242,25 @@ export default class FeedView extends React.Component {
   loadNextPage = async () => {
     if (this.state.loadingPage || this.state.loadedLastPage) return;
     this.setState({
-      page: this.state.page+1,
+      page: this.state.page + 1,
       loadingPage: true,
     }, state =>
-      api.get(this.getUri(), {'page': this.state.page}).then(response => {
-        this.setState({ 
-          posts: [...this.state.posts, ...response],
-          loadingPage: false,
-          loadedLastPage: response.length < 15
-        });
-      })
-      .catch((err) => {
-        console.error(err);
-      })
+        api.get(this.getUri(), { 'page': this.state.page }).then(response => {
+          this.setState({
+            posts: [...this.state.posts, ...response],
+            loadingPage: false,
+            loadedLastPage: response.length < 15
+          });
+        })
+          .catch((err) => {
+            console.error(err);
+          })
     );
   }
 
   listFooter = () => {
     if (this.state.loadingPage) {
-      return <Spinner color='#cd8500'/>;
+      return <Spinner color='#cd8500' />;
     }
     else if (this.state.loadedLastPage) {
       return <Text style={styles.noMorePosts}>No more posts!</Text>;
