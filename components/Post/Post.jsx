@@ -22,6 +22,7 @@ export default class Post extends React.Component {
       profilePicture: null,
       showEditButtons: false,
       editing: false,
+      isLiked: this.props.data.isLiked,
     }
   }
 
@@ -56,10 +57,10 @@ export default class Post extends React.Component {
   saveEdited = (newContent) => {
     const { updatePost, data } = this.props;
     var postId = data._id;
-
+    data.content = newContent;
     this.closeEditingModal();
 
-    updatePost && updatePost(postId, { content: newContent });
+    updatePost && updatePost(postId, data, 'editPost');
   }
 
   closeEditingModal = () => {
@@ -96,10 +97,24 @@ export default class Post extends React.Component {
   toggleLike = () => {
     const {
       updatePost,
-      data: postData
+      data,
+      userId,
     } = this.props;
 
-    updatePost && updatePost(postData._id, postData, 'toggleLike');
+    if (data.usersLiked.includes(userId)) {
+      data.likes--;
+      data.usersLiked = _.filter(data.usersLiked, user => user !== userId);
+      data.isLiked = false;
+    } else {
+      data.likes++;
+      data.usersLiked.push(userId);
+      data.isLiked = true;
+    }
+
+    if (data.likes < 0) data.likes = 0; // (Grebel's a positive community, come on!)
+
+    this.setState({isLiked: data.isLiked});
+    updatePost && updatePost(data._id, data, 'toggleLike');
   }
 
   getEditButtonJSX() {
@@ -132,6 +147,7 @@ export default class Post extends React.Component {
       isLiked,
       comments,
       createdAt,
+      isLiked,
       tags,
     } = data;
 

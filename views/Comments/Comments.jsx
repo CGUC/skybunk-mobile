@@ -82,32 +82,19 @@ export default class CommentsView extends React.Component {
     const userId = navigation.getParam('userId');
     const reloadParent = navigation.getParam('reloadParent');
     const postData = navigation.getParam('postData');
-
-    AsyncStorage.getItem('@Skybunk:token')
+    if (type === 'toggleLike') {
+      reloadParent(id, data, type);
+    } else if (type === 'editPost') {
+      reloadParent(id, data, type);
+    } else if (type === 'deletePost') {
+      reloadParent(id, data, type);
+      navigation.goBack();
+    } 
+    else {
+      AsyncStorage.getItem('@Skybunk:token')
       .then(value => {
 
-        if (type === 'toggleLike') {
-
-          if (data.usersLiked.includes(userId)) {
-            data.likes--;
-            data.usersLiked = _.filter(data.usersLiked, user => user !== userId);
-          } else {
-            data.likes++;
-            data.usersLiked.push(userId);
-          }
-
-          if (data.likes < 0) data.likes = 0;
-
-          api.put(`/posts/${id}`, { 'Authorization': 'Bearer ' + value }, data)
-            .then(() => {
-              this.loadData();
-              reloadParent();
-            })
-            .catch(err => {
-              alert("Error updating post. Sorry about that!");
-            });
-
-        } else if (type === 'updateComment') {
+        if (type === 'updateComment') {
           api.put(`/posts/${postData._id}/comment/${id}`, { 'Authorization': 'Bearer ' + value }, data)
             .then(() => {
               this.loadData();
@@ -121,7 +108,7 @@ export default class CommentsView extends React.Component {
           api.delete(`/posts/${postData._id}/comment/${id}`,  { 'Authorization': 'Bearer ' + value })
             .then(() => {
               this.loadData();
-              reloadParent();
+              reloadParent(id, data);
             })
             .catch(err => {
               alert("Error deleting comment. Sorry about that!")
@@ -131,6 +118,7 @@ export default class CommentsView extends React.Component {
       .catch(error => {
         this.props.navigation.navigate('Auth');
       });
+    }
   }
 
   addComment = (data) => {
@@ -189,6 +177,7 @@ export default class CommentsView extends React.Component {
               maxLines={1000}
               updatePost={this.updateResource}
               enableEditing={enablePostEditing}
+              userId={userId}
             />
             <ScrollView>
               {comments.length ?

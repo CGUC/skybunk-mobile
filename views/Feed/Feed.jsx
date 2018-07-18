@@ -126,46 +126,50 @@ export default class FeedView extends React.Component {
 
     const userId = navigation.getParam('userId');
 
+    if (type === 'toggleLike') {
+      this.setState({
+        posts: this.state.posts.map(post => {
+          if (post._id === postId) return data;
+          return post;
+        })
+      });
+    }
+
     AsyncStorage.getItem('@Skybunk:token')
       .then(value => {
 
-        if (type === 'toggleLike') {
-
-          // Data should be post object
-
-          /**
-           * Toggle likes; if user has already liked post, this would be 'unliking' it.
-           * TODO: set like icon to 'liked' state so user knows whether they have liked post
-           */
-          if (data.usersLiked.includes(userId)) {
-            data.likes--;
-            data.usersLiked = _.filter(data.usersLiked, user => user !== userId);
-          } else {
-            data.likes++;
-            data.usersLiked.push(userId);
-          }
-
-          if (data.likes < 0) data.likes = 0; // (Grebel's a positive community, come on!)
-
-        } else if (type === 'deletePost') {
+        if (type === 'deletePost') {
           return api.delete(`/posts/${postId}`, { 'Authorization': 'Bearer ' + value })
             .then(() => {
-              this.loadData();
+              this.setState({
+                posts: this.state.posts.filter(post => {
+                  return post._id !== postId;
+                })
+              });
             })
             .catch(err => {
               alert("Error deleting post. Sorry about that!")
             });
         }
+        else if (type === 'editPost') {
+          this.setState({
+            posts: this.state.posts.map(post => {
+              if (post._id === postId) return data;
+              return post;
+            })
+          });
+        }
 
         api.put(`/posts/${postId}`, { 'Authorization': 'Bearer ' + value }, data)
           .then(() => {
-            this.loadData();
+            //this.loadData();
           })
           .catch(err => {
             alert("Error updating post. Sorry about that!");
           });
       })
       .catch(error => {
+        console.log(error);
         this.props.navigation.navigate('Auth');
       });
   }
@@ -174,7 +178,7 @@ export default class FeedView extends React.Component {
     const { navigation } = this.props;
     const userId = navigation.getParam('userId');
 
-    var reloadParent = this.loadData;
+    var reloadParent = this.updatePost;
     this.props.navigation.navigate('Comments', { postData, reloadParent, userId });
   }
 
@@ -212,6 +216,7 @@ export default class FeedView extends React.Component {
 
     return (
       <Post
+        userId={this.props.navigation.getParam('userId')}
         data={item}
         maxLines={10}
         key={item._id}
