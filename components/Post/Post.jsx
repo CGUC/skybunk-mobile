@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Platform, TouchableOpacity, Modal } from 'react-native';
+import { View, Platform, TouchableOpacity, Modal, Alert } from 'react-native';
 import {
   Container, Left, Right, Body, Content, Card,
   CardItem, Text, Thumbnail, Button, Icon
@@ -67,6 +67,17 @@ export default class Post extends React.Component {
   }
 
   onPressDelete = () => {
+    Alert.alert(
+      'Hold Up!',
+      'Removing this post will also delete all comments associated with it.\nAre you sure you want to proceed?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', onPress: this.onConfirmDelete },
+      ],
+    )
+  }
+
+  onConfirmDelete = () => {
     const { updatePost, data } = this.props;
 
     var postId = data._id;
