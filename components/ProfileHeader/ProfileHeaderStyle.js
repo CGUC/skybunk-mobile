@@ -10,6 +10,7 @@ export default (styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     elevation: 5,
+    paddingTop: 28,
   },
   profilePicture: {
     alignSelf: "center",
