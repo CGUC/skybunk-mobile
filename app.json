@@ -28,7 +28,7 @@
     "splash": {
       "backgroundColor": "#71d3d1",
       "resizeMode": "cover",
-      "image": "./assets/temp-splash.png"
+      "image": "./assets/splash.png"
     }
   }
 }
