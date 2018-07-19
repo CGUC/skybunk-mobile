@@ -30,7 +30,7 @@ export default class SplashScreen extends React.Component {
     return (
       <ImageBackground
         style={style.background}
-        source={require('../../assets/login-bg.png')}
+        source={require('../../assets/splash.png')}
       >
         <Container>
           <Content contentContainerStyle={style.contentContainer}>
