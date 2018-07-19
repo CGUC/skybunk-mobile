@@ -142,6 +142,15 @@ export default class LoginView extends React.Component {
         </Item>
       </View>;
 
+      const logoIcon = 
+        <View>
+          <Image
+            source={require('../../assets/logo.png')}
+            style={styles.loginLogo}
+          />
+        </View>;
+
+
     if (this.state.loading) {
       return (
         <Container>
@@ -158,15 +167,11 @@ export default class LoginView extends React.Component {
             <Content contentContainerStyle={{ flex: 1, alignItems: 'center' }}>
               <KeyboardAvoidingView
                 style={styles.loginInputGroup}
-                flex={this.state.registering ? 0.8 : 0.65}
+                flex={this.state.registering ? 0.75 : 1}
                 behavior='padding'
                 enabled
               >
-                <Image
-                  source={require('../../assets/full-logo.png')}
-                  style={styles.loginLogo}
-                //marginBottom={this.state.registering ? 16 : 80}
-                />
+                {this.state.registering ? null : logoIcon}
 
                 <Text style={styles.loginTitle}>
                   {this.state.registering ? 'Register' : 'Sign In'}
