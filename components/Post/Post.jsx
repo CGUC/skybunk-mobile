@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Autolink from 'react-native-autolink';
 import { View, Platform, TouchableOpacity, Modal, Alert } from 'react-native';
 import {
   Container, Left, Right, Body, Content, Card,
@@ -194,7 +195,7 @@ export default class Post extends React.Component {
           <CardItem button onPress={this.onPressPost} style={styles.postContent}>
             <Body>
               {/* {this.getImageJSX()} */}
-              <Text numberOfLines={this.props.maxLines} ellipsizeMode='tail'>{content}</Text>
+              <Autolink text={content} numberOfLines={this.props.maxLines} ellipsizeMode='tail'/>
             </Body>
           </CardItem>
 

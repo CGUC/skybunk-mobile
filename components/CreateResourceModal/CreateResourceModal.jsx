@@ -28,6 +28,7 @@ export default class CreateResourceModal extends React.Component {
 
   onCancel = () => {
     const { onClose } = this.props;
+    this.setState({ resourceText: '' });
     onClose();
   }
 

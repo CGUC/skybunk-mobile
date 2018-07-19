@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Autolink from 'react-native-autolink';
 import { Dimensions, TouchableOpacity, View, Modal } from 'react-native';
 import {
   Text, Thumbnail, ListItem, Card, CardItem,
@@ -116,9 +117,7 @@ export default class Comment extends React.Component {
                 <Text style={styles.textAuthor}>
                   {`${authorName} `}
                 </Text>
-                <Text style={styles.textContent}>
-                  {content}
-                </Text>
+                <Autolink text={content} style={styles.textContent}/>
               </TouchableOpacity>
             </View>
           </CardItem>
