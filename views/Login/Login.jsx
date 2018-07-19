@@ -14,8 +14,8 @@ export default class LoginView extends React.Component {
     super(props);
     this.state = {
       registering: false,
-      username: '',
-      password: '',
+      username: null,
+      password: null,
       firstName: null,
       lastName: null,
       goldenTicket: null,
@@ -58,6 +58,7 @@ export default class LoginView extends React.Component {
         lastName: this.state.lastName,
         goldenTicket: this.state.goldenTicket,
       })
+        .then(response => response.json())
         .then(jsonResponse => {
           if (jsonResponse.message) {
             this.setState({
@@ -89,6 +90,7 @@ export default class LoginView extends React.Component {
         username: this.state.username,
         password: this.state.password,
       })
+        .then(response => response.json())
         .then(jsonResponse => {
           if (jsonResponse.err) {
             this.setState({
@@ -108,7 +110,7 @@ export default class LoginView extends React.Component {
             }).catch(error => {
               console.log(error);
               this.setState({
-                errorMessage: String(error.message),
+                errorMessage: 'Sorry, there was an error logging you in',
                 successMessage: null,
                 processing: false,
               });

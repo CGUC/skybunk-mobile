@@ -30,10 +30,6 @@ export default class ApiClient {
 			},
 			body: JSON.stringify(body),
 		})
-		.then(response => response.json())
-		.then(responseJSON => {
-			return responseJSON;
-		})
 		.catch(err => {
 			err = err.replace(/</g, '').replace(/>/g, '');
 			console.error(err);
