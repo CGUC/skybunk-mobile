@@ -18,6 +18,7 @@ export default class CreateResourceModal extends React.Component {
 
   saveResource = () => {
     const { saveResource } = this.props;
+    this.setState({ resourceText: '' });
     return saveResource && saveResource(this.state.resourceText);
   }
 
