@@ -3,13 +3,16 @@
     "name": "Skybunk",
     "icon": "./assets/app-icon.png",
     "primaryColor": "#71d3d1",
-    "version": "0.0.3",
+    "orientation": "portrait",
+    "version": "0.1",
     "sdkVersion": "27.0.0",
     "ios": {
-      "bundleIdentifier": "com.grebel.skybunk"
+      "bundleIdentifier": "com.grebel.skybunk",
+      "buildNumber": "0.1"
     },
     "android": {
-      "package": "com.grebel.skybunk"
+      "package": "com.grebel.skybunk",
+      "versionCode": 1
     },
     "notification": {
       "icon": "./assets/notif-icon.png",
