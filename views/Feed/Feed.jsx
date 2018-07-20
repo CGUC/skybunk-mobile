@@ -69,7 +69,11 @@ export default class FeedView extends React.Component {
   }
 
   loadData = async () => {
-    this.setState({ loading: true });
+    this.setState({ 
+      loading: true,
+      page: 1,
+      loadedLastPage: false
+    });
     await api.get(this.getUri())
       .then(response => {
         var posts = _.map(response, post => {
