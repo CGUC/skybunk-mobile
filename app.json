@@ -3,24 +3,24 @@
     "name": "Skybunk",
     "description": "By Grebel, for Grebel.",
     "primaryColor": "#71d3d1",
-    "version": "0.1",
+    "version": "0.1.1",
     "orientation": "portrait",
     "sdkVersion": "27.0.0",
-    "icon": "./assets/ios-logo.png",
+    "icon": "./assets/app-icon.png",
     "ios": {
       "bundleIdentifier": "com.grebel.skybunk",
-      "buildNumber": "0.1"
+      "buildNumber": "0.1.1"
     },
     "android": {
       "package": "com.grebel.skybunk",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/android-foreground.png",
-        "backgroundImage": "./assets/android-background.png"
+        "foregroundImage": "./assets/icon-front.png",
+        "backgroundImage": "./assets/icon-back.png"
       },
       "versionCode": 1
     },
     "notification": {
-      "icon": "./assets/notif-icon.png",
+      "icon": "./assets/icon-notification.png",
       "color": "#71d3d1",
       "androidMode": "collapse",
       "androidCollapsedTitle": "#{unread_notifications} new posts!"
