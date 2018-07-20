@@ -6,15 +6,17 @@ export default class Banner extends React.Component {
   bgStyle() {
     let bgColor = '#FEFEFE';
     if (this.props.success)
-      bgColor = '#0C0';
+      bgColor = '#0A0';
     else if (this.props.error)
-      bgColor = '#C00';
+      bgColor = '#A00';
 
     return {
       backgroundColor: bgColor,
-      marginTop: 10,
       paddingLeft: 10,
-      marginBottom:10,
+      paddingRight: 10,
+      paddingBottom: 2,
+      marginBottom: 10,
+      borderRadius: 10,
     }
   }
 
