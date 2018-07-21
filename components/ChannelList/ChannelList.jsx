@@ -10,6 +10,7 @@ import styles from "./ChannelListStyle";
 
 const DEFAULT_CHANNELS = [
   { name: 'All Feed', id: 'all' },
+  { name: 'My Posts', id: 'myPosts' },
   { name: 'My Subscriptions', id: 'subs' },
 ]
 
@@ -37,7 +38,7 @@ export default class ChannelList extends React.Component {
   }
 
   updateSubscription = (id, index) => {
-    if (id === 'all' && id === 'subs') return;
+    if (['all', 'subs', 'myPosts'].includes(id)) return;
 
     return () => {
       if (index === -1) {
@@ -59,7 +60,7 @@ export default class ChannelList extends React.Component {
     let user = this.state.user;
     user.subscribedChannels = this.state.subscribedChannels;
     ApiClient.put(
-      `/users/${user._id}`, 
+      `/users/${user._id}`,
       { 'Authorization': 'Bearer ' + this.props.token },
       user
     ).catch(err => console.error(err));
@@ -70,6 +71,8 @@ export default class ChannelList extends React.Component {
     sortedChannels = channels.sort((c1, c2) => {
       if (c1.id === 'all') return -1;
       if (c2.id === 'all') return 1;
+      if (c1.id === 'myPosts') return -1;
+      if (c2.id === 'myPosts') return 1;
       if (c1.id === 'subs') return -1;
       if (c2.id === 'subs') return 1;
 
@@ -88,21 +91,22 @@ export default class ChannelList extends React.Component {
         if (channel.id === 'subs') {
           icon = require('../../assets/my-subs-bell-Icon.png');
         }
-        else if (channel.id === 'all') {
+        else if (['all', 'myPosts'].includes(channel.id)) {
+          //TODO: Give myPosts an icon
           opacity = 0;
         }
         else if (subIndex !== -1) {
           icon = require('../../assets/Bell-ON.png');
         }
-        
+
         return (
           <View style={styles.channelCard} key={`channel${key}`}>
             <TouchableOpacity onPress={this.updateSubscription(channel.id, subIndex)} activeOpacity={0.5}>
-              <Image opacity={opacity} source={icon} style={styles.notificationBell}/>
+              <Image opacity={opacity} source={icon} style={styles.notificationBell} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.channelListButton} onPress={() => this.onPressChannel(channel.id, channel.name)}>
               <Text style={styles.channelText}>{channel.name}</Text>
-              <Image source={require('../../assets/arrowright.png')} style={styles.rightArrow}/>
+              <Image source={require('../../assets/arrowright.png')} style={styles.rightArrow} />
             </TouchableOpacity>
           </View>
         )
@@ -132,7 +136,7 @@ export default class ChannelList extends React.Component {
       );
     } else {
       return (
-        <View style={{backgroundColor: '#FFFFFF'}}>
+        <View style={{ backgroundColor: '#FFFFFF' }}>
           {channelCards}
         </View>
       );
