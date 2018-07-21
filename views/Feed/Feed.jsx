@@ -56,6 +56,8 @@ export default class FeedView extends React.Component {
   }
 
   getUri() {
+    const userId = this.props.navigation.getParam('userId');
+    
     var channel = this.props.navigation.getParam('channel');
     if (!channel) channel = { _id: 'all' };
 
@@ -63,7 +65,10 @@ export default class FeedView extends React.Component {
       return '/posts'
     }
     else if ('subs' === channel._id) {
-      return `/users/${this.props.navigation.getParam('userId')}/subscribedChannels/posts`;
+      return `/users/${userId}/subscribedChannels/posts`;
+    }
+    else if ('myPosts' === channel._id) {
+      return `/posts/user/${userId}`;
     }
     return `/channels/${channel._id}/posts`;
   }
@@ -204,7 +209,7 @@ export default class FeedView extends React.Component {
 
     var channel = navigation.getParam('channel');
 
-    if (!['all', 'subs'].includes(channel._id)) {
+    if (!['all', 'subs', 'myPosts'].includes(channel._id)) {
       return (
         <Footer>
           <ContentBar
@@ -237,7 +242,7 @@ export default class FeedView extends React.Component {
         key={item._id}
         onPressPost={this.onPressPost}
         updatePost={this.updatePost}
-        showTag={channelId === 'all' || channelId === 'subs'}
+        showTag={['all', 'subs', 'myPosts'].includes(channelId)}
         enableEditing={enableEditing}
       />
     );
@@ -311,15 +316,23 @@ export default class FeedView extends React.Component {
         </Container>
       )
     } else {
-      var message = channelId === 'subs' ?
-        'Nothing here - try subscribing to a channel!'
-        : 'No posts yet - you could be the first!';
+      var message;
+      switch (channelId) {
+        case 'subs':
+          message = 'Nothing here - try subscribing to a channel!';
+          break;
+        case 'myPosts':
+          message = 'Looks like you haven`t made any posts yet!';
+          break;
+        default:
+          message = 'No posts yet - you could be the first!';
+      }
 
       return (
         <NoData
           message={message}
           addResource={this.addPost}
-          hideFooter={channelId === 'subs'}
+          hideFooter={['all', 'subs', 'myPosts'].includes(channelId)}
         />
       );
     }
