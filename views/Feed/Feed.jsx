@@ -325,14 +325,14 @@ export default class FeedView extends React.Component {
           message = 'Looks like you haven`t made any posts yet!';
           break;
         default:
-          'No posts yet - you could be the first!'
+          message = 'No posts yet - you could be the first!';
       }
 
       return (
         <NoData
           message={message}
           addResource={this.addPost}
-          hideFooter={['all', 'subs', 'myPosts'].includes(channelid)}
+          hideFooter={['all', 'subs', 'myPosts'].includes(channelId)}
         />
       );
     }
