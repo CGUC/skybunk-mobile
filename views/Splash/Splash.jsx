@@ -3,6 +3,7 @@ import { AsyncStorage, ImageBackground, Dimensions } from 'react-native';
 import { Spinner, Container, Content } from 'native-base';
 import api from '../../ApiClient';
 import style from './SplashStyle';
+import notificationToken from '../../helpers/notificationToken';
 
 export default class SplashScreen extends React.Component {
 
@@ -13,6 +14,7 @@ export default class SplashScreen extends React.Component {
       if (!value) this.props.navigation.navigate('Auth');
       api.get('/users/loggedInUser', { 'Authorization': 'Bearer ' + value}).then(user => {
         if (user._id) {
+          notificationToken.registerForPushNotificationsAsync(user, value);
           this.props.navigation.navigate('App');
         }
         else {
