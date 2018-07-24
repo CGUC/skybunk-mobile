@@ -18,6 +18,12 @@ This app communicates with our [server](https://github.com/cguc/grapp-server) vi
 2. run `npm start`
 3. Scan the barcode with expo on your phone
 
+#### Testing the app on eduroam
+1. Download and install the [Expo development environment (XDE)](https://github.com/expo/xde)
+2. Open XDE and select 'Open existing project...'
+3. Select the root folder of the Skybunk client repo
+4. Once the app builds, click either 'Share' or 'Device' to open the app on your smartphone
+
 ## Architecture
 Full views are placed in `views` folder, reusable components are placed in `components` folder. The entry point is `App.js` and we are using [react-navigation](https://reactnavigation.org/) to handle app flow (navigation)
 ___
