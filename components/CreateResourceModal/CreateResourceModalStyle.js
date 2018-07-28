@@ -10,7 +10,7 @@ export default (styles = StyleSheet.create({
   },
   view: {
     width: width,
-    height: 300,
+    height: 330,
     backgroundColor: '#DDDDDD',
   },
   textBox: {

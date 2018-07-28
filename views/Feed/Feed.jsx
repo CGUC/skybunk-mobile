@@ -117,10 +117,25 @@ export default class FeedView extends React.Component {
       .then(value => {
         var postContent = {
           author: userId,
-          content: data,
+          content: data.content,
           tags: tags
         }
-        api.post('/posts', { 'Authorization': 'Bearer ' + value }, postContent).then(() => this.loadData());
+        api.post('/posts', { 'Authorization': 'Bearer ' + value }, postContent)
+        .then(response => response.json())
+        .then(post => {
+          if (data.image) {
+            api.uploadPhoto(
+              `/posts/${post._id}/image`,
+              { 'Authorization': 'Bearer ' + value },
+              data.image,
+              'image',
+              'POST'
+            ).then(() => this.loadData());
+          }
+          else {
+            this.loadData();
+          }
+        });
       })
       .catch(error => {
         this.props.navigation.navigate('Auth');
@@ -215,6 +230,7 @@ export default class FeedView extends React.Component {
           <ContentBar
             addResource={this.addPost}
             submitButtonText='Post'
+            showModalToolbar={true}
           />
         </Footer>
       )
