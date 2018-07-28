@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Autolink from 'react-native-autolink';
-import { View, Platform, TouchableOpacity, Modal, Alert } from 'react-native';
+import { View, Platform, TouchableOpacity, Modal, Alert, Dimensions } from 'react-native';
+import Image from 'react-native-scalable-image';
 import {
   Container, Left, Right, Body, Content, Card,
   CardItem, Text, Thumbnail, Button, Icon
@@ -24,6 +25,7 @@ export default class Post extends React.Component {
       showEditButtons: false,
       editing: false,
       isLiked: this.props.data.isLiked,
+      image: null,
     }
   }
 
@@ -33,13 +35,22 @@ export default class Post extends React.Component {
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
 
-    await ApiClient.get(`/users/${this.props.data.author._id}/profilePicture`, {}).then(pic => {
+    ApiClient.get(`/users/${this.props.data.author._id}/profilePicture`, {}).then(pic => {
       this.setState({
         profilePicture: pic,
       });
     }).catch(error => {
       console.log(error);
     });
+    if (this.props.data.image) {
+      ApiClient.get(`/posts/${this.props.data._id}/image`, {}).then(pic => {
+        this.setState({
+          image: pic,
+        });
+      }).catch(error => {
+        console.log(error);
+      });
+    }
   }
 
   onPressOptions = () => {
@@ -194,10 +205,17 @@ export default class Post extends React.Component {
 
           <CardItem button onPress={this.onPressPost} style={styles.postContent}>
             <Body>
-              {/* {this.getImageJSX()} */}
               <Autolink text={content} numberOfLines={this.props.maxLines} ellipsizeMode='tail'/>
             </Body>
           </CardItem>
+
+          {this.state.image ? <CardItem style={styles.imageContainer}>
+            <Image
+              style={styles.image}
+              width={Dimensions.get('window').width}
+              source={{ uri: `data:image/png;base64,${this.state.image}` }}
+            />
+          </CardItem> : null}
 
           <CardItem style={styles.postFooter}>
             <Left>

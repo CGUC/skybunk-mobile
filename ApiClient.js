@@ -58,7 +58,7 @@ export default class ApiClient {
 		});
 	}
 
-	static uploadPhoto(endpoint, headers, uri, name) {
+	static uploadPhoto(endpoint, headers, uri, name, method = 'PUT') {
 		let uriParts = uri.split('.');
 		let fileType = uriParts[uriParts.length - 1];
 
@@ -70,14 +70,16 @@ export default class ApiClient {
 		});
 
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
-			method: 'PUT',
+			method: method,
 			headers: {
 				Accept: 'application/json',
 				...headers,
 			},
 			body: formData,
 		})
-		.then(response => response.json())
+		.then(response => {
+			return response.json();
+		})
 		.then(responseJSON => responseJSON)
 		.catch(err => {
 			err = err.replace(/</g, '').replace(/>/g, '');

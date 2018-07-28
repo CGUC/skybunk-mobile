@@ -7,7 +7,7 @@ export default (styles = StyleSheet.create({
 		borderColor: "#71d3d1"
 	},
 	card: {
-		flex: 0,
+		flex: 1,
 		elevation: 0,
 		marginTop: 0,
 		marginBottom: 4,
@@ -92,5 +92,14 @@ export default (styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
     backgroundColor: 'red',
+  },
+  imageContainer: {
+  	flexDirection: 'row',
+  	alignItems: 'center',
+  	justifyContent: 'center'
+  },
+  image: {
+  	borderWidth: 2,
+  	borderColor: '#AAAAAA',
   }
 }));

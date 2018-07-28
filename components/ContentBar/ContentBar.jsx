@@ -68,6 +68,7 @@ export default class ContentBar extends React.Component {
           isModalOpen={this.state.isModalOpen} 
           saveResource={this.saveResource}
           submitButtonText={this.props.submitButtonText}
+          showToolbar={this.props.showModalToolbar}
         />
       </View>
     )
