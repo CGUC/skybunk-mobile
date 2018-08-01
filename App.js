@@ -5,6 +5,7 @@ import FeedView from './views/Feed/Feed';
 import CommentsView from './views/Comments/Comments';
 import SplashScreen from './views/Splash/Splash';
 import SettingsView from './views/Settings/Settings';
+import MemberListView from './views/MemberList/MemberList';
 
 const AppStack = createStackNavigator(
   {
@@ -12,6 +13,7 @@ const AppStack = createStackNavigator(
     Feed: FeedView,
     Comments: CommentsView,
     Settings: SettingsView,
+    MemberList: MemberListView,
   }
 )
 
