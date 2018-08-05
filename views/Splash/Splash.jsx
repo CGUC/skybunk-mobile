@@ -15,7 +15,7 @@ export default class SplashScreen extends React.Component {
       api.get('/users/loggedInUser', { 'Authorization': 'Bearer ' + value}).then(user => {
         if (user._id) {
           notificationToken.registerForPushNotificationsAsync(user, value);
-          this.props.navigation.navigate('App');
+          this.props.navigation.navigate('Home', {token: value, user: user});
         }
         else {
           this.props.navigation.navigate('Auth');

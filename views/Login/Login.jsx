@@ -106,7 +106,7 @@ export default class LoginView extends React.Component {
               })
                 .catch(err => console.log(err));
 
-              this.props.navigation.navigate('App');
+              this.props.navigation.navigate('Home', {token: jsonResponse.token, user});
             }).catch(error => {
               console.log(error);
               this.setState({
