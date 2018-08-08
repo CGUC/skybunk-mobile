@@ -93,12 +93,13 @@ export default class CommentsView extends React.Component {
       .then(value => {
 
         if (['toggleLike', 'editPost'].includes(type)) {
-          api.put(`/posts/${postData._id}`, { 'Authorization': 'Bearer ' + value }, data.content)
+          api.put(`/posts/${postData._id}`, { 'Authorization': 'Bearer ' + value }, data)
             .then(() => {
-              this.setState({ postData: data.content });
-              updateParentState('updatePost', data.content);
+              this.setState({ postData: data });
+              updateParentState('updatePost', data);
             })
             .catch(err => {
+              console.log(err);
               alert("Error updating post. Sorry about that!");
             });
         }
@@ -133,12 +134,12 @@ export default class CommentsView extends React.Component {
             author: userId,
             content: data.content,
           }
-          api.put(`/posts/${postData._id}/comment/${id}`, { 'Authorization': 'Bearer ' + value }, data.content)
+          api.put(`/posts/${postData._id}/comment/${id}`, { 'Authorization': 'Bearer ' + value }, commentContent)
             .then(() => {
               var updatedPost = {
                 ...postData,
                 comments: postData.comments.map(comment => {
-                  if (comment._id === id) return data.content;
+                  if (comment._id === id) return commentContent;
                   return comment;
                 })
               };

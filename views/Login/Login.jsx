@@ -103,10 +103,9 @@ export default class LoginView extends React.Component {
             AsyncStorage.setItem('@Skybunk:token', jsonResponse.token).then(() => {
               ApiClient.get('/users/loggedInUser', { 'Authorization': 'Bearer ' + jsonResponse.token }).then(user => {
                 notificationToken.registerForPushNotificationsAsync(user, jsonResponse.token);
+                this.props.navigation.navigate('Home', {token: jsonResponse.token, user});
               })
-                .catch(err => console.log(err));
-
-              this.props.navigation.navigate('Home', {token: jsonResponse.token, user});
+              .catch(err => console.log(err));
             }).catch(error => {
               console.log(error);
               this.setState({

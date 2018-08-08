@@ -43,7 +43,6 @@ export default class HomeView extends React.Component {
   }
 
   onPressNotif = (notif) => {
-    console.log(notif.data.post);
     this.updateNotificationState(notif);
     this.props.navigation.navigate(
       'Comments', 
