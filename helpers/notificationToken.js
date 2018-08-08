@@ -24,13 +24,21 @@ module.exports = {
 
 
     // Get the token that uniquely identifies this device
-    let token = await Notifications.getExpoPushTokenAsync();
-    ApiClient.post(
-      `/users/${user._id}/notificationToken`,
-      { 'Authorization': 'Bearer ' + authToken },
-      {notificationToken: token}
-    )
-    .then(pushToken => console.log(pushToken))
+    Notifications.getExpoPushTokenAsync().then(token => {
+      console.log(token);
+      if (token) {
+        ApiClient.post(
+          `/users/${user._id}/notificationToken`,
+          { 'Authorization': 'Bearer ' + authToken },
+          {notificationToken: token}
+        )
+        .then(response => {})
+        .catch(err => console.log(err));
+      }
+      else {
+        console.error('Error getting notification token!');
+      }
+    })
     .catch(err => console.log(err));
   }
 }
