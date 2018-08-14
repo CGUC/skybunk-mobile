@@ -17,15 +17,15 @@ export default class UserListItem extends React.Component {
     }
   }
 
-  async componentDidMount() {
-    var { user } = this.props;
+  // async componentWillMount() {
+  //   var { user } = this.props;
 
-    ApiClient.get(`/users/${user._id}/profilePicture`, {}).then(pic => {
-      this.setState({ profilePicture: pic });
-    }).catch(error => {
-      console.log(error);
-    });
-  }
+  //   ApiClient.get(`/users/${user._id}/profilePicture`, {}).then(pic => {
+  //     this.setState({ profilePicture: pic });
+  //   }).catch(error => {
+  //     console.log(error);
+  //   });
+  // }
 
   /**
    * Limit re-rendering for optimisation
@@ -47,9 +47,10 @@ export default class UserListItem extends React.Component {
       <ListItem>
         <TouchableOpacity hitSlop={{ top: 10, right: 300, bottom: 10, left: 0 }}>
           <View style={styles.rowContainer}>
-            <View>
+          {/* This has critical performance issues so has been excluded for now (Neil) */}
+            {/* <View>
               <Thumbnail style={styles.profilePicThumbnail} source={{ uri: `data:image/png;base64,${profilePicture}` }} />
-            </View>
+            </View> */}
             <Text style={styles.userName}>
               {`${user.firstName} ${user.lastName}`}
             </Text>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { AsyncStorage, FlatList, Text } from 'react-native';
-import { Container, Content, Spinner } from 'native-base';
+import { Container, Content, Spinner, Item, Button, Input, Icon, Header } from 'native-base';
 import { Font } from "expo";
 
 import UserListItem from '../../components/UserListItem/UserListItem';
@@ -27,7 +27,10 @@ export default class MemberList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: [],
+      members: [],
+      filteredMembers: [],
+      filter: undefined,
+      useFiltered: false,
       page: 1,
       loading: true,
       loadingPage: false,
@@ -43,30 +46,26 @@ export default class MemberList extends React.Component {
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
 
-    await this.loadUsers();
+    await this.loadMembers();
   }
 
-  sortAlphabetically(users) {
-    sorted = users.sort((u1, u2) => {
-      if (u1.firstName < u2.firstName) return -1;
-      if (u1.firstName > u2.firstName) return 1;
+  sortAlphabetically(members) {
+    sorted = members.sort((m1, m2) => {
+      if (m1.firstName < m2.firstName) return -1;
+      if (m1.firstName > m2.firstName) return 1;
       return 0;
     });
     return sorted;
   }
 
-  loadUsers = async () => {
-    /**
-     * TODO
-     *  Implement searching
-     *  Add profile pictures / clean up list entries
-     *  Implement with profiles
-     *  Require auth to access all user accounts? (backend implementation)
-     */
+  loadMembers = async () => {
     this.setState({
       loading: true,
       page: 1,
-      loadedLastPage: false
+      loadedLastPage: false,
+      filteredMembers: [],
+      filter: undefined,
+      useFiltered: false,
     });
 
     await AsyncStorage.getItem('@Skybunk:token')
@@ -74,7 +73,7 @@ export default class MemberList extends React.Component {
         api.get('/users')
           .then(users => {
             this.setState({
-              users: this.sortAlphabetically(users),
+              members: this.sortAlphabetically(users),
               loading: false
             });
           })
@@ -87,44 +86,69 @@ export default class MemberList extends React.Component {
       });
   }
 
-  chunkItemsToRender() {
-    let {
-      users,
-      page
-    } = this.state;
+  searchMembers = () => {
+    const { filter, members } = this.state;
+    var filtered = _.filter(members, member => {
+      var name = member.firstName + member.lastName;
+      name = name.toLowerCase();
+      return name.match(new RegExp(filter));
+    });
 
-    console.log(`page: ${page}`)
+    this.setState({
+      useFiltered: true,
+      filteredMembers: filtered,
+      page: 1,
+      loadedLastPage: false
+    });
+  }
 
-    //var startIndex = Math.max(0, page - chunk_limit);
-    var startIndex = 0;
-    var endIndex = Math.min(page * chunk_limit, users.length)
-
-    console.log(`startIndex: ${startIndex}`)
-    console.log(`endIndex: ${endIndex}`)
-
-    return _.slice(users, startIndex, endIndex);
+  clearFilter = () => {
+    this.setState({
+      filteredMembers: [],
+      filter: undefined,
+      useFiltered: false,
+      page: 1,
+      loadedLastPage: false
+    });
   }
 
   loadNextChunk = async () => {
     let {
       page,
-      users
+      members,
+      useFiltered,
+      filteredMembers
     } = this.state;
 
-    console.log("End reached")
+    var membersToShow = useFiltered ? filteredMembers : members;
 
-    if (page * chunk_limit < users.length) {
-      console.log('incrementing renderStartIndex')
+    if (page * chunk_limit < membersToShow.length) {
       this.setState({ page: page + 1 });
     } else {
       this.setState({ loadedLastPage: true });
     }
   }
 
-  buildListItems() {
-    var usersToRender = this.chunkItemsToRender();
+  chunkItemsToRender() {
+    let {
+      members,
+      page,
+      useFiltered,
+      filteredMembers
+    } = this.state;
 
-    var items = _.map(usersToRender, (user, index) => {
+    var membersToShow = useFiltered ? filteredMembers : members;
+
+    var startIndex = 0;
+    var endIndex = Math.min(page * chunk_limit, membersToShow.length)
+
+    return _.slice(membersToShow, startIndex, endIndex);
+  }
+
+  buildListItems() {
+    var membersToRender = this.chunkItemsToRender();
+
+    var items = _.map(membersToRender, (user, index) => {
       user.key = `user-${index}`;
       return user;
     });
@@ -153,7 +177,35 @@ export default class MemberList extends React.Component {
   render() {
     const {
       loading,
+      useFiltered,
+      filter
     } = this.state;
+
+    var searchAdornmentJSX;
+
+    if (!filter) {
+      searchAdornmentJSX = (
+        <Icon name='ios-people' />
+      )
+    } else if (useFiltered) {
+      searchAdornmentJSX = (
+        <Button
+          transparent
+          onPress={this.clearFilter}
+        >
+          <Icon name='ios-close-circle-outline' />
+        </Button>
+      )
+    } else {
+      searchAdornmentJSX = (
+        <Button
+          transparent
+          onPress={this.searchMembers}
+        >
+          <Icon name='arrow-forward' />
+        </Button>
+      )
+    }
 
     if (loading) {
       return (
@@ -166,12 +218,33 @@ export default class MemberList extends React.Component {
     } else {
       return (
         <Container>
+          <Header
+            searchBar
+            rounded
+            transparent
+            style={{
+              paddingTop: 0
+            }}
+          >
+            <Item>
+              <Icon name='ios-search' />
+              <Input
+                {...(filter ? {} : { value: '' })}
+                placeholder="search"
+                autoCorrect={false}
+                onChangeText={(text) => this.setState({ filter: text.toLowerCase() })}
+                onSubmitEditing={this.searchMembers}
+              />
+              {searchAdornmentJSX}
+            </Item>
+          </Header>
+
           <FlatList
             data={this.buildListItems()}
             renderItem={this.renderListItem}
             onEndReached={this.loadNextChunk}
             refreshing={this.state.loading}
-            onRefresh={this.loadUsers}
+            onRefresh={this.loadMembers}
             onEndReachedThreshold={0.5}
             ListFooterComponent={this.listFooter()}
           />
