@@ -40,12 +40,15 @@ export default class UserListItem extends React.Component {
   }
 
   render() {
-    var { user } = this.props;
+    var { user, showUserProfile } = this.props;
     var { profilePicture } = this.state;
 
     return (
       <ListItem>
-        <TouchableOpacity hitSlop={{ top: 10, right: 300, bottom: 10, left: 0 }}>
+        <TouchableOpacity
+          hitSlop={{ top: 10, right: 300, bottom: 10, left: 0 }}
+          onPress={() => showUserProfile(user)}
+        >
           <View style={styles.rowContainer}>
           {/* This has critical performance issues so has been excluded for now (Neil) */}
             {/* <View>

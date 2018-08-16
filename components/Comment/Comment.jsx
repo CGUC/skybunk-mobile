@@ -93,7 +93,10 @@ export default class Comment extends React.Component {
       editing
     } = this.state;
 
-    const { data } = this.props;
+    const {
+      data,
+      showUserProfile
+    } = this.props;
 
     var {
       author,
@@ -105,14 +108,18 @@ export default class Comment extends React.Component {
     if (!author) authorName = "Ghost";
     else authorName = `${author.firstName} ${author.lastName}`;
 
-    var authorPhoto = author.profilePicture;
-
     return (
       <View>
         <Card style={styles.card}>
           <CardItem style={styles.cardItem}>
             <View style={styles.textContainer}>
-              <Thumbnail small style={styles.profilePicThumbnail} source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }} />
+              <TouchableOpacity onPress={() => showUserProfile(author)}>
+                <Thumbnail
+                  small
+                  style={styles.profilePicThumbnail}
+                  source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }}
+                />
+              </TouchableOpacity>
               <TouchableOpacity onPress={this.onPressComment} hitSlop={{ top: 15, bottom: 15, left: 10, right: 10 }}>
                 <Text style={styles.textAuthor}>
                   {`${authorName} `}
