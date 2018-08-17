@@ -32,7 +32,7 @@ export default class ProfileHeader extends React.Component {
         style={styles.profileHeader}
         source={require('../../assets/Menu-Header.png')}
       >
-        <TouchableOpacity onPress={() => { this.props.navigation.navigate('Settings') }}>
+        <TouchableOpacity onPress={() => { this.props.navigation.navigate('Settings', { user: this.props.user }) }}>
           <Image source={require('../../assets/settings-with-word-icon.png')} style={styles.settingsIcon} />
         </TouchableOpacity>
         <View>

@@ -18,7 +18,7 @@ const chunk_limit = 15;
 export default class MemberList extends React.Component {
 
   static navigationOptions = {
-    title: 'Settings',
+    title: 'Member List',
     headerTintColor: '#FFFFFF',
     headerStyle: {
       backgroundColor: '#fc4970'

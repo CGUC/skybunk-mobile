@@ -119,7 +119,7 @@ export default class UserProfile extends React.Component {
 
     var enableInfoBlock = program || address || affiliation;
 
-    var cardHeightPreset = bio && enableInfoBlock ? styles.cardFull : styles.cardShort;
+    var cardHeightPreset = bio || enableInfoBlock ? styles.cardFull : styles.cardShort;
 
     return (
       <Modal
