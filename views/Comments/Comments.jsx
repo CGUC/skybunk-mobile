@@ -2,9 +2,11 @@ import React from 'react';
 import { ScrollView, AsyncStorage } from 'react-native';
 import { Container, Footer, Content, Text, Spinner } from 'native-base';
 import { Font } from "expo";
+
 import Post from '../../components/Post/Post';
 import Comment from '../../components/Comment/Comment';
 import ContentBar from '../../components/ContentBar/ContentBar';
+import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import api from '../../ApiClient';
 import style from './CommentsStyle';
 
@@ -36,6 +38,8 @@ export default class CommentsView extends React.Component {
     this.state = {
       loading: true,
       postData,
+      userDataToShow: undefined,
+      showProfileModal: false
     }
   }
 
@@ -173,10 +177,26 @@ export default class CommentsView extends React.Component {
       });
   }
 
+  showUserProfile = (user) => {
+    this.setState({
+      userDataToShow: user,
+      showProfileModal: true
+    })
+  }
+
+  closeProfileModal = () => {
+    this.setState({
+      userDataToShow: undefined,
+      showProfileModal: false
+    })
+  }
+
   render() {
     const {
       loading,
       postData,
+      userDataToShow,
+      showProfileModal
     } = this.state;
 
     const userId = this.props.navigation.getParam('userId');
@@ -215,6 +235,7 @@ export default class CommentsView extends React.Component {
                         data={comment}
                         updateComment={this.updateResource}
                         enableEditing={enableCommentEditing}
+                        showUserProfile={this.showUserProfile}
                       />
                     )
                   })
@@ -231,6 +252,12 @@ export default class CommentsView extends React.Component {
               submitButtonText='Comment'
             />
           </Footer>
+
+          <UserProfile
+            user={userDataToShow}
+            onClose={this.closeProfileModal}
+            isModalOpen={showProfileModal}
+          />
         </Container>
       )
     }

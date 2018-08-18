@@ -149,7 +149,8 @@ export default class Post extends React.Component {
     } = this.state;
 
     const {
-      data
+      data,
+      showUserProfile
     } = this.props;
 
     var {
@@ -187,7 +188,12 @@ export default class Post extends React.Component {
 
               <View style={styles.headerLeft}>
                 <View>
-                  <Thumbnail style={styles.profilePicThumbnail} source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }} />
+                  <TouchableOpacity onPress={() => showUserProfile(author)}>
+                    <Thumbnail
+                      style={styles.profilePicThumbnail}
+                      source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }}
+                    />
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.headerBody}>
                   <View style={styles.authorDetails}>

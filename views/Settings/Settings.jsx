@@ -15,8 +15,9 @@ export default class SettingsView extends React.Component {
     },
   };
 
-  showUserProfile() {
-    
+  showUserProfile = () => {
+    const user = this.props.navigation.getParam('user');
+    this.props.navigation.navigate('EditProfile', { user });
   }
   
   showMemberList = () => {

@@ -4,6 +4,7 @@ import { Container, Content, Spinner, Item, Button, Input, Icon, Header } from '
 import { Font } from "expo";
 
 import UserListItem from '../../components/UserListItem/UserListItem';
+import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import styles from './MemberListStyle';
 import api from '../../ApiClient';
 
@@ -17,7 +18,7 @@ const chunk_limit = 15;
 export default class MemberList extends React.Component {
 
   static navigationOptions = {
-    title: 'Settings',
+    title: 'Member List',
     headerTintColor: '#FFFFFF',
     headerStyle: {
       backgroundColor: '#fc4970'
@@ -35,6 +36,8 @@ export default class MemberList extends React.Component {
       loading: true,
       loadingPage: false,
       loadedLastPage: false,
+      userDataToShow: undefined,
+      showProfileModal: false
     }
   }
 
@@ -84,6 +87,20 @@ export default class MemberList extends React.Component {
       .catch(error => {
         this.props.navigation.navigate('Auth');
       });
+  }
+
+  showUserProfile = (user) => {
+    this.setState({
+      userDataToShow: user,
+      showProfileModal: true
+    })
+  }
+
+  closeProfileModal = () => {
+    this.setState({
+      userDataToShow: undefined,
+      showProfileModal: false
+    })
   }
 
   searchMembers = () => {
@@ -158,7 +175,10 @@ export default class MemberList extends React.Component {
 
   renderListItem = ({ item }) => {
     return (
-      <UserListItem user={item} />
+      <UserListItem
+        user={item}
+        showUserProfile={this.showUserProfile}
+      />
     )
   }
 
@@ -174,21 +194,18 @@ export default class MemberList extends React.Component {
     );
   }
 
-  render() {
+  getSearchAdornmentJSX() {
     const {
-      loading,
       useFiltered,
-      filter
+      filter,
     } = this.state;
-
-    var searchAdornmentJSX;
-
+    
     if (!filter) {
-      searchAdornmentJSX = (
+      return (
         <Icon name='ios-people' />
       )
     } else if (useFiltered) {
-      searchAdornmentJSX = (
+      return (
         <Button
           transparent
           onPress={this.clearFilter}
@@ -197,7 +214,7 @@ export default class MemberList extends React.Component {
         </Button>
       )
     } else {
-      searchAdornmentJSX = (
+      return (
         <Button
           transparent
           onPress={this.searchMembers}
@@ -206,6 +223,17 @@ export default class MemberList extends React.Component {
         </Button>
       )
     }
+  }
+
+  render() {
+    const {
+      loading,
+      filter,
+      userDataToShow,
+      showProfileModal
+    } = this.state;
+
+    var searchAdornmentJSX = this.getSearchAdornmentJSX();
 
     if (loading) {
       return (
@@ -227,7 +255,7 @@ export default class MemberList extends React.Component {
             }}
           >
             <Item>
-              <Icon name='ios-search' />
+              <Icon name='ios-search' style={{ marginBottom: 2 }}/>
               <Input
                 {...(filter ? {} : { value: '' })}
                 placeholder="search"
@@ -247,6 +275,12 @@ export default class MemberList extends React.Component {
             onRefresh={this.loadMembers}
             onEndReachedThreshold={0.5}
             ListFooterComponent={this.listFooter()}
+          />
+
+          <UserProfile
+            user={userDataToShow}
+            onClose={this.closeProfileModal}
+            isModalOpen={showProfileModal}
           />
         </Container>
       )

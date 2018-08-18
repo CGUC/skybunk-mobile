@@ -10,6 +10,7 @@ import { FlatList, AsyncStorage, View } from 'react-native';
 import { Container, Footer, Content, Spinner, Text } from 'native-base';
 import { Font, AppLoading } from "expo";
 import ContentBar from '../../components/ContentBar/ContentBar';
+import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import Post from '../../components/Post/Post';
 import NoData from '../../components/NoData/NoData';
 import api from '../../ApiClient';
@@ -40,6 +41,8 @@ export default class FeedView extends React.Component {
       loadingPage: false,
       page: 1,
       loadedLastPage: false,
+      userDataToShow: undefined,
+      showProfileModal: false
     }
   }
 
@@ -217,6 +220,20 @@ export default class FeedView extends React.Component {
     this.props.navigation.navigate('Comments', { postData, updateParentState, userId });
   }
 
+  showUserProfile = (user) => {
+    this.setState({
+      userDataToShow: user,
+      showProfileModal: true
+    })
+  }
+
+  closeProfileModal = () => {
+    this.setState({
+      userDataToShow: undefined,
+      showProfileModal: false
+    })
+  }
+
   getFooterJSX() {
     const {
       navigation,
@@ -260,6 +277,7 @@ export default class FeedView extends React.Component {
         updatePost={this.updatePost}
         showTag={['all', 'subs', 'myPosts'].includes(channelId)}
         enableEditing={enableEditing}
+        showUserProfile={this.showUserProfile}
       />
     );
   }
@@ -297,6 +315,8 @@ export default class FeedView extends React.Component {
     const {
       posts,
       loading,
+      userDataToShow,
+      showProfileModal
     } = this.state;
 
     const {
@@ -328,6 +348,12 @@ export default class FeedView extends React.Component {
           />
 
           {this.getFooterJSX()}
+
+          <UserProfile
+            user={userDataToShow}
+            onClose={this.closeProfileModal}
+            isModalOpen={showProfileModal}
+          />
 
         </Container>
       )
