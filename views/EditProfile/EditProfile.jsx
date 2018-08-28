@@ -112,7 +112,6 @@ export default class EditProfile extends React.Component {
       [first, last] = name.split(' ');
       if (first) user.firstName = first;
       if (last) user.lastName = last;
-      console.log(`${first}, ${last}`)
     }
 
     if (program) user.info.program = program;
@@ -189,7 +188,7 @@ export default class EditProfile extends React.Component {
           {this.generateFieldJSX('name', 'Name', 'Enter your name')}
           {this.generateFieldJSX('program', 'Program', 'What are you studying?')}
           {this.generateFieldJSX('address', 'Room Number / Address', 'Where can you be found?')}
-          {this.generateFieldJSX('affiliation', 'Affiliation with Grebel', 'i.e. Resdient')}
+          {this.generateFieldJSX('affiliation', 'Affiliation with Grebel', 'i.e. Resident')}
           {this.generateFieldJSX('bio', 'Bio', 'Share something about yourself')}
         </GestureRecognizer>
       </KeyboardAvoidingView>
