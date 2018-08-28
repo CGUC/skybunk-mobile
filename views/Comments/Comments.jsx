@@ -222,6 +222,7 @@ export default class CommentsView extends React.Component {
               updatePost={this.updateResource}
               enableEditing={enablePostEditing}
               userId={userId}
+              showUserProfile={this.showUserProfile}
             />
             <ScrollView>
               {comments.length ?
