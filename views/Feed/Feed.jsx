@@ -336,7 +336,7 @@ export default class FeedView extends React.Component {
       );
     } else if (posts.length) {
       return (
-        <Container>
+        <View>
           <FlatList
             data={this.buildListItems()}
             renderItem={this.renderListItem}
@@ -345,6 +345,7 @@ export default class FeedView extends React.Component {
             refreshing={this.state.loading}
             onRefresh={this.loadData}
             onEndReachedThreshold={0.8}
+            removeClippedSubviews
           />
 
           {this.getFooterJSX()}
@@ -355,7 +356,7 @@ export default class FeedView extends React.Component {
             isModalOpen={showProfileModal}
           />
 
-        </Container>
+        </View>
       )
     } else {
       var message;
