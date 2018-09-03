@@ -143,7 +143,7 @@ export default class CommentsView extends React.Component {
               var updatedPost = {
                 ...postData,
                 comments: postData.comments.map(comment => {
-                  if (comment._id === id) return commentContent;
+                  if (comment._id === id) return data;
                   return comment;
                 })
               };

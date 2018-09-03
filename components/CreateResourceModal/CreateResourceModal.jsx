@@ -20,8 +20,8 @@ export default class CreateResourceModal extends React.Component {
   }
 
   saveResource = () => {
-    const { saveResource } = this.props;
-    this.setState({ resourceText: '', image: null });
+    const { saveResource, clearAfterSave } = this.props;
+    if (clearAfterSave) this.setState({ resourceText: '', image: null });
     return saveResource && saveResource({content: this.state.resourceText, image: this.state.image});
   }
 
@@ -30,8 +30,8 @@ export default class CreateResourceModal extends React.Component {
   }
 
   onCancel = () => {
-    const { onClose } = this.props;
-    this.setState({ resourceText: '', image: null });
+    const { onClose, clearAfterSave } = this.props;
+    if (clearAfterSave) this.setState({ resourceText: '', image: null });
     onClose();
   }
 
