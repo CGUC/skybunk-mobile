@@ -160,6 +160,7 @@ export default class Comment extends React.Component {
           saveResource={this.saveEdited}
           existing={content}
           submitButtonText='Save'
+          clearAfterSave={false}
         />
 
       </View>

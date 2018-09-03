@@ -277,6 +277,7 @@ export default class Post extends React.Component {
           saveResource={this.saveEdited}
           existing={content}
           submitButtonText='Save'
+          clearAfterSave={false}
         />
       </View>
     )
