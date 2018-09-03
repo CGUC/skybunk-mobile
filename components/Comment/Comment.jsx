@@ -65,7 +65,7 @@ export default class Comment extends React.Component {
     var commentId = data._id;
     var newComment = {
       ...data,
-      content: newContent
+      ...newContent
     }
 
     this.closeEditingModal();

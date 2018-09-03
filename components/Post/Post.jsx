@@ -67,9 +67,13 @@ export default class Post extends React.Component {
   }
 
   saveEdited = (newContent) => {
-    const { updatePost, data } = this.props;
+    let { updatePost, data } = this.props;
     var postId = data._id;
-    data.content = newContent;
+    data = {
+      ...data,
+      content: newContent.content,
+      image: newContent.image || data.image
+    }
     this.closeEditingModal();
 
     updatePost && updatePost(postId, data, 'editPost');
