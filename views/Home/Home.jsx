@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, AsyncStorage, TouchableOpacity } from 'react-native';
-import { Container, Header, Content, Text, Spinner, Footer } from 'native-base';
+import { Container, Header, Content, Text, Spinner, Footer, Icon } from 'native-base';
 import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
 import ChannelList from "../../components/ChannelList/ChannelList";
 import NotificationList from "../../components/NotificationList/NotificationList";
@@ -80,6 +80,23 @@ export default class HomeView extends React.Component {
     return false;
   };
 
+  markNotifsSeen = () => {
+    api.post(
+      `/users/${this.state.user._id}/markNotifsSeen`,
+      { Authorization: `Bearer ${this.state.token}`},
+      {}
+    )
+    .then(res => {
+      this.setState({
+        notifications: this.state.notifications.map(notif => {
+          notif.seen = true;
+          return notif;
+        })
+      });
+    })
+    .catch(err => console.error(err));
+  }
+
   render() {
     const { channels, loading, user, token } = this.state;
 
@@ -104,10 +121,16 @@ export default class HomeView extends React.Component {
                   user={user}
                   token={token}
                 /> :
+              <View>
+                <TouchableOpacity style={style.markAllSeen} onPress={this.markNotifsSeen}>
+                  <Icon name='eye'/>
+                  <Text style={style.markAllSeenText}>Mark all as seen</Text>
+                </TouchableOpacity>
                 <NotificationList
                   notifications={this.state.notifications}
                   onPressNotif={this.onPressNotif}
                 />
+              </View>
               }
             </ScrollView>
           </Content>
