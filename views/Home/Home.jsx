@@ -142,7 +142,7 @@ export default class HomeView extends React.Component {
                   <Text style={style.markAllSeenText}>Mark all as seen</Text>
                 </TouchableOpacity>
                 <NotificationList
-                  notifications={this.state.notifications}
+                  notifications={this.state.notifications.slice(0, 30)}
                   onPressNotif={this.onPressNotif}
                 />
               </View>
