@@ -7,6 +7,7 @@ import NotificationList from "../../components/NotificationList/NotificationList
 import HomeTabBar from "./HomeTabBar/HomeTabBar";
 import style from "./HomeStyle";
 import api from '../../ApiClient';
+import { Notifications } from 'expo';
 
 export default class HomeView extends React.Component {
 
@@ -30,6 +31,20 @@ export default class HomeView extends React.Component {
       this.setState({ channels: response, loading: false });
     })
     .catch(err => console.error(err));
+
+    this.notificationSubscription = Notifications.addListener(this.handleNewNotification);
+  }
+
+  handleNewNotification = () => {
+    api.get(
+      '/users/loggedInUser',
+      { Authorization: `Bearer ${this.state.token}`}
+    )
+    .then(user => {
+      if (user._id) {
+        this.setState({notifications: user.notifications});
+      }
+    }).catch(err => console.log(err));
   }
 
   onPressChannel = (channelId, channelName) => {
