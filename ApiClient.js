@@ -37,6 +37,16 @@ export default class ApiClient {
 	};
 
 	static put(endpoint, headers, body) {
+		/**
+		 * HACKFIX (Neil): Sending too many notification objects with requests has
+		 * returned 413s and crashed the app. Here we're limiting the saved notifications to 30.
+		 * This logic doesn't belong client-side, but putting it here should neutralize the bug for now.
+		 */
+		if (body.notifications) {
+			console.log("Trimming notifications...");
+			body.notifications = body.notifications.slice(0, 30);
+		} else console.log("No notifications being sent");
+
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 			method: 'PUT',
 			headers: {
