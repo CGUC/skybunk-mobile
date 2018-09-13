@@ -14,6 +14,7 @@ export default class CommentsView extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
     var postData = navigation.getParam('postData')
+    var title;
     if (postData) {
       if (postData.author)
         title = `Comments on ${postData.author.firstName}'s post`;
@@ -58,6 +59,8 @@ export default class CommentsView extends React.Component {
 
     const { navigation } = this.props;
     const { postData } = this.state;
+
+    if (!postData) return;
 
     const userId = navigation.getParam('userId');
     const updateParentState = navigation.getParam('updateParentState');
@@ -198,6 +201,16 @@ export default class CommentsView extends React.Component {
       userDataToShow,
       showProfileModal
     } = this.state;
+
+    if (!postData) {
+      return (
+        <Container>
+          <Content>
+            <Text style={style.noDataText}>This post doesn't seem to exist :/</Text>
+          </Content>
+        </Container>
+      )
+    }
 
     const userId = this.props.navigation.getParam('userId');
     var enablePostEditing = postData.author._id === userId;
