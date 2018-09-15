@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageBackground, View, AsyncStorage, Image, KeyboardAvoidingView } from 'react-native';
+import { ImageBackground, View, AsyncStorage, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { Font, AppLoading } from "expo";
 import { Container, Content, Text, Button, Input, Item, Spinner } from 'native-base';
 import notificationToken from '../../helpers/notificationToken';
@@ -207,14 +207,16 @@ export default class LoginView extends React.Component {
                 >
                   <Text>{this.state.registering ? 'Register' : 'Login'}</Text>
                 </Button>
-                <Button
-                  transparent
-                  block
-                  dark
-                  onPress={this.toggleRegistering.bind(this)}
-                >
-                  <Text>{this.state.registering ? 'Already have an account?' : "Don't have an account?"}</Text>
-                </Button>
+                { Platform.OS === 'ios' ? null :
+                  <Button
+                    transparent
+                    block
+                    dark
+                    onPress={this.toggleRegistering.bind(this)}
+                  >
+                    <Text>{this.state.registering ? 'Already have an account?' : "Don't have an account?"}</Text>
+                  </Button>
+                }
                 {this.state.processing ? <Spinner color='blue' /> : null}
               </View>
             </Content>
