@@ -76,10 +76,13 @@ export default (styles = StyleSheet.create({
     backgroundColor: '#00000050'
   },
   view: {
-    width: width,
-    height: 100
+  	flexDirection: 'column',
+  	justifyContent: 'center',
+  	alignItems: 'flex-end',
+  	paddingBottom: 5
   },
   editButton: {
+  	width: width - 10,
     marginTop: 5,
     height: 40,
     marginLeft: 5,
@@ -87,6 +90,7 @@ export default (styles = StyleSheet.create({
     backgroundColor: '#71d3d1',
   },
   deleteButton: {
+  	width: width - 10,
     marginTop: 5,
     height: 40,
     marginLeft: 5,
