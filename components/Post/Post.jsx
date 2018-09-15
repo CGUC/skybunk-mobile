@@ -133,17 +133,28 @@ export default class Post extends React.Component {
     updatePost && updatePost(data._id, data, 'toggleLike');
   }
 
-  getEditButtonJSX() {
-    const { enableEditing } = this.props;
-
-    if (enableEditing) return (
-      <View style={styles.headerRight}>
-        <TouchableOpacity onPress={this.onPressOptions} hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}>
-          <Icon style={styles.icon} type='MaterialIcons' name='more-vert' />
-        </TouchableOpacity>
-      </View>
-    )
-    return null;
+  getMenuOptions() {
+    if (this.props.enableEditing) {
+      return(
+        <View style={styles.view}>
+          <Button block style={styles.editButton} onPress={this.onPressEdit}>
+            <Text>Edit Post</Text>
+          </Button>
+          <Button block style={styles.deleteButton} onPress={this.onPressDelete}>
+            <Text>Delete Post</Text>
+          </Button>
+        </View>
+      );
+    }
+    else {
+      return(
+        <View style={styles.view}>
+          <Button block style={styles.deleteButton} onPress={this.hideEditButtons}>
+            <Text>Flag as innapropriate</Text>
+          </Button>
+        </View>
+      );
+    }
   }
 
   render() {
@@ -208,8 +219,11 @@ export default class Post extends React.Component {
                 </View>
               </View>
 
-              {this.getEditButtonJSX()}
-
+              <View style={styles.headerRight}>
+                <TouchableOpacity onPress={this.onPressOptions} hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}>
+                  <Icon style={styles.icon} type='MaterialIcons' name='more-vert' />
+                </TouchableOpacity>
+              </View>
             </View>
           </CardItem>
 
@@ -259,14 +273,7 @@ export default class Post extends React.Component {
               style={styles.editButtonsContainer}
               onPress={this.hideEditButtons}
             >
-              <View style={styles.view}>
-                <Button block style={styles.editButton} onPress={this.onPressEdit}>
-                  <Text>Edit Post</Text>
-                </Button>
-                <Button block style={styles.deleteButton} onPress={this.onPressDelete}>
-                  <Text>Delete Post</Text>
-                </Button>
-              </View>
+              {this.getMenuOptions()}
             </TouchableOpacity>
           </Modal>
         </View>
