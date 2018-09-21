@@ -19,7 +19,7 @@ This app communicates with our [server](https://github.com/cguc/grapp-server) vi
 3. Scan the barcode with expo on your phone
 
 #### Testing the app on eduroam
-1. Download and install the [Expo development environment (XDE)](https://github.com/expo/xde)
+1. Download and install the [Expo development environment (XDE)](https://github.com/expo/xde) (NOTE: You must be logged into the same account on the app and the XDE)
 2. Open XDE and select 'Open existing project...'
 3. Select the root folder of the Skybunk client repo
 4. Once the app builds, click either 'Share' or 'Device' to open the app on your smartphone
