@@ -266,7 +266,9 @@ export default class FeedView extends React.Component {
 
   renderListItem = ({ item }) => {
     const userId = this.props.navigation.getParam('userId')
-    const enableEditing = item.author._id === userId || this.props.navigation.getParam('userIsAdmin');
+    // Concept of editing includes deleting; deleting does not include editing.
+    const enableEditing = item.author._id === userId;
+    const enableDeleting = this.props.navigation.getParam('userIsAdmin');
     const channelId = this.props.navigation.getParam('channel')._id;
 
     return (
@@ -279,6 +281,7 @@ export default class FeedView extends React.Component {
         updatePost={this.updatePost}
         showTag={['all', 'subs', 'myPosts'].includes(channelId)}
         enableEditing={enableEditing}
+        enableDeleting={enableDeleting}
         showUserProfile={this.showUserProfile}
       />
     );

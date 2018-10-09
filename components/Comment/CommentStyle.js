@@ -44,7 +44,10 @@ export default (styles = StyleSheet.create({
   },
   view: {
     width: width,
-    height: 100
+    height: 100,
+    flexDirection: 'column',
+  	justifyContent: 'flex-end',
+  	paddingBottom: 5
   },
   editButton: {
     marginTop: 5,

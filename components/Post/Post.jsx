@@ -134,12 +134,12 @@ export default class Post extends React.Component {
   }
 
   getMenuOptions() {
-    if (this.props.enableEditing) {
+    if (this.props.enableEditing || this.props.enableDeleting) {
       return(
         <View style={styles.view}>
-          <Button block style={styles.editButton} onPress={this.onPressEdit}>
+          {this.props.enableEditing && <Button block style={styles.editButton} onPress={this.onPressEdit}>
             <Text>Edit Post</Text>
-          </Button>
+          </Button>}
           <Button block style={styles.deleteButton} onPress={this.onPressDelete}>
             <Text>Delete Post</Text>
           </Button>

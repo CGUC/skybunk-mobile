@@ -64,7 +64,8 @@ export default class HomeView extends React.Component {
       { 
         postData: notif.data.post,
         updateParentState: () => {}, 
-        userId: this.state.user._id 
+        userId: this.state.user._id,
+        userIsAdmin: this.state.user.isAdmin
       }
     );
   }

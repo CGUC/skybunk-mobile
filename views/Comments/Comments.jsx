@@ -214,7 +214,8 @@ export default class CommentsView extends React.Component {
 
     const userId = this.props.navigation.getParam('userId');
     const userIsAdmin = this.props.navigation.getParam('userIsAdmin');
-    var enablePostEditing = postData.author._id === userId || userIsAdmin;
+    var enablePostEditing = postData.author._id === userId;
+    var enablePostDeleting = userIsAdmin;
 
     var comments = postData.comments;
 
@@ -235,6 +236,7 @@ export default class CommentsView extends React.Component {
               maxLines={1000}
               updatePost={this.updateResource}
               enableEditing={enablePostEditing}
+              enableDeleting={enablePostDeleting}
               userId={userId}
               showUserProfile={this.showUserProfile}
             />
@@ -242,8 +244,8 @@ export default class CommentsView extends React.Component {
               {comments.length ?
                 _.map(_.orderBy(comments, comment => comment.createdAt.valueOf()),
                   (comment, key) => {
-                    var enableCommentEditing = comment.author._id === userId || userIsAdmin;
-                    console.log(enableCommentEditing);
+                    var enableCommentEditing = comment.author._id === userId;
+                    var enableCommentDeleting = userIsAdmin;
 
                     return (
                       <Comment
@@ -251,6 +253,7 @@ export default class CommentsView extends React.Component {
                         data={comment}
                         updateComment={this.updateResource}
                         enableEditing={enableCommentEditing}
+                        enableDeleting={enableCommentDeleting}
                         showUserProfile={this.showUserProfile}
                       />
                     )
