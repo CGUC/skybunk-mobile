@@ -110,6 +110,38 @@ export default class Post extends React.Component {
     if (onPressPost) onPressPost(data);
   }
 
+  onPressFlagInappropriate = () => {
+    Alert.alert(
+      'Hold Up!',
+      'Are you sure you want to flag this post as inappropriate?\nDoing so will notify the webmasters.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Confirm', onPress: this.notifyWebmasters },
+      ],
+    )
+  }
+
+  onPressBlock = () => {
+    Alert.alert(
+      'Hold Up!',
+      'Are you sure you want to report this user?\nDoing so will notify the webmasters, who can block their account.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Confirm', onPress: this.notifyWebmasters },
+      ],
+    )
+  }
+
+  notifyWebmasters = () => {
+    Alert.alert(
+      'Wemasters alerted',
+      'The webmasters have been notified about your request.',
+      [
+        { text: 'Continue', style: 'cancel' },
+      ],
+    )
+  }
+
   toggleLike = () => {
     const {
       updatePost,
@@ -149,8 +181,11 @@ export default class Post extends React.Component {
     else {
       return(
         <View style={styles.view}>
-          <Button block style={styles.deleteButton} onPress={this.hideEditButtons}>
-            <Text>Flag as innapropriate</Text>
+          <Button block style={styles.deleteButton} onPress={this.onPressFlagInappropriate}>
+            <Text>Flag as inappropriate</Text>
+          </Button>
+          <Button block style={styles.deleteButton} onPress={this.onPressBlock}>
+            <Text>Report/block user</Text>
           </Button>
         </View>
       );
