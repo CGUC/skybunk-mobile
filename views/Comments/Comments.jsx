@@ -213,7 +213,8 @@ export default class CommentsView extends React.Component {
     }
 
     const userId = this.props.navigation.getParam('userId');
-    var enablePostEditing = postData.author._id === userId;
+    const userIsAdmin = this.props.navigation.getParam('userIsAdmin');
+    var enablePostEditing = postData.author._id === userId || userIsAdmin;
 
     var comments = postData.comments;
 
@@ -241,7 +242,8 @@ export default class CommentsView extends React.Component {
               {comments.length ?
                 _.map(_.orderBy(comments, comment => comment.createdAt.valueOf()),
                   (comment, key) => {
-                    var enableCommentEditing = comment.author._id === userId;
+                    var enableCommentEditing = comment.author._id === userId || userIsAdmin;
+                    console.log(enableCommentEditing);
 
                     return (
                       <Comment

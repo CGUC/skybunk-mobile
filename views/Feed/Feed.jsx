@@ -215,9 +215,10 @@ export default class FeedView extends React.Component {
   onPressPost = (postData) => {
     const { navigation } = this.props;
     const userId = navigation.getParam('userId');
+    const userIsAdmin = navigation.getParam('userIsAdmin');
 
     var updateParentState = this.updateState;
-    this.props.navigation.navigate('Comments', { postData, updateParentState, userId });
+    this.props.navigation.navigate('Comments', { postData, updateParentState, userId, userIsAdmin });
   }
 
   showUserProfile = (user) => {
@@ -264,12 +265,13 @@ export default class FeedView extends React.Component {
   }
 
   renderListItem = ({ item }) => {
-    const enableEditing = item.author._id === this.props.navigation.getParam('userId');
+    const userId = this.props.navigation.getParam('userId')
+    const enableEditing = item.author._id === userId || this.props.navigation.getParam('userIsAdmin');
     const channelId = this.props.navigation.getParam('channel')._id;
 
     return (
       <Post
-        userId={this.props.navigation.getParam('userId')}
+        userId={userId}
         data={item}
         maxLines={10}
         key={item._id}
