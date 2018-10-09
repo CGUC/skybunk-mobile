@@ -54,7 +54,7 @@ export default class HomeView extends React.Component {
     if (['all', 'subs', 'myPosts'].includes(channelId)) channel = { _id: channelId, name: channelName };
     else channel = _.head(_.filter(channels, { _id: channelId }));
 
-    this.props.navigation.navigate('Feed', { channel, userId: user._id });
+    this.props.navigation.navigate('Feed', { channel, userId: user._id, userIsAdmin: user.isAdmin });
   }
 
   onPressNotif = (notif) => {
@@ -64,7 +64,8 @@ export default class HomeView extends React.Component {
       { 
         postData: notif.data.post,
         updateParentState: () => {}, 
-        userId: this.state.user._id 
+        userId: this.state.user._id,
+        userIsAdmin: this.state.user.isAdmin
       }
     );
   }

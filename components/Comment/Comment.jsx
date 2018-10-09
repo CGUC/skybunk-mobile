@@ -45,9 +45,9 @@ export default class Comment extends React.Component {
   }
 
   onPressComment = () => {
-    if (!this.props.enableEditing) return;
-
-    this.setState({ showEditButtons: true });
+    if (this.props.enableEditing || this.props.enableDeleting) {
+      this.setState({ showEditButtons: true });
+    }
   }
 
   hideEditButtons = () => {
@@ -95,7 +95,8 @@ export default class Comment extends React.Component {
 
     const {
       data,
-      showUserProfile
+      showUserProfile,
+      enableEditing
     } = this.props;
 
     var {
@@ -143,9 +144,9 @@ export default class Comment extends React.Component {
               onPress={this.hideEditButtons}
             >
               <View style={styles.view}>
-                <Button block style={styles.editButton} onPress={this.onPressEdit}>
+                {enableEditing && <Button block style={styles.editButton} onPress={this.onPressEdit}>
                   <Text>Edit Comment</Text>
-                </Button>
+                </Button>}
                 <Button block style={styles.deleteButton} onPress={this.onPressDelete}>
                   <Text>Delete Comment</Text>
                 </Button>
