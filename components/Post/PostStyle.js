@@ -24,13 +24,17 @@ export default (styles = StyleSheet.create({
 	},
 	iconContainer: {
 		flexDirection: 'row',
-		marginRight: 20
+		alignItems: 'center',
 	},
 	icon: {
 		width: 25,
 		height: 25,
 		marginRight: 0,
 		paddingRight: 0
+	},
+	commentsContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
 	},
 	moreIconContainer: {
 		marginRight: 5,
@@ -87,8 +91,8 @@ export default (styles = StyleSheet.create({
     height: 40,
     marginLeft: 5,
     marginRight: 5,
-    backgroundColor: '#71d3d1',
-  },
+		backgroundColor: '#71d3d1',
+	},
   deleteButton: {
   	width: width - 10,
     marginTop: 5,
@@ -105,5 +109,21 @@ export default (styles = StyleSheet.create({
   image: {
   	borderWidth: 2,
   	borderColor: '#AAAAAA',
-  }
+	},
+	footerContainer: {
+		display: 'flex',
+		flexDirection: 'row',
+		width: '100%',
+		justifyContent: 'space-between'
+	},
+	likesDialog: {
+		fontSize: 12,
+		paddingLeft: 10,
+		flex: 1,
+		textAlign: 'left',
+	},
+	commentsDialog: {
+		paddingLeft: 5,
+		marginRight: 15
+	}
 }));

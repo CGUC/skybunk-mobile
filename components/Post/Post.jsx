@@ -161,8 +161,12 @@ export default class Post extends React.Component {
 
     if (data.likes < 0) data.likes = 0; // (Grebel's a positive community, come on!)
 
-    this.setState({isLiked: data.isLiked});
+    this.setState({ isLiked: data.isLiked });
     updatePost && updatePost(data._id, data, 'toggleLike');
+  }
+
+  showUsersLiked = () => {
+    // Bring popover over modal with list of users
   }
 
   getMenuOptions() {
@@ -179,7 +183,7 @@ export default class Post extends React.Component {
       );
     }
     else {
-      return(
+      return (
         <View style={styles.view}>
           <Button block style={styles.deleteButton} onPress={this.onPressFlagInappropriate}>
             <Text>Flag as inappropriate</Text>
@@ -207,6 +211,7 @@ export default class Post extends React.Component {
       author,
       content,
       likes,
+      usersLiked,
       isLiked,
       comments,
       createdAt,
@@ -215,6 +220,17 @@ export default class Post extends React.Component {
     } = data;
 
     var likeIcon = isLiked ? require('../../assets/liked-cookie.png') : require('../../assets/cookie-icon.png');
+
+    var likesDialog;
+    if (likes === 0) {
+      likesDialog = "Sauce a 'cook!";
+    } else if (likes === 1) {
+      likesDialog = `Liked by ${usersLiked[0].firstName}`;
+    } else if (likes === 2) {
+      likesDialog = `Liked by\n${usersLiked[0].firstName} and ${usersLiked[1].firstName}`;
+    } else {
+      likesDialog = `Liked by ${usersLiked[0].firstName},\n${usersLiked[1].firstName} and ${likes - 2} ${likes === 3 ? 'other' : 'others'}`;
+    }
 
     // In case author account is deleted
     var authorName;
@@ -264,7 +280,7 @@ export default class Post extends React.Component {
 
           <CardItem button onPress={this.onPressPost} style={styles.postContent}>
             <Body>
-              <Autolink text={content} numberOfLines={this.props.maxLines} ellipsizeMode='tail'/>
+              <Autolink text={content} numberOfLines={this.props.maxLines} ellipsizeMode='tail' />
             </Body>
           </CardItem>
 
@@ -277,21 +293,22 @@ export default class Post extends React.Component {
           </CardItem> : null}
 
           <CardItem style={styles.postFooter}>
-            <Left>
-              <TouchableOpacity onPress={this.toggleLike}>
+            <View style={styles.footerContainer}>
                 <View style={styles.iconContainer}>
+                <TouchableOpacity onPress={this.toggleLike}>
                   <Thumbnail small square source={likeIcon} style={styles.icon} />
-                  <Text>{`${likes}`}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.showUsersLiked}>
+                  <Text style={styles.likesDialog}>{`${likesDialog}`}</Text>
+                </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
-
               <TouchableOpacity onPress={this.onPressPost}>
-                <View style={styles.iconContainer}>
+                <View style={styles.commentsContainer}>
                   <Thumbnail small square source={require('../../assets/comments-icon.png')} style={styles.icon} />
-                  <Text>{`${numComments}`}</Text>
+                  <Text style={styles.commentsDialog}>{`${numComments}`}</Text>
                 </View>
               </TouchableOpacity>
-            </Left>
+            </View>
           </CardItem>
 
         </Card>

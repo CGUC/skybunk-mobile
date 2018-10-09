@@ -82,10 +82,11 @@ export default class FeedView extends React.Component {
       page: 1,
       loadedLastPage: false
     });
+    const userId = this.props.navigation.getParam('userId');
     await api.get(this.getUri())
       .then(response => {
         var posts = _.map(response, post => {
-          if (post.usersLiked.includes(this.props.navigation.getParam('userId'))) {
+          if (post.usersLiked.find((user) => user._id === userId)) {
             post.isLiked = true;
           } else post.isLiked = false;
           return post;
