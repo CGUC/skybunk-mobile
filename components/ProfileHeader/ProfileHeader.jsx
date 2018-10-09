@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Text, View, Image, TouchableOpacity, ImageBackground, Platform } from "react-native";
+import { Alert, Text, View, Image, TouchableOpacity, ImageBackground, Platform, Linking } from "react-native";
 import { Icon } from "native-base"
 import { ImagePicker, Permissions } from 'expo';
 import styles from "./ProfileHeaderStyle";
@@ -46,7 +46,15 @@ export default class ProfileHeader extends React.Component {
             {this.props.user.firstName} {this.props.user.lastName}
           </Text>
         </View>
-        <TouchableOpacity onPress={() => { Alert.alert('Help', `Version: ${config.VERSION}`) }}>
+        <TouchableOpacity onPress={() => {Alert.alert(
+            'Help',
+            `Version: ${config.VERSION}`,
+            [
+              {text: 'Send feedback', onPress: () => Linking.openURL('https://grebelife.com/skybunk/feedback')},
+              {text: 'Contact webmasters', onPress: () => Linking.openURL(`mailto:webmaster@grebelife.com?subject=Skybunk%20Question%20v${config.VERSION}`)},
+            ],
+            { cancelable: true }
+          ) }}>
           <Image source={require('../../assets/help-with-words-icon.png')} style={styles.helpIcon} />
         </TouchableOpacity>
       </ImageBackground>
