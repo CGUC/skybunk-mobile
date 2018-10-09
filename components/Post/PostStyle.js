@@ -120,7 +120,7 @@ export default (styles = StyleSheet.create({
 		fontSize: 12,
 		paddingLeft: 10,
 		flex: 1,
-		textAlign: 'left',
+		textAlignVertical: 'center',
 	},
 	commentsDialog: {
 		paddingLeft: 5,

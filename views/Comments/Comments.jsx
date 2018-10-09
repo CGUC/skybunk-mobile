@@ -62,14 +62,14 @@ export default class CommentsView extends React.Component {
 
     if (!postData) return;
 
-    const userId = navigation.getParam('userId');
+    const loggedInUser = navigation.getParam('loggedInUser');
     const updateParentState = navigation.getParam('updateParentState');
 
     var postUri = `/posts/${postData._id}`;
 
     await api.get(postUri)
       .then(response => {
-        if (response.usersLiked.includes(userId)) {
+        if (response.usersLiked.includes(loggedInUser._id)) {
           response.isLiked = true;
         } else response.isLiked = false;
 
@@ -93,7 +93,7 @@ export default class CommentsView extends React.Component {
       postData
     } = this.state;
 
-    const userId = this.props.navigation.getParam('userId');
+    const loggedInUser = this.props.navigation.getParam('loggedInUser');
     const updateParentState = navigation.getParam('updateParentState');
 
     AsyncStorage.getItem('@Skybunk:token')
@@ -124,7 +124,7 @@ export default class CommentsView extends React.Component {
 
         else if (type === 'addComment') {
           var commentContent = {
-            author: userId,
+            author: loggedInUser._id,
             content: data.content,
           }
           api.post(`/posts/${postData._id}/comment`, { 'Authorization': 'Bearer ' + value }, commentContent)
@@ -138,7 +138,7 @@ export default class CommentsView extends React.Component {
 
         else if (type === 'updateComment') {
           var commentContent = {
-            author: userId,
+            author: loggedInUser._id,
             content: data.content,
           }
           api.put(`/posts/${postData._id}/comment/${id}`, { 'Authorization': 'Bearer ' + value }, commentContent)
@@ -212,10 +212,8 @@ export default class CommentsView extends React.Component {
       )
     }
 
-    const userId = this.props.navigation.getParam('userId');
-    const userIsAdmin = this.props.navigation.getParam('userIsAdmin');
-    var enablePostEditing = postData.author._id === userId;
-    var enablePostDeleting = userIsAdmin;
+    const loggedInUser = this.props.navigation.getParam('loggedInUser');
+    var enablePostEditing = postData.author._id === loggedInUser._id;
 
     var comments = postData.comments;
 
@@ -236,16 +234,15 @@ export default class CommentsView extends React.Component {
               maxLines={1000}
               updatePost={this.updateResource}
               enableEditing={enablePostEditing}
-              enableDeleting={enablePostDeleting}
-              userId={userId}
+              enableDeleting={loggedInUser.isAdmin}
+              loggedInUser={loggedInUser}
               showUserProfile={this.showUserProfile}
             />
             <ScrollView>
               {comments.length ?
                 _.map(_.orderBy(comments, comment => comment.createdAt.valueOf()),
                   (comment, key) => {
-                    var enableCommentEditing = comment.author._id === userId;
-                    var enableCommentDeleting = userIsAdmin;
+                    var enableCommentEditing = comment.author._id === loggedInUser._id;
 
                     return (
                       <Comment
@@ -253,7 +250,7 @@ export default class CommentsView extends React.Component {
                         data={comment}
                         updateComment={this.updateResource}
                         enableEditing={enableCommentEditing}
-                        enableDeleting={enableCommentDeleting}
+                        enableDeleting={loggedInUser.isAdmin}
                         showUserProfile={this.showUserProfile}
                       />
                     )

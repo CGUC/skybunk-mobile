@@ -146,16 +146,20 @@ export default class Post extends React.Component {
     const {
       updatePost,
       data,
-      userId,
+      loggedInUser,
     } = this.props;
 
-    if (data.usersLiked.includes(userId)) {
+    if (data.usersLiked.find((user) => user._id === loggedInUser._id)) {
       data.likes--;
-      data.usersLiked = _.filter(data.usersLiked, user => user !== userId);
+      data.usersLiked = _.filter(data.usersLiked, user => user._id !== loggedInUser._id);
       data.isLiked = false;
     } else {
       data.likes++;
-      data.usersLiked.push(userId);
+      data.usersLiked.push({ 
+        _id: loggedInUser._id,
+        firstname: loggedInUser.firstname,
+        lastName: loggedInUser.lastName
+      });
       data.isLiked = true;
     }
 
@@ -171,7 +175,7 @@ export default class Post extends React.Component {
 
   getMenuOptions() {
     if (this.props.enableEditing || this.props.enableDeleting) {
-      return(
+      return (
         <View style={styles.view}>
           {this.props.enableEditing && <Button block style={styles.editButton} onPress={this.onPressEdit}>
             <Text>Edit Post</Text>
@@ -204,7 +208,8 @@ export default class Post extends React.Component {
 
     const {
       data,
-      showUserProfile
+      showUserProfile,
+      loggedInUser
     } = this.props;
 
     var {
@@ -215,21 +220,24 @@ export default class Post extends React.Component {
       isLiked,
       comments,
       createdAt,
-      isLiked,
       tags,
     } = data;
 
     var likeIcon = isLiked ? require('../../assets/liked-cookie.png') : require('../../assets/cookie-icon.png');
 
+    if (isLiked) {
+      usersLiked = usersLiked.filter(user => user._id !== loggedInUser._id);
+      usersLiked.unshift({ firstName: 'You' }); // a wee hack
+    }
     var likesDialog;
     if (likes === 0) {
       likesDialog = "Sauce a 'cook!";
     } else if (likes === 1) {
-      likesDialog = `Liked by ${usersLiked[0].firstName}`;
+      likesDialog = `${usersLiked[0].firstName}`;
     } else if (likes === 2) {
-      likesDialog = `Liked by\n${usersLiked[0].firstName} and ${usersLiked[1].firstName}`;
+      likesDialog = `${usersLiked[0].firstName} and ${usersLiked[1].firstName}`;
     } else {
-      likesDialog = `Liked by ${usersLiked[0].firstName},\n${usersLiked[1].firstName} and ${likes - 2} ${likes === 3 ? 'other' : 'others'}`;
+      likesDialog = `${usersLiked[0].firstName},\n${usersLiked[1].firstName} and ${likes - 2} ${likes === 3 ? 'other' : 'others'}`;
     }
 
     // In case author account is deleted
@@ -294,14 +302,14 @@ export default class Post extends React.Component {
 
           <CardItem style={styles.postFooter}>
             <View style={styles.footerContainer}>
-                <View style={styles.iconContainer}>
+              <View style={styles.iconContainer}>
                 <TouchableOpacity onPress={this.toggleLike}>
                   <Thumbnail small square source={likeIcon} style={styles.icon} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={this.showUsersLiked}>
                   <Text style={styles.likesDialog}>{`${likesDialog}`}</Text>
                 </TouchableOpacity>
-                </View>
+              </View>
               <TouchableOpacity onPress={this.onPressPost}>
                 <View style={styles.commentsContainer}>
                   <Thumbnail small square source={require('../../assets/comments-icon.png')} style={styles.icon} />

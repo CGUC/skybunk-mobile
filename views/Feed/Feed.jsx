@@ -59,7 +59,7 @@ export default class FeedView extends React.Component {
   }
 
   getUri() {
-    const userId = this.props.navigation.getParam('userId');
+    const loggedInUser = this.props.navigation.getParam('loggedInUser');
     
     var channel = this.props.navigation.getParam('channel');
     if (!channel) channel = { _id: 'all' };
@@ -68,10 +68,10 @@ export default class FeedView extends React.Component {
       return '/posts'
     }
     else if ('subs' === channel._id) {
-      return `/users/${userId}/subscribedChannels/posts`;
+      return `/users/${loggedInUser._id}/subscribedChannels/posts`;
     }
     else if ('myPosts' === channel._id) {
-      return `/posts/user/${userId}`;
+      return `/posts/user/${loggedInUser._id}`;
     }
     return `/channels/${channel._id}/posts`;
   }
@@ -82,11 +82,12 @@ export default class FeedView extends React.Component {
       page: 1,
       loadedLastPage: false
     });
-    const userId = this.props.navigation.getParam('userId');
+    const loggedInUser = this.props.navigation.getParam('loggedInUser');
     await api.get(this.getUri())
       .then(response => {
+        // This doesn't look like it does anything, but it does. ¯\_(ツ)_/¯
         var posts = _.map(response, post => {
-          if (post.usersLiked.find((user) => user._id === userId)) {
+          if (post.usersLiked.find((user) => user._id === loggedInUser._id)) {
             post.isLiked = true;
           } else post.isLiked = false;
           return post;
@@ -110,7 +111,7 @@ export default class FeedView extends React.Component {
       navigation,
     } = this.props;
 
-    const userId = navigation.getParam('userId');
+    const loggedInUser = navigation.getParam('loggedInUser');
 
     var channel = navigation.getParam('channel');
     if (['all', 'subs'].includes(channel._id)) return console.error(`Can't add post to ${channel._id} feed`);
@@ -120,7 +121,7 @@ export default class FeedView extends React.Component {
     AsyncStorage.getItem('@Skybunk:token')
       .then(value => {
         var postContent = {
-          author: userId,
+          author: loggedInUser._id,
           content: data.content,
           tags: tags
         }
@@ -151,8 +152,6 @@ export default class FeedView extends React.Component {
     const {
       navigation,
     } = this.props;
-
-    const userId = navigation.getParam('userId');
 
     if (type === 'toggleLike') {
       this.setState({
@@ -215,11 +214,10 @@ export default class FeedView extends React.Component {
 
   onPressPost = (postData) => {
     const { navigation } = this.props;
-    const userId = navigation.getParam('userId');
-    const userIsAdmin = navigation.getParam('userIsAdmin');
+    const loggedInUser = navigation.getParam('loggedInUser');
 
     var updateParentState = this.updateState;
-    this.props.navigation.navigate('Comments', { postData, updateParentState, userId, userIsAdmin });
+    this.props.navigation.navigate('Comments', { postData, updateParentState, loggedInUser });
   }
 
   showUserProfile = (user) => {
@@ -266,15 +264,14 @@ export default class FeedView extends React.Component {
   }
 
   renderListItem = ({ item }) => {
-    const userId = this.props.navigation.getParam('userId')
+    const loggedInUser = this.props.navigation.getParam('loggedInUser')
     // Concept of editing includes deleting; deleting does not include editing.
-    const enableEditing = item.author._id === userId;
-    const enableDeleting = this.props.navigation.getParam('userIsAdmin');
+    const enableEditing = item.author._id === loggedInUser._id;
     const channelId = this.props.navigation.getParam('channel')._id;
 
     return (
       <Post
-        userId={userId}
+        loggedInUser={loggedInUser}
         data={item}
         maxLines={10}
         key={item._id}
@@ -282,7 +279,7 @@ export default class FeedView extends React.Component {
         updatePost={this.updatePost}
         showTag={['all', 'subs', 'myPosts'].includes(channelId)}
         enableEditing={enableEditing}
-        enableDeleting={enableDeleting}
+        enableDeleting={loggedInUser.isAdmin}
         showUserProfile={this.showUserProfile}
       />
     );
@@ -329,7 +326,6 @@ export default class FeedView extends React.Component {
       navigation,
     } = this.props;
 
-    const userId = navigation.getParam('userId');
     const channelId = navigation.getParam('channel')._id;
 
     if (loading) {
