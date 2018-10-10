@@ -1,15 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Autolink from 'react-native-autolink';
-import { View, Platform, TouchableOpacity, Modal, Alert, Dimensions } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Modal, Alert, Dimensions } from 'react-native';
 import Image from 'react-native-scalable-image';
-import {
-  Container, Left, Right, Body, Content, Card,
-  CardItem, Text, Thumbnail, Button, Icon
-} from 'native-base';
+import { Body, Card, CardItem, Text, Thumbnail, Button, Icon } from 'native-base';
 import _ from 'lodash';
-import { Font, AppLoading } from "expo";
+import { Font } from "expo";
 import date from 'date-fns';
+import Popover from 'react-native-popover-view';
 
 import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
 import ApiClient from '../../ApiClient';
@@ -155,7 +152,7 @@ export default class Post extends React.Component {
       data.isLiked = false;
     } else {
       data.likes++;
-      data.usersLiked.push({ 
+      data.usersLiked.push({
         _id: loggedInUser._id,
         firstname: loggedInUser.firstname,
         lastName: loggedInUser.lastName
@@ -169,8 +166,30 @@ export default class Post extends React.Component {
     updatePost && updatePost(data._id, data, 'toggleLike');
   }
 
-  showUsersLiked = () => {
-    // Bring popover over modal with list of users
+  generateLikesList = () => {
+    let {
+      usersLiked,
+      isLiked
+    } = this.props.data;
+
+    const { loggedInUser } = this.props;
+
+    if (isLiked) {
+      usersLiked = usersLiked.filter(user => user._id !== loggedInUser._id);
+      usersLiked.unshift({ firstName: 'You' }); // a wee hack
+    }
+
+    return (
+      <ScrollView contentContainerStyle={styles.likedList}>
+        <Thumbnail small square source={require('../../assets/liked-cookie.png')} style={styles.likedListIcon} />
+        <View style={styles.line} />
+          {usersLiked.map((user, i) => {
+            return (
+              <Text style={styles.likedListItem}>{user.firstName} {user.lastName || ''}</Text>
+            )
+          })}
+      </ScrollView>
+    )
   }
 
   getMenuOptions() {
@@ -203,7 +222,8 @@ export default class Post extends React.Component {
   render() {
     const {
       showEditButtons,
-      editing
+      editing,
+      showLikedList
     } = this.state;
 
     const {
@@ -227,7 +247,7 @@ export default class Post extends React.Component {
 
     if (isLiked) {
       usersLiked = usersLiked.filter(user => user._id !== loggedInUser._id);
-      usersLiked.unshift({ firstName: 'You' }); // a wee hack
+      usersLiked.unshift({ firstName: 'You' });
     }
     var likesDialog;
     if (likes === 0) {
@@ -306,7 +326,7 @@ export default class Post extends React.Component {
                 <TouchableOpacity onPress={this.toggleLike}>
                   <Thumbnail small square source={likeIcon} style={styles.icon} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this.showUsersLiked}>
+                <TouchableOpacity onPress={() => this.setState({ showLikedList: true })} ref={ref => this.dialogRef = ref}>
                   <Text style={styles.likesDialog}>{`${likesDialog}`}</Text>
                 </TouchableOpacity>
               </View>
@@ -318,6 +338,14 @@ export default class Post extends React.Component {
               </TouchableOpacity>
             </View>
           </CardItem>
+
+          <Popover
+            fromView={this.dialogRef}
+            isVisible={showLikedList}
+            onClose={() => this.setState({ showLikedList: false })}
+          >
+            {this.generateLikesList()}
+          </Popover>
 
         </Card>
 

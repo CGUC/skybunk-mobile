@@ -26,6 +26,7 @@
     "react-native": "~0.55.2",
     "react-native-autolink": "^1.4.0",
     "react-native-nav": "2.0.2",
+    "react-native-popover-view": "^1.0.9",
     "react-native-scalable-image": "^0.4.0",
     "react-native-swipe-gestures": "^1.0.2",
     "react-navigation": "^2.5.3"

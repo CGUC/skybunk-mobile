@@ -73,42 +73,42 @@ export default (styles = StyleSheet.create({
 		paddingTop: 6
 	},
 	editButtonsContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    backgroundColor: '#00000050'
-  },
-  view: {
-  	flexDirection: 'column',
-  	justifyContent: 'center',
-  	alignItems: 'flex-end',
-  	paddingBottom: 5
-  },
-  editButton: {
-  	width: width - 10,
-    marginTop: 5,
-    height: 40,
-    marginLeft: 5,
-    marginRight: 5,
+		flex: 1,
+		flexDirection: 'column',
+		justifyContent: 'flex-end',
+		alignItems: 'center',
+		backgroundColor: '#00000050'
+	},
+	view: {
+		flexDirection: 'column',
+		justifyContent: 'center',
+		alignItems: 'flex-end',
+		paddingBottom: 5
+	},
+	editButton: {
+		width: width - 10,
+		marginTop: 5,
+		height: 40,
+		marginLeft: 5,
+		marginRight: 5,
 		backgroundColor: '#71d3d1',
 	},
-  deleteButton: {
-  	width: width - 10,
-    marginTop: 5,
-    height: 40,
-    marginLeft: 5,
-    marginRight: 5,
-    backgroundColor: 'red',
-  },
-  imageContainer: {
-  	flexDirection: 'row',
-  	alignItems: 'center',
-  	justifyContent: 'center'
-  },
-  image: {
-  	borderWidth: 2,
-  	borderColor: '#AAAAAA',
+	deleteButton: {
+		width: width - 10,
+		marginTop: 5,
+		height: 40,
+		marginLeft: 5,
+		marginRight: 5,
+		backgroundColor: 'red',
+	},
+	imageContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
+	image: {
+		borderWidth: 2,
+		borderColor: '#AAAAAA',
 	},
 	footerContainer: {
 		display: 'flex',
@@ -125,5 +125,28 @@ export default (styles = StyleSheet.create({
 	commentsDialog: {
 		paddingLeft: 5,
 		marginRight: 15
+	},
+	likedList: {
+		padding: 20,
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'flex-start',
+		alignItems: 'flex-start',
+	},
+	likedListIcon: {
+		width: 25,
+		height: 25,
+		marginBottom: 10,
+		alignSelf: 'center'
+	},
+	line: {
+		width: '100%',
+		borderBottomWidth: 1,
+		borderBottomColor: '#C0C0C0',
+		paddingLeft: 20,
+		paddingRight: 20
+	},
+	likedListItem: {
+		padding: 5
 	}
 }));
