@@ -1,15 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Autolink from 'react-native-autolink';
-import { View, Platform, TouchableOpacity, Modal, Alert, Dimensions } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Modal, Alert, Dimensions } from 'react-native';
 import Image from 'react-native-scalable-image';
-import {
-  Container, Left, Right, Body, Content, Card,
-  CardItem, Text, Thumbnail, Button, Icon
-} from 'native-base';
+import { Body, Card, CardItem, Text, Thumbnail, Button, Icon } from 'native-base';
 import _ from 'lodash';
-import { Font, AppLoading } from "expo";
+import { Font } from "expo";
 import date from 'date-fns';
+import Popover from 'react-native-popover-view';
 
 import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
 import ApiClient from '../../ApiClient';
@@ -24,7 +21,6 @@ export default class Post extends React.Component {
       profilePicture: null,
       showEditButtons: false,
       editing: false,
-      isLiked: this.props.data.isLiked,
       image: null,
     }
   }
@@ -146,28 +142,57 @@ export default class Post extends React.Component {
     const {
       updatePost,
       data,
-      userId,
+      loggedInUser,
     } = this.props;
 
-    if (data.usersLiked.includes(userId)) {
+    if (data.usersLiked.find((user) => user._id === loggedInUser._id)) {
       data.likes--;
-      data.usersLiked = _.filter(data.usersLiked, user => user !== userId);
+      data.usersLiked = _.filter(data.usersLiked, user => user._id !== loggedInUser._id);
       data.isLiked = false;
     } else {
       data.likes++;
-      data.usersLiked.push(userId);
+      data.usersLiked.push({
+        _id: loggedInUser._id,
+        firstname: loggedInUser.firstName,
+        lastName: loggedInUser.lastName
+      });
       data.isLiked = true;
     }
 
     if (data.likes < 0) data.likes = 0; // (Grebel's a positive community, come on!)
 
-    this.setState({isLiked: data.isLiked});
     updatePost && updatePost(data._id, data, 'toggleLike');
+  }
+
+  generateLikesList = () => {
+    let {
+      usersLiked,
+      isLiked
+    } = this.props.data;
+
+    const { loggedInUser } = this.props;
+
+    if (isLiked) {
+      usersLiked = usersLiked.filter(user => user._id !== loggedInUser._id);
+      usersLiked.unshift({ firstName: 'You' }); // a wee hack
+    }
+
+    return (
+      <ScrollView contentContainerStyle={styles.likedList}>
+        <Thumbnail small square source={require('../../assets/liked-cookie.png')} style={styles.likedListIcon} />
+        <View style={styles.line} />
+          {usersLiked.map((user, i) => {
+            return (
+              <Text key={i} style={styles.likedListItem}>{user.firstName} {user.lastName || ''}</Text>
+            )
+          })}
+      </ScrollView>
+    )
   }
 
   getMenuOptions() {
     if (this.props.enableEditing || this.props.enableDeleting) {
-      return(
+      return (
         <View style={styles.view}>
           {this.props.enableEditing && <Button block style={styles.editButton} onPress={this.onPressEdit}>
             <Text>Edit Post</Text>
@@ -179,7 +204,7 @@ export default class Post extends React.Component {
       );
     }
     else {
-      return(
+      return (
         <View style={styles.view}>
           <Button block style={styles.deleteButton} onPress={this.onPressFlagInappropriate}>
             <Text>Flag as inappropriate</Text>
@@ -195,26 +220,43 @@ export default class Post extends React.Component {
   render() {
     const {
       showEditButtons,
-      editing
+      editing,
+      showLikedList
     } = this.state;
 
     const {
       data,
-      showUserProfile
+      showUserProfile,
+      loggedInUser
     } = this.props;
 
     var {
       author,
       content,
       likes,
+      usersLiked,
       isLiked,
       comments,
       createdAt,
-      isLiked,
       tags,
     } = data;
 
     var likeIcon = isLiked ? require('../../assets/liked-cookie.png') : require('../../assets/cookie-icon.png');
+
+    if (isLiked) {
+      usersLiked = usersLiked.filter(user => user._id !== loggedInUser._id);
+      usersLiked.unshift({ firstName: 'You' });
+    }
+    var likesDialog;
+    if (likes === 0) {
+      likesDialog = "Sauce a 'cook!";
+    } else if (likes === 1) {
+      likesDialog = `${usersLiked[0].firstName}`;
+    } else if (likes === 2) {
+      likesDialog = `${usersLiked[0].firstName} and ${usersLiked[1].firstName}`;
+    } else {
+      likesDialog = `${usersLiked[0].firstName},\n${usersLiked[1].firstName} and ${likes - 2} ${likes === 3 ? 'other' : 'others'}`;
+    }
 
     // In case author account is deleted
     var authorName;
@@ -264,7 +306,7 @@ export default class Post extends React.Component {
 
           <CardItem button onPress={this.onPressPost} style={styles.postContent}>
             <Body>
-              <Autolink text={content} numberOfLines={this.props.maxLines} ellipsizeMode='tail'/>
+              <Autolink text={content} numberOfLines={this.props.maxLines} ellipsizeMode='tail' />
             </Body>
           </CardItem>
 
@@ -277,22 +319,35 @@ export default class Post extends React.Component {
           </CardItem> : null}
 
           <CardItem style={styles.postFooter}>
-            <Left>
-              <TouchableOpacity onPress={this.toggleLike}>
-                <View style={styles.iconContainer}>
+            <View style={styles.footerContainer}>
+              <View style={styles.iconContainer}>
+                <TouchableOpacity onPress={this.toggleLike}>
                   <Thumbnail small square source={likeIcon} style={styles.icon} />
-                  <Text>{`${likes}`}</Text>
-                </View>
-              </TouchableOpacity>
-
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.setState({ showLikedList: true })}
+                  ref={ref => this.dialogRef = ref}
+                  hitSlop={{ top: 10, bottom: 10, left: 0, right: 40 }}
+                >
+                  <Text style={styles.likesDialog}>{`${likesDialog}`}</Text>
+                </TouchableOpacity>
+              </View>
               <TouchableOpacity onPress={this.onPressPost}>
-                <View style={styles.iconContainer}>
+                <View style={styles.commentsContainer}>
                   <Thumbnail small square source={require('../../assets/comments-icon.png')} style={styles.icon} />
-                  <Text>{`${numComments}`}</Text>
+                  <Text style={styles.commentsDialog}>{`${numComments}`}</Text>
                 </View>
               </TouchableOpacity>
-            </Left>
+            </View>
           </CardItem>
+
+          <Popover
+            fromView={this.dialogRef}
+            isVisible={showLikedList}
+            onClose={() => this.setState({ showLikedList: false })}
+          >
+            {this.generateLikesList()}
+          </Popover>
 
         </Card>
 
