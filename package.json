@@ -19,6 +19,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "cryptiles": "^4.1.2",
     "date-fns": "^1.29.0",
     "expo": "^27.0.1",
     "native-base": "^2.6.1",
