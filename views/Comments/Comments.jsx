@@ -69,7 +69,7 @@ export default class CommentsView extends React.Component {
 
     await api.get(postUri)
       .then(response => {
-        if (response.usersLiked.includes(loggedInUser._id)) {
+        if (response.usersLiked.find(user => user._id === loggedInUser._id)) {
           response.isLiked = true;
         } else response.isLiked = false;
 

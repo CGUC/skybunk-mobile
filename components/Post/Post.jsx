@@ -21,7 +21,6 @@ export default class Post extends React.Component {
       profilePicture: null,
       showEditButtons: false,
       editing: false,
-      isLiked: this.props.data.isLiked,
       image: null,
     }
   }
@@ -154,7 +153,7 @@ export default class Post extends React.Component {
       data.likes++;
       data.usersLiked.push({
         _id: loggedInUser._id,
-        firstname: loggedInUser.firstname,
+        firstname: loggedInUser.firstName,
         lastName: loggedInUser.lastName
       });
       data.isLiked = true;
@@ -162,7 +161,6 @@ export default class Post extends React.Component {
 
     if (data.likes < 0) data.likes = 0; // (Grebel's a positive community, come on!)
 
-    this.setState({ isLiked: data.isLiked });
     updatePost && updatePost(data._id, data, 'toggleLike');
   }
 
@@ -185,7 +183,7 @@ export default class Post extends React.Component {
         <View style={styles.line} />
           {usersLiked.map((user, i) => {
             return (
-              <Text style={styles.likedListItem}>{user.firstName} {user.lastName || ''}</Text>
+              <Text key={i} style={styles.likedListItem}>{user.firstName} {user.lastName || ''}</Text>
             )
           })}
       </ScrollView>
@@ -326,7 +324,11 @@ export default class Post extends React.Component {
                 <TouchableOpacity onPress={this.toggleLike}>
                   <Thumbnail small square source={likeIcon} style={styles.icon} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.setState({ showLikedList: true })} ref={ref => this.dialogRef = ref}>
+                <TouchableOpacity
+                  onPress={() => this.setState({ showLikedList: true })}
+                  ref={ref => this.dialogRef = ref}
+                  hitSlop={{ top: 10, bottom: 10, left: 0, right: 40 }}
+                >
                   <Text style={styles.likesDialog}>{`${likesDialog}`}</Text>
                 </TouchableOpacity>
               </View>
