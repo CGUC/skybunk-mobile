@@ -249,7 +249,7 @@ export default class Post extends React.Component {
     }
     var likesDialog;
     if (likes === 0) {
-      likesDialog = "Sauce a 'cook!";
+      likesDialog = "No cookies yet";
     } else if (likes === 1) {
       likesDialog = `${usersLiked[0].firstName}`;
     } else if (likes === 2) {
