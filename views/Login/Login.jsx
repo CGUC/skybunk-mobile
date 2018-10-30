@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageBackground, View, AsyncStorage, Image, KeyboardAvoidingView, Platform } from 'react-native';
+import { ImageBackground, View, AsyncStorage, Image, KeyboardAvoidingView, Platform, Linking } from 'react-native';
 import { Font, AppLoading } from "expo";
 import { Container, Content, Text, Button, Input, Item, Spinner } from 'native-base';
 import notificationToken from '../../helpers/notificationToken';
@@ -45,6 +45,10 @@ export default class LoginView extends React.Component {
         [key]: text,
       });
     };
+  }
+
+  contactWebmasters() {
+    Linking.openURL(`mailto:webmaster@grebelife.com?subject=Skybunk%20Help%20`)
   }
 
   submitForm() {
@@ -166,7 +170,7 @@ export default class LoginView extends React.Component {
             <Content contentContainerStyle={{ flex: 1, alignItems: 'center' }}>
               <KeyboardAvoidingView
                 style={styles.loginInputGroup}
-                flex={this.state.registering ? 0.75 : 1}
+                flex={this.state.registering ? 0.70 : 0.75}
                 behavior='padding'
                 enabled
               >
@@ -207,7 +211,16 @@ export default class LoginView extends React.Component {
                 >
                   <Text>{this.state.registering ? 'Register' : 'Login'}</Text>
                 </Button>
-                { Platform.OS === 'ios' ? null :
+                { Platform.OS === 'ios' ? 
+                  <Button
+                    transparent
+                    block
+                    dark
+                    onPress={() => Linking.openURL('https://www.grebelife.com/skybunk')}
+                  >
+                    <Text>{"Don't have an account?"}</Text>
+                  </Button>
+                 :
                   <Button
                     transparent
                     block
@@ -217,6 +230,15 @@ export default class LoginView extends React.Component {
                     <Text>{this.state.registering ? 'Already have an account?' : "Don't have an account?"}</Text>
                   </Button>
                 }
+                <Button
+                  transparent
+                  block
+                  dark
+                  onPress={this.contactWebmasters.bind(this)}
+                >
+                  <Text>{"Contact the webmasters!"}</Text>
+                </Button>
+
                 {this.state.processing ? <Spinner color='blue' /> : null}
               </View>
             </Content>
