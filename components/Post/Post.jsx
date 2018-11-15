@@ -266,7 +266,17 @@ export default class Post extends React.Component {
     // TODO: implement
     var authorPhoto = author.profilePicture;
 
-    createdAt = date.format(createdAt, 'ddd MMM Do [at] h:mma');
+    if(this.props.showFullDate){
+      //If in comment view, view full date including timestamp
+      createdAt = date.format(createdAt, 'ddd MMM Do [at] h:mma');
+    }else if(date.isPast(date.addWeeks(createdAt,1))){
+      //If the post is more than a week old, display date
+      createdAt = date.format(createdAt, 'ddd MMM Do');
+    }else{
+      //Display how long ago the post was made
+      createdAt = date.distanceInWordsToNow(createdAt, {addSuffix: true});
+    }
+
     var numComments = comments ? comments.length : 0;
     var likes = likes ? likes : 0;
 

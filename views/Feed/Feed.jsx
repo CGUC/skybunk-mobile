@@ -281,6 +281,7 @@ export default class FeedView extends React.Component {
         enableEditing={enableEditing}
         enableDeleting={loggedInUser.isAdmin}
         showUserProfile={this.showUserProfile}
+        showFullDate={false}
       />
     );
   }
