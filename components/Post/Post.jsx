@@ -289,8 +289,7 @@ export default class Post extends React.Component {
                 </View>
                 <View style={styles.headerBody}>
                   <View style={styles.authorDetails}>
-                    <Text>{authorName}</Text>
-                    <Text>{this.props.showTag ? ` ►  ${tags[0]}` : null}</Text>
+                    <Text>{authorName}{this.props.showTag ? ` ►  ${tags[0]}` : null}</Text>
                   </View>
                   <Text note>{createdAt}</Text>
                 </View>
@@ -315,6 +314,7 @@ export default class Post extends React.Component {
               style={styles.image}
               width={Dimensions.get('window').width}
               source={{ uri: `data:image/png;base64,${this.state.image}` }}
+              onPress={this.onPressPost}
             />
           </CardItem> : null}
 
