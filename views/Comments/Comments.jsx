@@ -237,6 +237,7 @@ export default class CommentsView extends React.Component {
               enableDeleting={loggedInUser.isAdmin}
               loggedInUser={loggedInUser}
               showUserProfile={this.showUserProfile}
+              showFullDate={true}
             />
             <ScrollView>
               {comments.length ?

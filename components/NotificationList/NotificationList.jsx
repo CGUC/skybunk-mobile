@@ -31,8 +31,15 @@ export default class NotificationList extends React.Component {
     } else {
       return (
         this.props.notifications.map((notif, key) => {
-          const createdAt = date.format(notif.createdAt, 'ddd MMM Do [at] h:mma');
-          
+          var createdAt;
+          if(date.isPast(date.addWeeks(notif.createdAt,1))){
+            //If the post is more than a week old, display date
+            createdAt = date.format(notif.createdAt, 'ddd MMM Do');
+          }else{
+            //Display how long ago the post was made
+            createdAt = date.distanceInWordsToNow(notif.createdAt, {addSuffix: true});
+          }
+
           return (
             <TouchableOpacity 
               key={key}
