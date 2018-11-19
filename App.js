@@ -6,6 +6,7 @@ import CommentsView from './views/Comments/Comments';
 import SplashScreen from './views/Splash/Splash';
 import SettingsView from './views/Settings/Settings';
 import MemberListView from './views/MemberList/MemberList';
+import DonInfoView from './views/DonInfo/DonInfo';
 import EditProfileView from './views/EditProfile/EditProfile';
 
 const AppStack = createStackNavigator(
@@ -15,6 +16,7 @@ const AppStack = createStackNavigator(
     Comments: CommentsView,
     Settings: SettingsView,
     MemberList: MemberListView,
+    DonInfo: DonInfoView,
     EditProfile: EditProfileView,
   }
 )

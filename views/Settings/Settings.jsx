@@ -21,7 +21,8 @@ export default class SettingsView extends React.Component {
   }
   
   showMemberList = () => {
-    this.props.navigation.navigate('MemberList');
+    const user = this.props.navigation.getParam('user');
+    this.props.navigation.navigate('DonInfo', { user });
   }
   
   logout = () => {

@@ -110,8 +110,9 @@ export default class FeedView extends React.Component {
     const {
       navigation,
     } = this.props;
-
+    
     const loggedInUser = navigation.getParam('loggedInUser');
+    console.log(loggedInUser);
 
     var channel = navigation.getParam('channel');
     if (['all', 'subs'].includes(channel._id)) return console.error(`Can't add post to ${channel._id} feed`);
@@ -215,6 +216,7 @@ export default class FeedView extends React.Component {
   onPressPost = (postData) => {
     const { navigation } = this.props;
     const loggedInUser = navigation.getParam('loggedInUser');
+    console.log(loggedInUser._id);
 
     var updateParentState = this.updateState;
     this.props.navigation.navigate('Comments', { postData, updateParentState, loggedInUser });
