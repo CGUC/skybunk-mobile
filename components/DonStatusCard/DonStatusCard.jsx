@@ -145,7 +145,7 @@ export default class DonStatusCard extends React.Component {
             <View style={styles.headerContainer}>
               <View style={styles.headerLeft}>
                 <View>
-                  <TouchableOpacity onPress={() => showUserProfile(don)}>
+                  <TouchableOpacity onPress={() => this.props.onOpenProfile(don)}>
                     <Thumbnail
                       style={styles.profilePicThumbnail}
                       source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }}

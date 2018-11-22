@@ -192,6 +192,7 @@ export default class DonInfo extends React.Component {
         togglable= {userIsDon}
         editable = {userIsThisDon}
         onChange = {this.handleCardChanged}
+        onOpenProfile = {this.showUserProfile}
       />
     )
   }
