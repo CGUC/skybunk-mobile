@@ -208,7 +208,6 @@ export default class LoginView extends React.Component {
                   block
                   onPress={this.submitForm.bind(this)}
                   style={styles.loginButton}
-                  disabled={this.state.processing}
                 >
                   <Text>{this.state.registering ? 'Register' : 'Login'}</Text>
                 </Button>
