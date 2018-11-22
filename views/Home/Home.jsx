@@ -7,6 +7,7 @@ import NotificationList from "../../components/NotificationList/NotificationList
 import HomeTabBar from "./HomeTabBar/HomeTabBar";
 import style from "./HomeStyle";
 import api from '../../ApiClient';
+import { Font} from "expo";
 import { Notifications } from 'expo';
 
 export default class HomeView extends React.Component {
@@ -25,7 +26,11 @@ export default class HomeView extends React.Component {
     }
   }
 
-  componentWillMount() {
+  async componentWillMount() {
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+    });
     api.get('/channels')
     .then(response => {
       this.setState({ channels: response, loading: false });
