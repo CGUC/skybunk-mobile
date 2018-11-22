@@ -87,6 +87,7 @@ export default class EditProfile extends React.Component {
       let result = await api.put(`/users/${user._id}`,  { 'Authorization': 'Bearer ' + token }, userData);
 
       this.props.navigation.setParams({ saveState: 'saved' });
+
     } catch (err) {
       alert('Error updating profile. Sorry about that!');
       console.error(err);

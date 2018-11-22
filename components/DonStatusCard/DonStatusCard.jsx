@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, TouchableOpacity, Switch, AsyncStorage} from 'react-native';
-import Image from 'react-native-scalable-image';
 import {Card, CardItem, Text, Thumbnail, Item, Input, Button } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import _ from 'lodash';
@@ -10,7 +9,6 @@ import styles from "./DonStatusCardStyle";
 import date from 'date-fns';
 
 export default class DonStatusCard extends React.Component {
-
   constructor(props) {
     super(props);
 
@@ -22,8 +20,6 @@ export default class DonStatusCard extends React.Component {
       isDateTimePickerVisible: false,
       clockOut: props.don.donInfo.clockOut,
       location: props.don.donInfo.location,
-      isTypingLocation: false,
-      typingTimeout: null,
     }
   }
 
@@ -45,14 +41,14 @@ export default class DonStatusCard extends React.Component {
     this.setState(state => ({changed: false}))
 
     if(this.props.togglable){
-      //late supper
+      //update all the fields
       var don = this.props.don;
       don.donInfo.isOn = this.state.isOn;
       don.donInfo.isOnLateSupper = this.state.isLateSupper;
       don.donInfo.clockOut = this.state.clockOut;
       don.donInfo.location = this.state.location
 
-      //update DonInfo page that something changed
+      //notify DonInfo page that something changed
       var onChange = this.props.onChange;
       onChange(don);
     }
@@ -63,8 +59,10 @@ export default class DonStatusCard extends React.Component {
       //Set default time if the current clock out time is invalid
       //default time is 8:30am on the next weekday
       var nextClockOut = this.state.clockOut
+
+      //check for valid time
       if(this.props.editable && (!date.isValid(new Date(this.state.clockOut))|| date.isPast(this.state.clockOut))){
-        //invalid clock out time, so set to default
+        //set the time to 8:30, then find the next weekday
         nextClockOut = date.setHours(date.setMinutes(new Date(),30),8)
         if(date.isFriday(nextClockOut)){
           nextClockOut = date.addDays(nextClockOut, 3)
@@ -100,11 +98,15 @@ export default class DonStatusCard extends React.Component {
 
   render() {
     const {don} = this.props
+
+    //Entering the land of way-too-many-if-statements. You have been warned.
+
     // In case don account is deleted
     var donName;
-    if (!don) donName = "Ghost";
+    if (!don) donName = "Ghost Don";
     else donName = `${don.firstName} ${don.lastName}`;
 
+    //Let DonInfo know if something has changed
     if(this.state.changed) this.isChanged();
 
     if(this.props.togglable){
@@ -113,6 +115,7 @@ export default class DonStatusCard extends React.Component {
       var icon = (this.state.isLateSupper && this.state.isOn) ? require('../../assets/fork-knife-on.png') : null
     }
 
+    //Figure out what information should be displayed on the 2 lines of text beside the profile
     if(this.props.editable){
       if(this.state.isOn){
         var line1 = 'On until'
@@ -136,7 +139,7 @@ export default class DonStatusCard extends React.Component {
       }
       var line2 = don.donInfo.location
     }
-    
+
 
     return (
       <View>
@@ -169,7 +172,7 @@ export default class DonStatusCard extends React.Component {
               </View>
             </View>
           </CardItem>
-          {this.props.editable ? 
+          {this.props.editable ?
             <CardItem>
               <View style={styles.formElement}>
                 <Text style={styles.fieldHeader}>
@@ -193,7 +196,7 @@ export default class DonStatusCard extends React.Component {
                   mode={'datetime'}
                 />
               </View>
-            </CardItem> 
+            </CardItem>
           : null}
         </Card>
       </View>
