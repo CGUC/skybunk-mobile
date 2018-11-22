@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Image } from "react-native";
 import { Container, Text, Button } from 'native-base';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { Font, AppLoading } from "expo";
+import { Font, AppLoading, Haptic } from "expo";
 import ApiClient from '../../ApiClient';
 
 import styles from "./ChannelListStyle";
@@ -39,14 +39,16 @@ export default class ChannelList extends React.Component {
 
   updateSubscription = (id, index) => {
     if (['all', 'subs', 'myPosts'].includes(id)) return;
-
+    
     return () => {
+      Haptic.impact('light')
       if (index === -1) {
         this.setState({
           subscribedChannels: [...this.state.subscribedChannels, id]
         }, this.updateUserRequest);
       }
       else {
+        
         let subs = this.state.subscribedChannels;
         subs.splice(index, 1);
         this.setState({

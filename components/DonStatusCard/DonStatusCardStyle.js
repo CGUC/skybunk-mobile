@@ -11,7 +11,20 @@ export default (styles = StyleSheet.create({
 		elevation: 0,
 		marginTop: 0,
 		marginBottom: 4,
-	},
+  },
+  inputItem: {
+		backgroundColor: "white",
+    marginBottom: 10,
+    height: 40,
+		width: width * 0.9,
+  },
+  button: {
+    marginTop: 5,
+    height: 40,
+    marginLeft: 5,
+    marginRight: 5,
+    backgroundColor: '#71d3d1',
+  },
 	postContent: {
 		marginTop: 0,
 		marginBottom: 0,

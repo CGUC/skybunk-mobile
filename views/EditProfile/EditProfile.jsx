@@ -3,7 +3,7 @@ import { View, TouchableOpacity, KeyboardAvoidingView, Keyboard, AsyncStorage } 
 import { Icon, Item, Text, Input, Textarea, Spinner } from 'native-base';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import _ from 'lodash';
-
+import {Haptic } from "expo";
 import api from '../../ApiClient';
 import styles from './EditProfileStyle';
 
@@ -64,6 +64,7 @@ export default class EditProfile extends React.Component {
       program: _.get(user, 'info.program', undefined),
       address: _.get(user, 'info.address', undefined),
       affiliation: _.get(user, 'info.affiliation', undefined),
+      phone: _.get(user, 'info.phone', undefined),
       bio: _.get(user, 'info.bio', undefined),
       avoidKeyboard: false,
     }
@@ -87,6 +88,7 @@ export default class EditProfile extends React.Component {
       let result = await api.put(`/users/${user._id}`,  { 'Authorization': 'Bearer ' + token }, userData);
 
       this.props.navigation.setParams({ saveState: 'saved' });
+      Haptic.notification('success')
 
     } catch (err) {
       alert('Error updating profile. Sorry about that!');
@@ -102,6 +104,7 @@ export default class EditProfile extends React.Component {
       program,
       address,
       affiliation,
+      phone,
       bio
     } = this.state;
 
@@ -117,6 +120,7 @@ export default class EditProfile extends React.Component {
     if (program) user.info.program = program;
     if (address) user.info.address = address;
     if (affiliation) user.info.affiliation = affiliation;
+    if (phone) user.info.phone = phone;
     if (bio) user.info.bio = bio;
 
     return user;
@@ -189,6 +193,7 @@ export default class EditProfile extends React.Component {
           {this.generateFieldJSX('program', 'Program', 'What are you studying?')}
           {this.generateFieldJSX('address', 'Room Number / Address', 'Where can you be found?')}
           {this.generateFieldJSX('affiliation', 'Affiliation with Grebel', 'i.e. Resident')}
+          {this.generateFieldJSX('phone', 'Phone Number', 'Let others contact you')}
           {this.generateFieldJSX('bio', 'Bio', 'Share something about yourself')}
         </GestureRecognizer>
       </KeyboardAvoidingView>

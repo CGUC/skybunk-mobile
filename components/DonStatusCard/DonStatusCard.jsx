@@ -1,11 +1,13 @@
 import React from 'react';
 import { View, TouchableOpacity, Switch, AsyncStorage} from 'react-native';
 import Image from 'react-native-scalable-image';
-import {Card, CardItem, Text, Thumbnail, Item, Input } from 'native-base';
+import {Card, CardItem, Text, Thumbnail, Item, Input, Button } from 'native-base';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 import _ from 'lodash';
-import { Font } from "expo";
+import { Font, Haptic } from "expo";
 import ApiClient from '../../ApiClient';
 import styles from "./DonStatusCardStyle";
+import date from 'date-fns';
 
 export default class DonStatusCard extends React.Component {
 
@@ -16,7 +18,12 @@ export default class DonStatusCard extends React.Component {
       profilePicture: null,
       isOn: props.don.donInfo.isOn,
       isLateSupper: props.don.donInfo.isOnLateSupper,
-      save: props.save
+      changed: false,
+      isDateTimePickerVisible: false,
+      clockOut: props.don.donInfo.clockOut,
+      location: props.don.donInfo.location,
+      isTypingLocation: false,
+      typingTimeout: null,
     }
   }
 
@@ -34,57 +41,103 @@ export default class DonStatusCard extends React.Component {
     });
   }
 
-  saveState = async () => {
-    console.log('Trying to save')
-    //late supper
-    var don = this.props.don;
-    var donInfo = this.props.don.donInfo;
-    donInfo.isOn = this.state.isOn;
-    donInfo.isOnLateSupper = this.state.isLateSupper;
-    //status
-    //location
-    //clocked
+  isChanged = () => {
+    this.setState(state => ({changed: false}))
 
-    try {
-      let token = await AsyncStorage.getItem('@Skybunk:token');
-      console.log(`/users/${don._id}`)
-      let result = await ApiClient.post(`/users/${don._id}/password`,  { 'Authorization': 'Bearer ' + token }, {password: "test"});
-    } catch (err) {
-      alert('Error updating don information. Sorry about that!');
-      console.error(err);
+    if(this.props.togglable){
+      //late supper
+      var don = this.props.don;
+      don.donInfo.isOn = this.state.isOn;
+      don.donInfo.isOnLateSupper = this.state.isLateSupper;
+      don.donInfo.clockOut = this.state.clockOut;
+      don.donInfo.location = this.state.location
+
+      //update DonInfo page that something changed
+      var onChange = this.props.onChange;
+      onChange(don);
     }
   }
 
   handleToggleOn = () =>{
-  this.setState(state => ({
-    isOn: !state.isOn,
-    save: true
-  }))
+    if(this.props.togglable){
+      //Set default time if the current clock out time is invalid
+      //default time is 8:30am on the next weekday
+      var nextClockOut = this.state.clockOut
+      if(this.props.editable && (!date.isValid(new Date(this.state.clockOut))|| date.isPast(this.state.clockOut))){
+        //invalid clock out time, so set to default
+        nextClockOut = date.setHours(date.setMinutes(new Date(),30),8)
+        if(date.isFriday(nextClockOut)){
+          nextClockOut = date.addDays(nextClockOut, 3)
+        }else if(date.isSaturday(nextClockOut)){
+          nextClockOut = date.addDays(nextClockOut, 2)
+        }else{
+          nextClockOut = date.addDays(nextClockOut, 1)
+        }
+      }
+      this.setState(state => ({
+          isOn: !state.isOn,
+          changed: true,
+          clockOut: nextClockOut
+        }))
+    }
   };
 
   handleToggleLateSupper = () =>{
-    this.setState(state => ({
-      isLateSupper: !state.isLateSupper,
-      save: true
-    }))
-    };
+    if(this.props.togglable){
+      Haptic.impact('light')
+      this.setState(state => ({
+        isLateSupper: !state.isLateSupper,
+        changed: true
+      }))
+    }
+  };
+
+  showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
+  hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false});
+  handleDatePicked = (datetime) => {this.setState({ isDateTimePickerVisible: false, clockOut: datetime, changed: true })};
+
+  handleUpdatedLocation = (text) => {this.setState({location: text, changed: true})}
 
   render() {
     const {don} = this.props
-
     // In case don account is deleted
     var donName;
     if (!don) donName = "Ghost";
     else donName = `${don.firstName} ${don.lastName}`;
-    
-    console.log(this.props.save)
-    if(this.state.save) this.saveState();
-    
+
+    if(this.state.changed) this.isChanged();
+
     if(this.props.togglable){
       var icon = this.state.isLateSupper ? require('../../assets/fork-knife-on.png') : require('../../assets/fork-knife-off.png')
     }else{
       var icon = (this.state.isLateSupper && this.state.isOn) ? require('../../assets/fork-knife-on.png') : null
     }
+
+    if(this.props.editable){
+      if(this.state.isOn){
+        var line1 = 'On until'
+        if(!date.isValid(new Date(this.state.clockOut)) || date.isPast(this.state.clockOut)){
+          var line2 = 'forever'
+        }else if(date.isToday(this.state.clockOut)){
+          var line2 = date.format(this.state.clockOut, 'h:mma');
+        }else if(date.isTomorrow(this.state.clockOut)){
+          var line2 = date.format(this.state.clockOut, '[Tomorrow at] h:mma');
+        }else{
+          var line2 = date.format(this.state.clockOut, 'ddd MMM Do [at] h:mma');
+        }
+      }else{
+        var line1 = ''
+      }
+    }else{
+      if(!don.info){
+        var line1 = '';
+      }else{
+        var line1 = don.info.phone;
+      }
+      var line2 = don.donInfo.location
+    }
+    
+
     return (
       <View>
         <Card style={styles.card}>
@@ -103,8 +156,8 @@ export default class DonStatusCard extends React.Component {
                   <View style={styles.donDetails}>
                     <Text>{donName}</Text>
                   </View>
-                  <Text note>{don.phone}</Text>
-                  {this.state.isOn ?<Text note>{don.donInfo.location}</Text>:null}
+                  <Text note>{line1}</Text>
+                  {this.state.isOn ?<Text note>{line2}</Text>:null}
                 </View>
               </View>
 
@@ -125,9 +178,20 @@ export default class DonStatusCard extends React.Component {
                 <Item regular style={styles.inputItem}>
                   <Input
                     placeholder={'Enter your location'}
-                    value={don.donInfo.location}
+                    value={this.state.location}
+                    onChangeText={this.handleUpdatedLocation}
                   />
                 </Item>
+                <Button onPress={this.showDateTimePicker} style={styles.button}>
+                  <Text>Change Clockout Time</Text>
+                </Button>
+                <DateTimePicker
+                  isVisible={this.state.isDateTimePickerVisible}
+                  date={new Date(this.state.clockOut)}
+                  onConfirm={this.handleDatePicked}
+                  onCancel={this.hideDateTimePicker}
+                  mode={'datetime'}
+                />
               </View>
             </CardItem> 
           : null}
