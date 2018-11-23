@@ -168,7 +168,7 @@ export default class DonStatusCard extends React.Component {
                 <TouchableOpacity onPress={this.handleToggleLateSupper}>
                   <Thumbnail medium square  source={icon} />
                 </TouchableOpacity>
-                <Switch value={this.state.isOn} disabled={!this.props.togglable} onValueChange={this.handleToggleOn}/>
+                <Switch value={this.state.isOn} disabled={!this.props.togglable} onSyncPress={this.handleToggleOn}/>
               </View>
             </View>
           </CardItem>

@@ -69,6 +69,7 @@ export default class UserProfile extends React.Component {
     let {
       program,
       address,
+      phone,
       affiliation,
     } = this.props.user.info;
 
@@ -76,6 +77,7 @@ export default class UserProfile extends React.Component {
       <View style={styles.infoBlock}>
         {program && <Text style={styles.infoText}>{program}</Text>}
         {address && <Text style={styles.infoText}>{address}</Text>}
+        {phone && <Text style={styles.infoText}>{phone}</Text>}
         {affiliation && <Text style={styles.infoText}>{affiliation}</Text>}
       </View>
     )
