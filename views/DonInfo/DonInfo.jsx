@@ -1,7 +1,7 @@
 import React from 'react';
 import { AsyncStorage, FlatList, TouchableOpacity, Text, View } from 'react-native';
 import { Container, Content, Spinner, Icon } from 'native-base';
-import { Font, Haptic } from "expo";
+import { Font} from "expo";
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import DonStatusCard from '../../components/DonStatusCard/DonStatusCard';
 import styles from './DonInfoStyle';
@@ -58,8 +58,7 @@ export default class DonInfo extends React.Component {
       dons: [],
       loading: true,
       userDataToShow: undefined,
-      showProfileModal: false,
-      donInfo: {}
+      showProfileModal: false
     }
   }
 
@@ -150,7 +149,6 @@ export default class DonInfo extends React.Component {
   }
 
   buildListItems() {
-
     items = this.state.dons.map(member => {
       member.key = member._id;
       return member;
@@ -171,7 +169,6 @@ export default class DonInfo extends React.Component {
       for(var index in items){
         let result = await api.post(`/users/${items[index]._id}/doninfo`,  { 'Authorization': 'Bearer ' + token }, items[index].donInfo);
       }
-      Haptic.notification('success')
       this.props.navigation.setParams({ saveState: 'saved' });
     } catch (err) {
       alert('Error updating don information. Sorry about that!');
@@ -179,9 +176,10 @@ export default class DonInfo extends React.Component {
     }
   }
 
-  handleCardChanged = async (don) => {
+  handleCardChanged = (don) => {
     this.props.navigation.setParams({ saveState: 'hasChanges' });
   }
+
   renderListItem = ({ item }) => {
     //if the current user is the don, enable editting
     const userIsThisDon = this.props.navigation.getParam('user')._id == item._id
@@ -196,21 +194,10 @@ export default class DonInfo extends React.Component {
       />
     )
   }
-  listFooter = () => {
-    let { loadedLastPage } = this.state;
 
-    if (!loadedLastPage) {
-      return <Spinner color='#cd8500' />;
-    } else return (
-      <Text style={styles.noMoreUsers}>
-        That's everyone!
-      </Text>
-    );
-  }
   render() {
     const {
       loading,
-      filter,
       userDataToShow,
       showProfileModal
     } = this.state;

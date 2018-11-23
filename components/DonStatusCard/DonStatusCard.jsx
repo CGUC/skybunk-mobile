@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Switch, AsyncStorage} from 'react-native';
 import {Card, CardItem, Text, Thumbnail, Item, Input, Button } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import _ from 'lodash';
-import { Font, Haptic } from "expo";
+import { Font} from "expo";
 import ApiClient from '../../ApiClient';
 import styles from "./DonStatusCardStyle";
 import date from 'date-fns';
@@ -82,7 +82,6 @@ export default class DonStatusCard extends React.Component {
 
   handleToggleLateSupper = () =>{
     if(this.props.togglable){
-      Haptic.impact('light')
       this.setState(state => ({
         isLateSupper: !state.isLateSupper,
         changed: true
