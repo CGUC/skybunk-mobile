@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, TouchableOpacity, Switch, AsyncStorage} from 'react-native';
+import { View, TouchableOpacity} from 'react-native';
 import {Card, CardItem, Text, Thumbnail, Item, Input, Button } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import Switch from 'react-native-switch-pro'
 import _ from 'lodash';
 import { Font} from "expo";
 import ApiClient from '../../ApiClient';

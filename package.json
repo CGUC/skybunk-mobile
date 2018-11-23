@@ -31,6 +31,7 @@
     "react-native-popover-view": "^1.0.10",
     "react-native-scalable-image": "^0.4.0",
     "react-native-swipe-gestures": "^1.0.2",
+    "react-native-switch-pro": "^1.0.2-beta",
     "react-navigation": "^2.5.3"
   }
 }
