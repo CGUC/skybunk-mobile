@@ -160,15 +160,14 @@ export default class DonInfo extends React.Component {
     this.props.navigation.setParams({ saveState: 'saving' });
 
     try {
-      const items = this.state.dons.map(member => {
-        member.key = member._id;
-        return member;
-      });
 
       let token = await AsyncStorage.getItem('@Skybunk:token');
-      for(var index in items){
-        let result = await api.post(`/users/${items[index]._id}/doninfo`,  { 'Authorization': 'Bearer ' + token }, items[index].donInfo);
+      const dons = this.state.dons;
+
+      for(var i=0; i<dons.length; i++){
+        await api.post(`/users/${dons[i]._id}/doninfo`,  { 'Authorization': 'Bearer ' + token }, dons[i].donInfo);
       }
+
       this.props.navigation.setParams({ saveState: 'saved' });
     } catch (err) {
       alert('Error updating don information. Sorry about that!');
