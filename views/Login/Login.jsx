@@ -94,40 +94,50 @@ export default class LoginView extends React.Component {
         username: this.state.username,
         password: this.state.password,
       })
-        .then(response => response.json())
-        .then(jsonResponse => {
-          if (jsonResponse.err) {
+        .then(response => {
+          if(!response){
             this.setState({
-              errorMessage: jsonResponse.err.message,
+              errorMessage: "Cannot connect to the server.",
               succesMessage: null,
               processing: false,
             });
-          }
-          else {
-            AsyncStorage.setItem('@Skybunk:token', jsonResponse.token).then(() => {
-              ApiClient.get('/users/loggedInUser', { 'Authorization': 'Bearer ' + jsonResponse.token }).then(user => {
-                notificationToken.registerForPushNotificationsAsync(user, jsonResponse.token);
-                this.props.navigation.navigate('Home', {token: jsonResponse.token, user});
-              })
-              .catch(err => console.log(err));
-            }).catch(error => {
-              console.log(error);
+          }else{
+            response.json()
+              .then(jsonResponse => {
+              if (jsonResponse.err) {
+                this.setState({
+                  errorMessage: jsonResponse.err.message,
+                  succesMessage: null,
+                  processing: false,
+                });
+              }
+              else {
+                AsyncStorage.setItem('@Skybunk:token', jsonResponse.token).then(() => {
+                  ApiClient.get('/users/loggedInUser', { 'Authorization': 'Bearer ' + jsonResponse.token }).then(user => {
+                    notificationToken.registerForPushNotificationsAsync(user, jsonResponse.token);
+                    this.props.navigation.navigate('Home', {token: jsonResponse.token, user});
+                  })
+                  .catch(err => console.log(err));
+                }).catch(error => {
+                  console.log(error);
+                  this.setState({
+                    errorMessage: 'Sorry, there was an error logging you in',
+                    successMessage: null,
+                    processing: false,
+                  });
+                });
+              }
+            })
+            .catch(err => {
+              console.log(err);
               this.setState({
-                errorMessage: 'Sorry, there was an error logging you in',
+                errorMessage: err.message,
                 successMessage: null,
                 processing: false,
               });
             });
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          this.setState({
-            errorMessage: err.message,
-            successMessage: null,
-            processing: false,
-          });
-        });
+        }
+      });
     }
   }
 
