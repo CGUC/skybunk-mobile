@@ -3,7 +3,7 @@ import { View, TouchableOpacity, KeyboardAvoidingView, Keyboard, AsyncStorage } 
 import { Icon, Item, Text, Input, Textarea, Spinner } from 'native-base';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import _ from 'lodash';
-import {Haptic } from "expo";
+
 import api from '../../ApiClient';
 import styles from './EditProfileStyle';
 
@@ -87,7 +87,7 @@ export default class EditProfile extends React.Component {
       let result = await api.put(`/users/${user._id}`,  { 'Authorization': 'Bearer ' + token }, userData);
 
       this.props.navigation.setParams({ saveState: 'saved' });
-      Haptic.notification('success');
+
     } catch (err) {
       alert('Error updating profile. Sorry about that!');
       console.error(err);
