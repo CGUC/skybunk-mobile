@@ -279,7 +279,7 @@ export default class FeedView extends React.Component {
         updatePost={this.updatePost}
         showTag={['all', 'subs', 'myPosts'].includes(channelId)}
         enableEditing={enableEditing}
-        enableDeleting={loggedInUser.role&2 == 2 /*isAdmin*/}
+        enableDeleting={loggedInUser.role.includes("admin")}
         showUserProfile={this.showUserProfile}
       />
     );

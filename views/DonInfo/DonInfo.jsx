@@ -80,8 +80,7 @@ export default class DonInfo extends React.Component {
   filterDons(users){
     var dons = []
     users.forEach(user =>{
-      //1st bit of role is for dons
-      if((user.role & 0x1)==1){
+      if((user.role.includes("don"))==1){
         //enter default data is don data isn't initilaized
         if(!user.donInfo) user.donInfo = {}
         dons.push(user);
@@ -181,8 +180,9 @@ export default class DonInfo extends React.Component {
 
   renderListItem = ({ item }) => {
     //if the current user is the don, enable editting
-    const userIsThisDon = this.props.navigation.getParam('user')._id == item._id
-    const userIsDon = (this.props.navigation.getParam('user').role & 1) == 1
+    const user = this.props.navigation.getParam('user')
+    const userIsThisDon = user._id == item._id
+    const userIsDon = user.role.includes("don")
     return (
       <DonStatusCard
         don={item}
