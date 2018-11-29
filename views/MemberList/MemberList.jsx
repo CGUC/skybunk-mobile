@@ -74,21 +74,15 @@ export default class MemberList extends React.Component {
       useFiltered: false,
     });
 
-    await AsyncStorage.getItem('@Skybunk:token')
-      .then(token => {
-        api.get('/users')
-          .then(users => {
-            this.setState({
-              members: this.sortAlphabetically(users),
-              loading: false
-            });
-          })
-          .catch((err) => {
-            console.error(err);
-          });
+    api.get('/users')
+      .then(users => {
+        this.setState({
+          members: this.sortAlphabetically(users),
+          loading: false
+        });
       })
-      .catch(error => {
-        this.props.navigation.navigate('Auth');
+      .catch((err) => {
+        console.error(err);
       });
   }
 

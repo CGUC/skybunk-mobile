@@ -118,33 +118,27 @@ export default class FeedView extends React.Component {
 
     var tags = channel.tags;
 
-    AsyncStorage.getItem('@Skybunk:token')
-      .then(value => {
-        var postContent = {
-          author: loggedInUser._id,
-          content: data.content,
-          tags: tags
-        }
-        api.post('/posts', {}, postContent)
-        .then(response => response.json())
-        .then(post => {
-          if (data.image) {
-            api.uploadPhoto(
-              `/posts/${post._id}/image`,
-              {},
-              data.image,
-              'image',
-              'POST'
-            ).then(() => this.loadData());
-          }
-          else {
-            this.loadData();
-          }
-        });
-      })
-      .catch(error => {
-        this.props.navigation.navigate('Auth');
-      });
+    var postContent = {
+      author: loggedInUser._id,
+      content: data.content,
+      tags: tags
+    }
+    api.post('/posts', {}, postContent)
+    .then(response => response.json())
+    .then(post => {
+      if (data.image) {
+        api.uploadPhoto(
+          `/posts/${post._id}/image`,
+          {},
+          data.image,
+          'image',
+          'POST'
+        ).then(() => this.loadData());
+      }
+      else {
+        this.loadData();
+      }
+    });
   }
 
   updatePost = async (postId, data, type) => {
@@ -161,34 +155,25 @@ export default class FeedView extends React.Component {
         })
       });
     }
+    else if (type === 'deletePost') {
+      return api.delete(`/posts/${postId}`)
+        .then(() => {
+          this.updateState('deletePost', postId);
+        })
+        .catch(err => {
+          alert("Error deleting post. Sorry about that!")
+        });
+    }
+    else if (type === 'editPost') {
+      this.updateState('updatePost', data);
+    }
 
-    AsyncStorage.getItem('@Skybunk:token')
-      .then(value => {
-
-        if (type === 'deletePost') {
-          return api.delete(`/posts/${postId}`)
-            .then(() => {
-              this.updateState('deletePost', postId);
-            })
-            .catch(err => {
-              alert("Error deleting post. Sorry about that!")
-            });
-        }
-        else if (type === 'editPost') {
-          this.updateState('updatePost', data);
-        }
-
-        api.put(`/posts/${postId}`, {}, data)
-          .then(() => {
-            //this.loadData();
-          })
-          .catch(err => {
-            alert("Error updating post. Sorry about that!");
-          });
+    api.put(`/posts/${postId}`, {}, data)
+      .then(() => {
+        //this.loadData();
       })
-      .catch(error => {
-        console.error(error);
-        this.props.navigation.navigate('Auth');
+      .catch(err => {
+        alert("Error updating post. Sorry about that!");
       });
   }
 
