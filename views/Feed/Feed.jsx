@@ -15,6 +15,7 @@ import Post from '../../components/Post/Post';
 import NoData from '../../components/NoData/NoData';
 import api from '../../ApiClient';
 import styles from './FeedStyle';
+import {setPostPicture} from '../../helpers/imageCache';
 
 export default class FeedView extends React.Component {
 
@@ -127,13 +128,7 @@ export default class FeedView extends React.Component {
     .then(response => response.json())
     .then(post => {
       if (data.image) {
-        api.uploadPhoto(
-          `/posts/${post._id}/image`,
-          {},
-          data.image,
-          'image',
-          'POST'
-        ).then(() => this.loadData());
+        setPostPicture(post._id, data.image).then(() => this.loadData());
       }
       else {
         this.loadData();

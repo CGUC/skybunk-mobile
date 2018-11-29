@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { Font } from "expo";
 import date from 'date-fns';
 import Popover from 'react-native-popover-view';
-
+import {getProfilePicture, getPostPicture} from "../../helpers/imageCache"
 import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
 import ApiClient from '../../ApiClient';
 import styles from "./PostStyle";
@@ -30,8 +30,7 @@ export default class Post extends React.Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
-
-    ApiClient.get(`/users/${this.props.data.author._id}/profilePicture`, {}).then(pic => {
+    getProfilePicture(this.props.data.author._id).then(pic => {
       this.setState({
         profilePicture: pic,
       });
@@ -39,7 +38,7 @@ export default class Post extends React.Component {
       console.error(error);
     });
     if (this.props.data.image) {
-      ApiClient.get(`/posts/${this.props.data._id}/image`, {}).then(pic => {
+      getPostPicture(this.props.data._id).then(pic => {
         this.setState({
           image: pic,
         });

@@ -4,6 +4,7 @@ import { Container, Content, View, List, ListItem } from 'native-base';
 
 import styles from './SettingsStyle';
 import api from '../../ApiClient';
+import {clearCache} from '../../helpers/imageCache'
 
 export default class SettingsView extends React.Component {
 
@@ -30,6 +31,7 @@ export default class SettingsView extends React.Component {
   }
   
   logout = () => {
+    clearCache();
     AsyncStorage.removeItem('@Skybunk:token').then(() => {
       this.props.navigation.navigate('Auth');
     })

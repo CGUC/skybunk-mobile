@@ -13,6 +13,7 @@ import date from 'date-fns';
 import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
 import ApiClient from '../../ApiClient';
 import styles from "./CommentStyle";
+import {getProfilePicture} from "../../helpers/imageCache"
 
 export default class Comment extends React.Component {
 
@@ -32,8 +33,7 @@ export default class Comment extends React.Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
-
-    ApiClient.get(`/users/${this.props.data.author._id}/profilePicture`, {}).then(pic => {
+    getProfilePicture(this.props.data.author._id).then(pic => {
       this.setState({
         profilePicture: pic,
       });
