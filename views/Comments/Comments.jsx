@@ -97,88 +97,81 @@ export default class CommentsView extends React.Component {
     const loggedInUser = this.props.navigation.getParam('loggedInUser');
     const updateParentState = navigation.getParam('updateParentState');
 
-    AsyncStorage.getItem('@Skybunk:token')
-      .then(value => {
+    if (['toggleLike', 'editPost'].includes(type)) {
+      api.put(`/posts/${postData._id}`,{}, data)
+        .then(() => {
+          this.setState({ postData: data });
+          updateParentState('updatePost', data);
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Error updating post. Sorry about that!");
+        });
+    }
 
-        if (['toggleLike', 'editPost'].includes(type)) {
-          api.put(`/posts/${postData._id}`,{}, data)
-            .then(() => {
-              this.setState({ postData: data });
-              updateParentState('updatePost', data);
-            })
-            .catch(err => {
-              console.error(err);
-              alert("Error updating post. Sorry about that!");
-            });
-        }
+    else if (type === 'deletePost') {
+      api.delete(`/posts/${postData._id}`)
+        .then(() => {
+          updateParentState('deletePost', postData._id);
+        })
+        .catch(err => {
+          alert("Error deleting post. Sorry about that!")
+        });
+      navigation.goBack();
+    }
 
-        else if (type === 'deletePost') {
-          api.delete(`/posts/${postData._id}`)
-            .then(() => {
-              updateParentState('deletePost', postData._id);
-            })
-            .catch(err => {
-              alert("Error deleting post. Sorry about that!")
-            });
-          navigation.goBack();
-        }
+    else if (type === 'addComment') {
+      var commentContent = {
+        author: loggedInUser._id,
+        content: data.content,
+      }
+      api.post(`/posts/${postData._id}/comment`, commentContent)
+        .then(() => {
+          this.loadData();
+        })
+        .catch(err => {
+          alert("Error adding comment. Sorry about that!")
+        });
+    }
 
-        else if (type === 'addComment') {
-          var commentContent = {
-            author: loggedInUser._id,
-            content: data.content,
-          }
-          api.post(`/posts/${postData._id}/comment`, commentContent)
-            .then(() => {
-              this.loadData();
+    else if (type === 'updateComment') {
+      var commentContent = {
+        author: loggedInUser._id,
+        content: data.content,
+      }
+      api.put(`/posts/${postData._id}/comment/${id}`, commentContent)
+        .then(() => {
+          var updatedPost = {
+            ...postData,
+            comments: postData.comments.map(comment => {
+              if (comment._id === id) return data;
+              return comment;
             })
-            .catch(err => {
-              alert("Error adding comment. Sorry about that!")
-            });
-        }
+          };
+          this.setState({ postData: updatedPost });
+          updateParentState('updatePost', updatedPost);
+        })
+        .catch(err => {
+          alert("Error updating comment. Sorry about that!");
+        });
+    }
 
-        else if (type === 'updateComment') {
-          var commentContent = {
-            author: loggedInUser._id,
-            content: data.content,
-          }
-          api.put(`/posts/${postData._id}/comment/${id}`, commentContent)
-            .then(() => {
-              var updatedPost = {
-                ...postData,
-                comments: postData.comments.map(comment => {
-                  if (comment._id === id) return data;
-                  return comment;
-                })
-              };
-              this.setState({ postData: updatedPost });
-              updateParentState('updatePost', updatedPost);
+    else if (type === 'deleteComment') {
+      api.delete(`/posts/${postData._id}/comment/${id}`)
+        .then(() => {
+          var updatedPost = {
+            ...postData,
+            comments: postData.comments.filter(comments => {
+              return comments._id !== id;
             })
-            .catch(err => {
-              alert("Error updating comment. Sorry about that!");
-            });
-        }
-
-        else if (type === 'deleteComment') {
-          api.delete(`/posts/${postData._id}/comment/${id}`)
-            .then(() => {
-              var updatedPost = {
-                ...postData,
-                comments: postData.comments.filter(comments => {
-                  return comments._id !== id;
-                })
-              };
-              this.setState({ postData: updatedPost });
-              updateParentState('updatePost', updatedPost);
-            })
-            .catch(err => {
-              alert("Error deleting comment. Sorry about that!")
-            });
-        }
-      })
-      .catch(error => {
-        this.props.navigation.navigate('Auth');
-      });
+          };
+          this.setState({ postData: updatedPost });
+          updateParentState('updatePost', updatedPost);
+        })
+        .catch(err => {
+          alert("Error deleting comment. Sorry about that!")
+        });
+    }
   }
 
   showUserProfile = (user) => {

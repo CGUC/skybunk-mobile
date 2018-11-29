@@ -83,7 +83,6 @@ export default class EditProfile extends React.Component {
     this.props.navigation.setParams({ saveState: 'saving' });
 
     try {
-      let token = await AsyncStorage.getItem('@Skybunk:token');
       let result = await api.put(`/users/${user._id}`, {}, userData);
 
       this.props.navigation.setParams({ saveState: 'saved' });
