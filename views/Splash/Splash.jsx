@@ -12,7 +12,7 @@ export default class SplashScreen extends React.Component {
   componentWillMount() {
     AsyncStorage.getItem('@Skybunk:token').then(value => {
       if (!value) this.props.navigation.navigate('Auth');
-      api.get('/users/loggedInUser', { 'Authorization': 'Bearer ' + value}).then(user => {
+      api.get('/users/loggedInUser').then(user => {
         if (user._id) {
           notificationToken.registerForPushNotificationsAsync(user, value);
           this.props.navigation.navigate('Home', {token: value, user: user});

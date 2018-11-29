@@ -1,12 +1,13 @@
 var config = require('./config');
-
+import {AsyncStorage} from 'react-native';
 export default class ApiClient {
-	static get(endpoint, headers) {
+	static async get(endpoint, headers) {
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 				method: 'GET',
 				headers: {
 					Accept: 'application/json',
 					'Content-Type': 'application/json',
+					 'Authorization': 'Bearer ' + await AsyncStorage.getItem('@Skybunk:token'),
 					...headers,
 				},
 			})
@@ -20,12 +21,13 @@ export default class ApiClient {
 			});
 	}
 
-	static post(endpoint, headers, body) {
+	static async post(endpoint, headers, body) {
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + await AsyncStorage.getItem('@Skybunk:token'),
 				...headers,
 			},
 			body: JSON.stringify(body),
@@ -36,7 +38,7 @@ export default class ApiClient {
 		});
 	};
 
-	static put(endpoint, headers, body) {
+	static async put(endpoint, headers, body) {
 		/**
 		 * HACKFIX (Neil): Sending too many notification objects with requests has
 		 * returned 413s and crashed the app. Here we're limiting the saved notifications to 30.
@@ -52,6 +54,7 @@ export default class ApiClient {
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + await AsyncStorage.getItem('@Skybunk:token'),
 				...headers,
 			},
 			body: JSON.stringify(body),
@@ -68,7 +71,7 @@ export default class ApiClient {
 		});
 	}
 
-	static uploadPhoto(endpoint, headers, uri, name, method = 'PUT') {
+	static async uploadPhoto(endpoint, headers, uri, name, method = 'PUT') {
 		let uriParts = uri.split('.');
 		let fileType = uriParts[uriParts.length - 1];
 
@@ -83,6 +86,7 @@ export default class ApiClient {
 			method: method,
 			headers: {
 				Accept: 'application/json',
+				'Authorization': 'Bearer ' + await AsyncStorage.getItem('@Skybunk:token'),
 				...headers,
 			},
 			body: formData,
@@ -97,12 +101,13 @@ export default class ApiClient {
 		});
 	}
 
-	static delete(endpoint, headers) {
+	static async delete(endpoint, headers) {
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + await AsyncStorage.getItem('@Skybunk:token'),
 				...headers,
 			}
 		})

@@ -101,7 +101,7 @@ export default class CommentsView extends React.Component {
       .then(value => {
 
         if (['toggleLike', 'editPost'].includes(type)) {
-          api.put(`/posts/${postData._id}`, { 'Authorization': 'Bearer ' + value }, data)
+          api.put(`/posts/${postData._id}`,{}, data)
             .then(() => {
               this.setState({ postData: data });
               updateParentState('updatePost', data);
@@ -113,7 +113,7 @@ export default class CommentsView extends React.Component {
         }
 
         else if (type === 'deletePost') {
-          api.delete(`/posts/${postData._id}`, { 'Authorization': 'Bearer ' + value })
+          api.delete(`/posts/${postData._id}`)
             .then(() => {
               updateParentState('deletePost', postData._id);
             })
@@ -128,7 +128,7 @@ export default class CommentsView extends React.Component {
             author: loggedInUser._id,
             content: data.content,
           }
-          api.post(`/posts/${postData._id}/comment`, { 'Authorization': 'Bearer ' + value }, commentContent)
+          api.post(`/posts/${postData._id}/comment`, commentContent)
             .then(() => {
               this.loadData();
             })
@@ -142,7 +142,7 @@ export default class CommentsView extends React.Component {
             author: loggedInUser._id,
             content: data.content,
           }
-          api.put(`/posts/${postData._id}/comment/${id}`, { 'Authorization': 'Bearer ' + value }, commentContent)
+          api.put(`/posts/${postData._id}/comment/${id}`, commentContent)
             .then(() => {
               var updatedPost = {
                 ...postData,
@@ -160,7 +160,7 @@ export default class CommentsView extends React.Component {
         }
 
         else if (type === 'deleteComment') {
-          api.delete(`/posts/${postData._id}/comment/${id}`, { 'Authorization': 'Bearer ' + value })
+          api.delete(`/posts/${postData._id}/comment/${id}`)
             .then(() => {
               var updatedPost = {
                 ...postData,

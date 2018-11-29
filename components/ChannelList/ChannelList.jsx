@@ -61,7 +61,7 @@ export default class ChannelList extends React.Component {
     user.subscribedChannels = this.state.subscribedChannels;
     ApiClient.put(
       `/users/${user._id}`,
-      { 'Authorization': 'Bearer ' + this.props.token },
+      {},
       user
     ).catch(err => console.error(err));
   }
