@@ -95,7 +95,7 @@ export default class ProfileHeader extends React.Component {
     if (!result.cancelled) {
       ApiClient.uploadPhoto(
         `/users/${this.props.user._id}/profilePicture`,
-        { 'Authorization': 'Bearer ' + this.props.token },
+        {}, 
         result.uri,
         'profilePicture'
       )
