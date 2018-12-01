@@ -34,7 +34,7 @@ export default class DonStatusCard extends React.Component {
         profilePicture: pic,
       });
     }).catch(error => {
-      console.log(error);
+      console.error(error);
     });
   }
 

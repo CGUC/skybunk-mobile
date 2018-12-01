@@ -148,11 +148,7 @@ export default class DonInfo extends React.Component {
   }
 
   buildListItems() {
-    items = this.state.dons.map(member => {
-      member.key = member._id;
-      return member;
-    });
-    return items;
+    return this.state.dons;
   }
 
   onSave = async () => {
