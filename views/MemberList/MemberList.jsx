@@ -1,5 +1,5 @@
 import React from 'react';
-import { AsyncStorage, FlatList, Text } from 'react-native';
+import { AsyncStorage, FlatList, Text, TouchableOpacity } from 'react-native';
 import { Container, Content, Spinner, Item, Button, Input, Icon, Header } from 'native-base';
 import { Font } from "expo";
 
@@ -7,6 +7,7 @@ import UserListItem from '../../components/UserListItem/UserListItem';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import styles from './MemberListStyle';
 import api from '../../ApiClient';
+import _ from 'lodash';
 
 /**
  * Searchable list of all members on the app to provide quick access to profiles
@@ -206,21 +207,19 @@ export default class MemberList extends React.Component {
       )
     } else if (useFiltered) {
       return (
-        <Button
-          transparent
+        <TouchableOpacity
           onPress={this.clearFilter}
         >
           <Icon name='ios-close-circle-outline' />
-        </Button>
+        </TouchableOpacity>
       )
     } else {
       return (
-        <Button
-          transparent
+        <TouchableOpacity
           onPress={this.searchMembers}
         >
           <Icon name='arrow-forward' />
-        </Button>
+        </TouchableOpacity>
       )
     }
   }

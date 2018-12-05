@@ -24,15 +24,16 @@ export default class UserProfile extends React.Component {
     if (prevProps.user && _.isEqual(prevProps.user, user)) return;
 
     ApiClient.get(`/users/${user._id}/profilePicture`, {}).then(pic => {
+      console.log(pic)
       this.setState({ profilePicture: pic });
     }).catch(error => {
-      console.log(error);
+      console.error(error);
     });
   }
 
   onClose = () => {
     const { onClose } = this.props;
-
+    console.log("Closing?")
     this.state = {
       profilePicture: null
     }

@@ -10,12 +10,13 @@ This app communicates with our [server](https://github.com/cguc/grapp-server) vi
 ## To set up dev environment:
 1. Install [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) if you don't already have it
 2. Install [node](https://nodejs.org/en/)
+3. Install [Expo CLI](https://expo.io/tools#cli)
 3. Clone this repository with `git clone http://github.com/cguc/grapp-client.git`
 4. cd into the folder and run `npm install`
 
 #### To test the app
 1. Install [expo](https://expo.io/) on your mobile device via your app store
-2. run `npm start`
+2. run `expo start`
 3. Scan the barcode with expo on your phone
 
 #### Testing the app on eduroam

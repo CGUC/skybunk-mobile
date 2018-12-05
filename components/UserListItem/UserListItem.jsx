@@ -23,7 +23,7 @@ export default class UserListItem extends React.Component {
   //   ApiClient.get(`/users/${user._id}/profilePicture`, {}).then(pic => {
   //     this.setState({ profilePicture: pic });
   //   }).catch(error => {
-  //     console.log(error);
+  //     console.error(error);
   //   });
   // }
 

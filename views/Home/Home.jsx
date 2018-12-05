@@ -9,6 +9,7 @@ import style from "./HomeStyle";
 import api from '../../ApiClient';
 import { Font} from "expo";
 import { Notifications } from 'expo';
+import _ from 'lodash';
 
 export default class HomeView extends React.Component {
 
@@ -49,7 +50,7 @@ export default class HomeView extends React.Component {
       if (user._id) {
         this.setState({notifications: user.notifications});
       }
-    }).catch(err => console.log(err));
+    }).catch(err => console.error(err));
   }
 
   onPressChannel = (channelId, channelName) => {

@@ -84,7 +84,7 @@ export default class LoginView extends React.Component {
           }
         })
         .catch(err => {
-          console.log(err);
+          console.error(err);
         });
     }
     // Login the user
@@ -117,9 +117,9 @@ export default class LoginView extends React.Component {
                     notificationToken.registerForPushNotificationsAsync(user, jsonResponse.token);
                     this.props.navigation.navigate('Home', {token: jsonResponse.token, user});
                   })
-                  .catch(err => console.log(err));
+                  .catch(err => console.error(err));
                 }).catch(error => {
-                  console.log(error);
+                  console.error(error);
                   this.setState({
                     errorMessage: 'Sorry, there was an error logging you in',
                     successMessage: null,
@@ -129,7 +129,7 @@ export default class LoginView extends React.Component {
               }
             })
             .catch(err => {
-              console.log(err);
+              console.error(err);
               this.setState({
                 errorMessage: err.message,
                 successMessage: null,

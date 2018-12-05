@@ -36,7 +36,7 @@ export default class Post extends React.Component {
         profilePicture: pic,
       });
     }).catch(error => {
-      console.log(error);
+      console.error(error);
     });
     if (this.props.data.image) {
       ApiClient.get(`/posts/${this.props.data._id}/image`, {}).then(pic => {
@@ -44,7 +44,7 @@ export default class Post extends React.Component {
           image: pic,
         });
       }).catch(error => {
-        console.log(error);
+        console.error(error);
       });
     }
   }
