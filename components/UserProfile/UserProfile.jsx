@@ -24,7 +24,6 @@ export default class UserProfile extends React.Component {
     if (prevProps.user && _.isEqual(prevProps.user, user)) return;
 
     ApiClient.get(`/users/${user._id}/profilePicture`, {}).then(pic => {
-      console.log(pic)
       this.setState({ profilePicture: pic });
     }).catch(error => {
       console.error(error);
@@ -33,10 +32,9 @@ export default class UserProfile extends React.Component {
 
   onClose = () => {
     const { onClose } = this.props;
-    console.log("Closing?")
-    this.state = {
+    this.setState({
       profilePicture: null
-    }
+    })
 
     onClose();
   }
@@ -132,7 +130,6 @@ export default class UserProfile extends React.Component {
         <TouchableOpacity
           activeOpacity={1}
           style={styles.modal}
-          // onPress={this.onClose}
         >
           <View style={[styles.card, cardHeightPreset]}>
 

@@ -41,7 +41,7 @@ export default (styles = StyleSheet.create({
     alignSelf: "center",
     width: 180,
     height: 180,
-    borderRadius: 100,
+    borderRadius: 90,
     borderColor: "#71d3d1",
     borderWidth: 3,
   },

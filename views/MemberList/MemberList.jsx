@@ -57,6 +57,8 @@ export default class MemberList extends React.Component {
     sorted = members.sort((m1, m2) => {
       if (m1.firstName < m2.firstName) return -1;
       if (m1.firstName > m2.firstName) return 1;
+      if (m1.lastName < m2.lastName) return -1;
+      if (m1.lastName > m2.lastName) return 1;
       return 0;
     });
     return sorted;

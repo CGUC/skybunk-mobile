@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, AsyncStorage, TouchableOpacity } from 'react-native';
+import { View, ScrollView, StatusBar, TouchableOpacity } from 'react-native';
 import { Container, Header, Content, Text, Spinner, Footer, Icon } from 'native-base';
 import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
 import ChannelList from "../../components/ChannelList/ChannelList";
@@ -120,7 +120,8 @@ export default class HomeView extends React.Component {
 
   render() {
     const { channels, loading, user, token } = this.state;
-
+    
+  StatusBar.setBarStyle('dark-content', true);
     if (loading) {
       return (
         <Container>
