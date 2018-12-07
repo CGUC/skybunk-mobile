@@ -2,7 +2,7 @@ import { Permissions, Notifications } from 'expo';
 import ApiClient from '../ApiClient';
 
 module.exports = {
-  registerForPushNotificationsAsync: async function (user, authToken) {
+  registerForPushNotificationsAsync: async function (user) {
     const { status: existingStatus } = await Permissions.getAsync(
       Permissions.NOTIFICATIONS
     );
