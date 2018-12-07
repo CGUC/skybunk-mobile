@@ -15,7 +15,8 @@ export default class ApiClient {
 				return responseJSON;
 			})
 			.catch(err => {
-				console.log(err);
+				err = err.replace(/</g, '').replace(/>/g, '');
+				console.error(err);
 			});
 	}
 
@@ -30,6 +31,7 @@ export default class ApiClient {
 			body: JSON.stringify(body),
 		})
 		.catch(err => {
+			err = err.replace(/</g, '').replace(/>/g, '');
 			console.error(err);
 		});
 	};
@@ -61,7 +63,8 @@ export default class ApiClient {
 			return responseJSON
 		})
 		.catch(err => {
-			console.log(err);
+			err = err.replace(/</g, '').replace(/>/g, '');
+			console.error(err);
 		});
 	}
 
@@ -89,7 +92,8 @@ export default class ApiClient {
 		})
 		.then(responseJSON => responseJSON)
 		.catch(err => {
-			console.log(err);
+			err = err.replace(/</g, '').replace(/>/g, '');
+			console.error(err);
 		});
 	}
 
@@ -103,7 +107,8 @@ export default class ApiClient {
 			}
 		})
 		.catch(err => {
-			console.log(err);
+			err = err.replace(/</g, '').replace(/>/g, '');
+			console.error(err);
 		});;
 	}
 
