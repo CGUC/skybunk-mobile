@@ -121,7 +121,7 @@ export default class HomeView extends React.Component {
   render() {
     const { channels, loading, user, token } = this.state;
     
-  StatusBar.setBarStyle('dark-content', true);
+    StatusBar.setBarStyle('dark-content', true);
     if (loading) {
       return (
         <Container>

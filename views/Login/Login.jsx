@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageBackground, View, AsyncStorage, Image, KeyboardAvoidingView, Platform, Linking } from 'react-native';
+import { ImageBackground, View, AsyncStorage, Image, KeyboardAvoidingView, Platform, Linking, StatusBar } from 'react-native';
 import { Font, AppLoading } from "expo";
 import { Container, Content, Text, Button, Input, Item, Spinner } from 'native-base';
 import notificationToken from '../../helpers/notificationToken';
@@ -94,54 +94,46 @@ export default class LoginView extends React.Component {
         username: this.state.username,
         password: this.state.password,
       })
-        .then(response => {
-          if(!response){
+        .then(response => response.json())
+        .then(jsonResponse => {
+          if (jsonResponse.err) {
             this.setState({
-              errorMessage: "Cannot connect to the server.",
+              errorMessage: jsonResponse.err.message,
               succesMessage: null,
               processing: false,
             });
-          }else{
-            response.json()
-              .then(jsonResponse => {
-              if (jsonResponse.err) {
-                this.setState({
-                  errorMessage: jsonResponse.err.message,
-                  succesMessage: null,
-                  processing: false,
-                });
-              }
-              else {
-                AsyncStorage.setItem('@Skybunk:token', jsonResponse.token).then(() => {
-                  ApiClient.get('/users/loggedInUser', { 'Authorization': 'Bearer ' + jsonResponse.token }).then(user => {
-                    notificationToken.registerForPushNotificationsAsync(user, jsonResponse.token);
-                    this.props.navigation.navigate('Home', {token: jsonResponse.token, user});
-                  })
-                  .catch(err => console.error(err));
-                }).catch(error => {
-                  console.error(error);
-                  this.setState({
-                    errorMessage: 'Sorry, there was an error logging you in',
-                    successMessage: null,
-                    processing: false,
-                  });
-                });
-              }
-            })
-            .catch(err => {
-              console.error(err);
+          }
+          else {
+            AsyncStorage.setItem('@Skybunk:token', jsonResponse.token).then(() => {
+              ApiClient.get('/users/loggedInUser', { 'Authorization': 'Bearer ' + jsonResponse.token }).then(user => {
+                notificationToken.registerForPushNotificationsAsync(user, jsonResponse.token);
+                this.props.navigation.navigate('Home', {token: jsonResponse.token, user});
+              })
+              .catch(err => console.error(err));
+            }).catch(error => {
+              console.error(error);
               this.setState({
-                errorMessage: err.message,
+                errorMessage: 'Sorry, there was an error logging you in',
                 successMessage: null,
                 processing: false,
               });
             });
-        }
-      });
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          this.setState({
+            errorMessage: err.message,
+            successMessage: null,
+            processing: false,
+          });
+        });
     }
   }
 
   render() {
+    StatusBar.setBarStyle('dark-content', true);
+
     const registerFields =
       <View>
         <Item regular style={styles.inputItem}>
