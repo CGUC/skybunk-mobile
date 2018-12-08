@@ -1,6 +1,6 @@
 import React from 'react';
 import Autolink from 'react-native-autolink';
-import { View, ScrollView, TouchableOpacity, Modal, Alert, Dimensions } from 'react-native';
+import { View, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Modal, Alert, Dimensions } from 'react-native';
 import Image from 'react-native-scalable-image';
 import { Body, Card, CardItem, Text, Thumbnail, Button, Icon } from 'native-base';
 import _ from 'lodash';
@@ -310,12 +310,13 @@ export default class Post extends React.Component {
           </CardItem>
 
           {this.state.image ? <CardItem style={styles.imageContainer}>
-            <Image
-              style={styles.image}
-              width={Dimensions.get('window').width}
-              source={{ uri: `data:image/png;base64,${this.state.image}` }}
-              onPress={this.onPressPost}
-            />
+            <TouchableWithoutFeedback onPress={this.onPressPost}>
+              <Image
+                style={styles.image}
+                width={Dimensions.get('window').width}
+                source={{ uri: `data:image/png;base64,${this.state.image}` }}
+              />
+            </TouchableWithoutFeedback>
           </CardItem> : null}
 
           <CardItem style={styles.postFooter}>
