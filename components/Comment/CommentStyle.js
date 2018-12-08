@@ -22,7 +22,6 @@ export default (styles = StyleSheet.create({
     marginTop: 5
   },
   textContainer: {
-    width: width * 0.8,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
@@ -62,5 +61,10 @@ export default (styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
     backgroundColor: 'red',
+  },
+  title: {
+    flexDirection: 'row',
+  	justifyContent: 'space-between',
+  	paddingBottom: 5
   }
 }));
