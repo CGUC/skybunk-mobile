@@ -174,7 +174,7 @@ export default class DonInfo extends React.Component {
     }
   }
 
-  handleCardChanged = (don) => {
+  handleCardChanged = () => {
     this.props.navigation.setParams({ saveState: 'hasChanges' });
   }
 

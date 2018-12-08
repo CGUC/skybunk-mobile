@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, TouchableOpacity} from 'react-native';
+import { View, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
 import {Card, CardItem, Text, Thumbnail, Item, Input, Button } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Switch from 'react-native-switch-pro'
+import Autolink from 'react-native-autolink';
 import _ from 'lodash';
 import { Font} from "expo";
 import ApiClient from '../../ApiClient';
@@ -17,7 +18,6 @@ export default class DonStatusCard extends React.Component {
       profilePicture: null,
       isOn: props.don.donInfo.isOn,
       isLateSupper: props.don.donInfo.isOnLateSupper,
-      changed: false,
       isDateTimePickerVisible: false,
       clockOut: props.don.donInfo.clockOut,
       location: props.don.donInfo.location,
@@ -38,20 +38,21 @@ export default class DonStatusCard extends React.Component {
     });
   }
 
-  isChanged = () => {
-    this.setState(state => ({changed: false}))
+  update = (newState) => {
+    console.log(newState)
+    this.setState(newState);
 
     if(this.props.togglable){
       //update all the fields
       var don = this.props.don;
-      don.donInfo.isOn = this.state.isOn;
-      don.donInfo.isOnLateSupper = this.state.isLateSupper;
-      don.donInfo.clockOut = this.state.clockOut;
-      don.donInfo.location = this.state.location
+      don.donInfo.isOn = ('isOn' in newState) ? newState.isOn : this.state.isOn;
+      don.donInfo.isOnLateSupper = ('isLateSupper' in newState) ? newState.isLateSupper : this.state.isLateSupper;
+      don.donInfo.clockOut = ('clockOut' in newState) ? newState.clockOut : this.state.clockOut;
+      don.donInfo.location = ('location' in newState) ? newState.location : this.state.location;
 
       //notify DonInfo page that something changed
       var onChange = this.props.onChange;
-      onChange(don);
+      onChange();
     }
   }
 
@@ -73,28 +74,21 @@ export default class DonStatusCard extends React.Component {
           nextClockOut = date.addDays(nextClockOut, 1)
         }
       }
-      this.setState(state => ({
-          isOn: !state.isOn,
-          changed: true,
-          clockOut: nextClockOut
-        }))
+      this.update({isOn: !this.state.isOn, clockOut: nextClockOut});
     }
   };
 
   handleToggleLateSupper = () =>{
     if(this.props.togglable){
-      this.setState(state => ({
-        isLateSupper: !state.isLateSupper,
-        changed: true
-      }))
+      this.update({isLateSupper: !this.state.isLateSupper});
     }
   };
 
   showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
   hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false});
-  handleDatePicked = (datetime) => {this.setState({ isDateTimePickerVisible: false, clockOut: datetime, changed: true })};
+  handleDatePicked = (datetime) => {this.update({ isDateTimePickerVisible: false, clockOut: datetime})};
 
-  handleUpdatedLocation = (text) => {this.setState({location: text, changed: true})}
+  handleUpdatedLocation = (text) => {this.update({location: text})}
 
   render() {
     const {don} = this.props
@@ -105,9 +99,6 @@ export default class DonStatusCard extends React.Component {
     var donName;
     if (!don) donName = "Ghost Don";
     else donName = `${don.firstName} ${don.lastName}`;
-
-    //Let DonInfo know if something has changed
-    if(this.state.changed) this.isChanged();
 
     if(this.props.togglable){
       var icon = this.state.isLateSupper ? require('../../assets/fork-knife-on.png') : require('../../assets/fork-knife-off.png')
@@ -159,7 +150,7 @@ export default class DonStatusCard extends React.Component {
                   <View style={styles.donDetails}>
                     <Text>{donName}</Text>
                   </View>
-                  <Text note>{line1}</Text>
+                  <Autolink text={line1}/>
                   {this.state.isOn ?<Text note>{line2}</Text>:null}
                 </View>
               </View>
