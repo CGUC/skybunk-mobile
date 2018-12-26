@@ -234,7 +234,7 @@ export default class CommentsView extends React.Component {
               maxLines={1000}
               updatePost={this.updateResource}
               enableEditing={enablePostEditing}
-              enableDeleting={loggedInUser.role.includes("admin")}
+              enableDeleting={ loggedInUser.role && loggedInUser.role.includes("admin")}
               loggedInUser={loggedInUser}
               showUserProfile={this.showUserProfile}
             />
@@ -250,7 +250,7 @@ export default class CommentsView extends React.Component {
                         data={comment}
                         updateComment={this.updateResource}
                         enableEditing={enableCommentEditing}
-                        enableDeleting={loggedInUser.role.includes("admin")}
+                        enableDeleting={ loggedInUser.role && loggedInUser.role.includes("admin")}
                         showUserProfile={this.showUserProfile}
                       />
                     )
