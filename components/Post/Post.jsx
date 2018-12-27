@@ -289,7 +289,8 @@ export default class Post extends React.Component {
                 </View>
                 <View style={styles.headerBody}>
                   <View style={styles.authorDetails}>
-                    <Text>{authorName}{this.props.showTag ? ` ►  ${tags[0]}` : null}</Text>
+                    <Text>{authorName}</Text>
+                    <Text>{this.props.showTag ? ` ►  ${tags[0]}` : null}</Text>
                   </View>
                   <Text note>{createdAt}</Text>
                 </View>

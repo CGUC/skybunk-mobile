@@ -66,7 +66,8 @@ export default (styles = StyleSheet.create({
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'flex-start',
-		flexWrap: 'wrap'
+		flexWrap: 'wrap',
+		alignItems: "baseline"
 	},
 	headerRight: {
 		alignSelf: 'flex-start',
