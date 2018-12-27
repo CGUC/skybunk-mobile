@@ -107,29 +107,29 @@ export default class DonStatusCard extends React.Component {
     }
 
     //Figure out what information should be displayed on the 2 lines of text beside the profile
+    var line1 = ''
+    var line2 = '';
     if(this.props.editable){
       if(this.state.isOn){
-        var line1 = 'On until'
+        line1 = 'On until'
         if(!date.isValid(new Date(this.state.clockOut)) || date.isPast(this.state.clockOut)){
-          var line2 = 'forever'
+          line2 = 'forever'
         }else if(date.isToday(this.state.clockOut)){
-          var line2 = date.format(this.state.clockOut, 'h:mma');
+          line2 = date.format(this.state.clockOut, 'h:mma');
         }else if(date.isTomorrow(this.state.clockOut)){
-          var line2 = date.format(this.state.clockOut, '[Tomorrow at] h:mma');
+          line2 = date.format(this.state.clockOut, '[Tomorrow at] h:mma');
         }else{
-          var line2 = date.format(this.state.clockOut, 'ddd MMM Do [at] h:mma');
+          line2 = date.format(this.state.clockOut, 'ddd MMM Do [at] h:mma');
         }
-      }else{
-        var line1 = ''
       }
     }else{
-      if(!don.info){
-        var line1 = '';
-      }else{
-        var line1 = don.info.phone;
+      if(don.info){
+        line1 = don.info.phone;
       }
-      var line2 = don.donInfo.location
+      line2 = don.donInfo.location;
     }
+    if(line1==undefined) line1='';
+    if(line2==undefined) line2='';
 
 
     return (

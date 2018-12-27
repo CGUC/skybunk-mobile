@@ -80,7 +80,7 @@ export default class DonInfo extends React.Component {
   filterDons(users){
     var dons = []
     users.forEach(user =>{
-      if((user.role && user.role.includes("don"))==1){
+      if(user.role && user.role.includes("don")){
         //enter default data is don data isn't initilaized
         if(!user.donInfo) user.donInfo = {}
         dons.push(user);
@@ -89,7 +89,7 @@ export default class DonInfo extends React.Component {
     return dons;
   }
   sortDons(dons) {
-    sorted = dons.sort((m1, m2) => {
+    dons.sort((m1, m2) => {
       //Put yourself at the top
       if(m1._id == this.props.navigation.getParam('user')._id) return -1
       if(m2._id == this.props.navigation.getParam('user')._id) return 1
@@ -115,21 +115,15 @@ export default class DonInfo extends React.Component {
       loading: true,
     });
 
-    await AsyncStorage.getItem('@Skybunk:token')
-      .then(token => {
-        api.get('/users')
-          .then(users => {
-            this.setState({
-              dons: this.sortDons(this.filterDons(users)),
-              loading: false
-            });
-          })
-          .catch((err) => {
-            console.error(err);
-          });
+    api.get('/users')
+      .then(users => {
+        this.setState({
+          dons: this.sortDons(this.filterDons(users)),
+          loading: false
+        });
       })
-      .catch(error => {
-        this.props.navigation.navigate('Auth');
+      .catch((err) => {
+        console.error(err);
       });
   }
 
