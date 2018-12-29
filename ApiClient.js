@@ -41,7 +41,7 @@ export default class ApiClient {
 	}
 
 	static async post(endpoint, headers, authorized, body) {
-		console.log(endpoint)
+
 		if(authorized) headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...headers}
 
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
