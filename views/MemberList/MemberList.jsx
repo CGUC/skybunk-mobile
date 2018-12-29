@@ -1,5 +1,5 @@
 import React from 'react';
-import { AsyncStorage, FlatList, Text, TouchableOpacity } from 'react-native';
+import { FlatList, Text, TouchableOpacity } from 'react-native';
 import { Container, Content, Spinner, Item, Button, Input, Icon, Header } from 'native-base';
 import { Font } from "expo";
 
@@ -74,7 +74,7 @@ export default class MemberList extends React.Component {
       useFiltered: false,
     });
 
-    api.get('/users')
+    api.get('/users', {}, true)
       .then(users => {
         this.setState({
           members: this.sortAlphabetically(users),

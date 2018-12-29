@@ -31,7 +31,7 @@ export default class HomeView extends React.Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
-    api.get('/channels')
+    api.get('/channels', {}, true)
     .then(response => {
       this.setState({ channels: response, loading: false });
     })
@@ -42,7 +42,7 @@ export default class HomeView extends React.Component {
 
   handleNewNotification = () => {
     api.get(
-      '/users/loggedInUser'
+      '/users/loggedInUser', {}, true
     )
     .then(user => {
       if (user._id) {
@@ -75,7 +75,7 @@ export default class HomeView extends React.Component {
 
   updateNotificationState = (notif) => {
     api.post(
-      `/notifications/${notif._id}/markSeen`
+      `/notifications/${notif._id}/markSeen`, {}, true
     ).catch(err => console.error(err));
 
     this.setState({
@@ -99,7 +99,7 @@ export default class HomeView extends React.Component {
 
   markNotifsSeen = () => {
     api.post(
-      `/users/${this.state.user._id}/markNotifsSeen`
+      `/users/${this.state.user._id}/markNotifsSeen`, {}, true
     )
     .then(res => {
       this.setState({

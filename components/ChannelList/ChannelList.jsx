@@ -62,6 +62,7 @@ export default class ChannelList extends React.Component {
     ApiClient.put(
       `/users/${user._id}`,
       {},
+      true,
       user
     ).catch(err => console.error(err));
   }

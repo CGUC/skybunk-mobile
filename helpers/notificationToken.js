@@ -29,6 +29,7 @@ module.exports = {
         ApiClient.post(
           `/users/${user._id}/notificationToken`,
           {},
+          true,
           {notificationToken: token}
         )
         .then(response => {})

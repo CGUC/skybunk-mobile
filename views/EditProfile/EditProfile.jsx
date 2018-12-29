@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, KeyboardAvoidingView, Keyboard, AsyncStorage } from 'react-native';
+import { View, TouchableOpacity, KeyboardAvoidingView, Keyboard} from 'react-native';
 import { Icon, Item, Text, Input, Textarea, Spinner } from 'native-base';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import _ from 'lodash';
@@ -83,7 +83,7 @@ export default class EditProfile extends React.Component {
     this.props.navigation.setParams({ saveState: 'saving' });
 
     try {
-      let result = await api.put(`/users/${user._id}`, {}, userData);
+      let result = await api.put(`/users/${user._id}`, {}, true, userData);
 
       this.props.navigation.setParams({ saveState: 'saved' });
 

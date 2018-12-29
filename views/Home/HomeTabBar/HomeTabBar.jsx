@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, AsyncStorage, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { Container, Header, Content, Text, Spinner, Footer } from 'native-base';
 import HomeTabBarButton from './HomeTabBarButton/HomeTabBarButton';
 
