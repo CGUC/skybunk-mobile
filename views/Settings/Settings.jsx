@@ -23,6 +23,11 @@ export default class SettingsView extends React.Component {
   showMemberList = () => {
     this.props.navigation.navigate('MemberList');
   }
+
+  showDonInfo = () => {
+    const user = this.props.navigation.getParam('user');
+    this.props.navigation.navigate('DonInfo', { user });
+  }
   
   logout = () => {
     AsyncStorage.removeItem('@Skybunk:token').then(() => {
@@ -48,6 +53,12 @@ export default class SettingsView extends React.Component {
             <ListItem style={{ margin: 0 }}>
               <TouchableOpacity style={styles.itemContainer} onPress={this.showMemberList}>
                 <Text style={styles.itemText}>Members</Text>
+              </TouchableOpacity>
+            </ListItem>
+
+            <ListItem style={{ margin: 0 }}>
+              <TouchableOpacity style={styles.itemContainer} onPress={this.showDonInfo}>
+                <Text style={styles.itemText}>Find A Don</Text>
               </TouchableOpacity>
             </ListItem>
 
