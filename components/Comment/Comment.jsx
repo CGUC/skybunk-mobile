@@ -109,6 +109,14 @@ export default class Comment extends React.Component {
     if (!author) authorName = "Ghost";
     else authorName = `${author.firstName} ${author.lastName}`;
 
+    if(date.isPast(date.addWeeks(createdAt,1))){
+      //If the post is more than a week old, display date
+      createdAt = date.format(createdAt, 'ddd MMM Do');
+    }else{
+      //Display how long ago the post was made
+      createdAt = date.distanceInWordsToNow(createdAt, {addSuffix: true});
+    }
+
     return (
       <View>
         <Card style={styles.card}>
@@ -121,10 +129,15 @@ export default class Comment extends React.Component {
                   source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={this.onPressComment} hitSlop={{ top: 15, bottom: 15, left: 10, right: 10 }}>
-                <Text style={styles.textAuthor}>
-                  {`${authorName} `}
-                </Text>
+              <TouchableOpacity style={{flex:1}} onPress={this.onPressComment} hitSlop={{ top: 15, bottom: 15, left: 10, right: 10 }}>
+                <View style={styles.title}>
+                  <Text style={styles.textAuthor}>
+                    {`${authorName} `}
+                  </Text>
+                  <Text note>
+                    {`${createdAt} `}
+                  </Text>
+                </View>
                 <Autolink text={content} style={styles.textContent}/>
               </TouchableOpacity>
             </View>
