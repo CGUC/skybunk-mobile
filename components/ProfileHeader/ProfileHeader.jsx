@@ -52,6 +52,7 @@ export default class ProfileHeader extends React.Component {
             [
               {text: 'Send feedback', onPress: () => Linking.openURL('https://grebelife.com/skybunk/feedback')},
               {text: 'Contact webmasters', onPress: () => Linking.openURL(`mailto:webmaster@grebelife.com?subject=Skybunk%20Question%20v${config.VERSION}`)},
+              {text: 'Close', style: 'cancel'}
             ],
             { cancelable: true }
           ) }}>
@@ -104,7 +105,7 @@ export default class ProfileHeader extends React.Component {
           });
         })
         .catch(err => {
-          console.log(err);
+          console.error(err);
         });
     }
   }

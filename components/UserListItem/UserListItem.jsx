@@ -17,16 +17,6 @@ export default class UserListItem extends React.Component {
     }
   }
 
-  // async componentWillMount() {
-  //   var { user } = this.props;
-
-  //   ApiClient.get(`/users/${user._id}/profilePicture`, {}).then(pic => {
-  //     this.setState({ profilePicture: pic });
-  //   }).catch(error => {
-  //     console.log(error);
-  //   });
-  // }
-
   /**
    * Limit re-rendering for optimisation
    */

@@ -29,7 +29,7 @@ export default class SettingsView extends React.Component {
       this.props.navigation.navigate('Auth');
     })
       .catch(error => {
-        console.log(error);
+        console.error(error);
       });
   }
 

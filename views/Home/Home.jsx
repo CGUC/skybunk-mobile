@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, AsyncStorage, TouchableOpacity } from 'react-native';
+import { View, ScrollView, StatusBar, TouchableOpacity } from 'react-native';
 import { Container, Header, Content, Text, Spinner, Footer, Icon } from 'native-base';
 import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
 import ChannelList from "../../components/ChannelList/ChannelList";
@@ -7,7 +7,9 @@ import NotificationList from "../../components/NotificationList/NotificationList
 import HomeTabBar from "./HomeTabBar/HomeTabBar";
 import style from "./HomeStyle";
 import api from '../../ApiClient';
+import { Font} from "expo";
 import { Notifications } from 'expo';
+import _ from 'lodash';
 
 export default class HomeView extends React.Component {
 
@@ -25,7 +27,11 @@ export default class HomeView extends React.Component {
     }
   }
 
-  componentWillMount() {
+  async componentWillMount() {
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+    });
     api.get('/channels')
     .then(response => {
       this.setState({ channels: response, loading: false });
@@ -44,7 +50,7 @@ export default class HomeView extends React.Component {
       if (user._id) {
         this.setState({notifications: user.notifications});
       }
-    }).catch(err => console.log(err));
+    }).catch(err => console.error(err));
   }
 
   onPressChannel = (channelId, channelName) => {
@@ -114,7 +120,8 @@ export default class HomeView extends React.Component {
 
   render() {
     const { channels, loading, user, token } = this.state;
-
+    
+    StatusBar.setBarStyle('dark-content', true);
     if (loading) {
       return (
         <Container>

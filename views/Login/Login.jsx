@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageBackground, View, AsyncStorage, Image, KeyboardAvoidingView, Platform, Linking } from 'react-native';
+import { ImageBackground, View, AsyncStorage, Image, KeyboardAvoidingView, Platform, Linking, StatusBar } from 'react-native';
 import { Font, AppLoading } from "expo";
 import { Container, Content, Text, Button, Input, Item, Spinner } from 'native-base';
 import notificationToken from '../../helpers/notificationToken';
@@ -84,7 +84,7 @@ export default class LoginView extends React.Component {
           }
         })
         .catch(err => {
-          console.log(err);
+          console.error(err);
         });
     }
     // Login the user
@@ -109,9 +109,9 @@ export default class LoginView extends React.Component {
                 notificationToken.registerForPushNotificationsAsync(user, jsonResponse.token);
                 this.props.navigation.navigate('Home', {token: jsonResponse.token, user});
               })
-              .catch(err => console.log(err));
+              .catch(err => console.error(err));
             }).catch(error => {
-              console.log(error);
+              console.error(error);
               this.setState({
                 errorMessage: 'Sorry, there was an error logging you in',
                 successMessage: null,
@@ -121,7 +121,7 @@ export default class LoginView extends React.Component {
           }
         })
         .catch(err => {
-          console.log(err);
+          console.error(err);
           this.setState({
             errorMessage: err.message,
             successMessage: null,
@@ -132,6 +132,8 @@ export default class LoginView extends React.Component {
   }
 
   render() {
+    StatusBar.setBarStyle('dark-content', true);
+
     const registerFields =
       <View>
         <Item regular style={styles.inputItem}>
@@ -208,6 +210,7 @@ export default class LoginView extends React.Component {
                   block
                   onPress={this.submitForm.bind(this)}
                   style={styles.loginButton}
+                  disabled={this.state.processing}
                 >
                   <Text>{this.state.registering ? 'Register' : 'Login'}</Text>
                 </Button>

@@ -12,7 +12,7 @@ export default function(props) {
 			<TouchableOpacity onPress={props.pickImage}>
 		  		<Icon name="image" style={styles.icon}/>
 		  	</TouchableOpacity>
-		  	<Thumbnail square source={{ uri: props.image }} style={styles.image}/> 
+		  	{props.image ? <Thumbnail square source={{ uri: props.image }} style={styles.image}/> : null }
 		</View>
 	);
 }

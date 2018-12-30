@@ -25,7 +25,6 @@ module.exports = {
 
     // Get the token that uniquely identifies this device
     Notifications.getExpoPushTokenAsync().then(token => {
-      console.log(token);
       if (token) {
         ApiClient.post(
           `/users/${user._id}/notificationToken`,
@@ -33,12 +32,12 @@ module.exports = {
           {notificationToken: token}
         )
         .then(response => {})
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
       }
       else {
         console.error('Error getting notification token!');
       }
     })
-    .catch(err => console.log(err));
+    .catch(err => console.error(err));
   }
 }

@@ -26,16 +26,15 @@ export default class UserProfile extends React.Component {
     ApiClient.get(`/users/${user._id}/profilePicture`, {}).then(pic => {
       this.setState({ profilePicture: pic });
     }).catch(error => {
-      console.log(error);
+      console.error(error);
     });
   }
 
   onClose = () => {
     const { onClose } = this.props;
-
-    this.state = {
+    this.setState({
       profilePicture: null
-    }
+    })
 
     onClose();
   }
@@ -131,7 +130,6 @@ export default class UserProfile extends React.Component {
         <TouchableOpacity
           activeOpacity={1}
           style={styles.modal}
-          // onPress={this.onClose}
         >
           <View style={[styles.card, cardHeightPreset]}>
 

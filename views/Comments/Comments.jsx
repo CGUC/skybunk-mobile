@@ -9,6 +9,7 @@ import ContentBar from '../../components/ContentBar/ContentBar';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import api from '../../ApiClient';
 import style from './CommentsStyle';
+import _ from 'lodash'
 
 export default class CommentsView extends React.Component {
 
@@ -106,7 +107,7 @@ export default class CommentsView extends React.Component {
               updateParentState('updatePost', data);
             })
             .catch(err => {
-              console.log(err);
+              console.error(err);
               alert("Error updating post. Sorry about that!");
             });
         }
