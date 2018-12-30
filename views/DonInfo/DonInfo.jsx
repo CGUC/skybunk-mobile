@@ -1,5 +1,5 @@
 import React from 'react';
-import { AsyncStorage, FlatList, TouchableOpacity, Text, View } from 'react-native';
+import { FlatList, TouchableOpacity, Text, View } from 'react-native';
 import { Container, Content, Spinner, Icon } from 'native-base';
 import { Font} from "expo";
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
@@ -153,8 +153,6 @@ export default class DonInfo extends React.Component {
     this.props.navigation.setParams({ saveState: 'saving' });
 
     try {
-
-      let token = await AsyncStorage.getItem('@Skybunk:token');
       const dons = this.state.dons;
 
       for(var i=0; i<dons.length; i++){
