@@ -1,4 +1,4 @@
 module.exports = {
   API_ADDRESS: 'http://api.grebelife.com',
-  VERSION: '1.7'
+  VERSION: '2.0'
 }
