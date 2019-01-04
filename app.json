@@ -17,7 +17,11 @@
         "foregroundImage": "./assets/icon-front.png",
         "backgroundImage": "./assets/icon-back.png"
       },
-      "versionCode": 2
+      "permissions": [
+        "CAMERA",
+        "CAMERA_ROLL"
+      ],
+      "versionCode": 3
     },
     "notification": {
       "icon": "./assets/icon-notification.png",
