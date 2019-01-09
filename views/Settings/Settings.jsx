@@ -3,7 +3,6 @@ import {TouchableOpacity, ImageBackground, Dimensions, Text } from 'react-native
 import { Container, Content, View, List, ListItem } from 'native-base';
 
 import styles from './SettingsStyle';
-import api from '../../ApiClient';
 import ApiClient from '../../ApiClient';
 
 export default class SettingsView extends React.Component {

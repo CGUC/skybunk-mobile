@@ -13,7 +13,7 @@ import ContentBar from '../../components/ContentBar/ContentBar';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import Post from '../../components/Post/Post';
 import NoData from '../../components/NoData/NoData';
-import api from '../../ApiClient';
+import ApiClient from '../../ApiClient';
 import styles from './FeedStyle';
 
 export default class FeedView extends React.Component {
@@ -83,7 +83,7 @@ export default class FeedView extends React.Component {
       loadedLastPage: false
     });
     const loggedInUser = this.props.navigation.getParam('loggedInUser');
-    await api.get(this.getUri(), {}, true)
+    await ApiClient.get(this.getUri(), {}, true)
       .then(response => {
         // This doesn't look like it does anything, but it does. ¯\_(ツ)_/¯
         var posts = _.map(response, post => {
@@ -123,11 +123,11 @@ export default class FeedView extends React.Component {
       content: data.content,
       tags: tags
     }
-    api.post('/posts', {}, true, postContent)
+    ApiClient.post('/posts', {}, true, postContent)
     .then(response => response.json())
     .then(post => {
       if (data.image) {
-        api.uploadPhoto(
+        ApiClient.uploadPhoto(
           `/posts/${post._id}/image`,
           {},
           true,
@@ -157,7 +157,7 @@ export default class FeedView extends React.Component {
       });
     }
     else if (type === 'deletePost') {
-      return api.delete(`/posts/${postId}`, {}, true)
+      return ApiClient.delete(`/posts/${postId}`, {}, true)
         .then(() => {
           this.updateState('deletePost', postId);
         })
@@ -169,7 +169,7 @@ export default class FeedView extends React.Component {
       this.updateState('updatePost', data);
     }
 
-    api.put(`/posts/${postId}`, {}, true, data)
+    ApiClient.put(`/posts/${postId}`, {}, true, data)
       .then(() => {
         //this.loadData();
       })
@@ -278,7 +278,7 @@ export default class FeedView extends React.Component {
       page: this.state.page + 1,
       loadingPage: true,
     }, state =>
-        api.get(this.getUri(), { 'page': this.state.page }, true).then(response => {
+        ApiClient.get(this.getUri(), { 'page': this.state.page }, true).then(response => {
           this.setState({
             posts: [...this.state.posts, ...response],
             loadingPage: false,

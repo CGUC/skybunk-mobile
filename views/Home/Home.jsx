@@ -6,7 +6,7 @@ import ChannelList from "../../components/ChannelList/ChannelList";
 import NotificationList from "../../components/NotificationList/NotificationList";
 import HomeTabBar from "./HomeTabBar/HomeTabBar";
 import style from "./HomeStyle";
-import api from '../../ApiClient';
+import ApiClient from '../../ApiClient';
 import { Font} from "expo";
 import { Notifications } from 'expo';
 import _ from 'lodash';
@@ -31,7 +31,7 @@ export default class HomeView extends React.Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
-    api.get('/channels', {}, true)
+    ApiClient.get('/channels', {}, true)
     .then(response => {
       this.setState({ channels: response, loading: false });
     })
@@ -41,7 +41,7 @@ export default class HomeView extends React.Component {
   }
 
   handleNewNotification = () => {
-    api.get(
+    ApiClient.get(
       '/users/loggedInUser', {}, true
     )
     .then(user => {
@@ -74,7 +74,7 @@ export default class HomeView extends React.Component {
   }
 
   updateNotificationState = (notif) => {
-    api.post(
+    ApiClient.post(
       `/notifications/${notif._id}/markSeen`, {}, true
     ).catch(err => console.error(err));
 
@@ -98,7 +98,7 @@ export default class HomeView extends React.Component {
   };
 
   markNotifsSeen = () => {
-    api.post(
+    ApiClient.post(
       `/users/${this.state.user._id}/markNotifsSeen`, {}, true
     )
     .then(res => {

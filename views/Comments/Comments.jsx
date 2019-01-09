@@ -7,7 +7,7 @@ import Post from '../../components/Post/Post';
 import Comment from '../../components/Comment/Comment';
 import ContentBar from '../../components/ContentBar/ContentBar';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
-import api from '../../ApiClient';
+import ApiClient from '../../ApiClient';
 import style from './CommentsStyle';
 import _ from 'lodash'
 
@@ -68,7 +68,7 @@ export default class CommentsView extends React.Component {
 
     var postUri = `/posts/${postData._id}`;
 
-    await api.get(postUri, {}, true)
+    await ApiClient.get(postUri, {}, true)
       .then(response => {
         if (response.usersLiked.find(user => user._id === loggedInUser._id)) {
           response.isLiked = true;
@@ -98,7 +98,7 @@ export default class CommentsView extends React.Component {
     const updateParentState = navigation.getParam('updateParentState');
 
     if (['toggleLike', 'editPost'].includes(type)) {
-      api.put(`/posts/${postData._id}`,{}, true, data)
+      ApiClient.put(`/posts/${postData._id}`,{}, true, data)
         .then(() => {
           this.setState({ postData: data });
           updateParentState('updatePost', data);
@@ -110,7 +110,7 @@ export default class CommentsView extends React.Component {
     }
 
     else if (type === 'deletePost') {
-      api.delete(`/posts/${postData._id}`, {}, true)
+      ApiClient.delete(`/posts/${postData._id}`, {}, true)
         .then(() => {
           updateParentState('deletePost', postData._id);
         })
@@ -125,7 +125,7 @@ export default class CommentsView extends React.Component {
         author: loggedInUser._id,
         content: data.content,
       }
-      api.post(`/posts/${postData._id}/comment`, {}, true, commentContent)
+      ApiClient.post(`/posts/${postData._id}/comment`, {}, true, commentContent)
         .then(() => {
           this.loadData();
         })
@@ -139,7 +139,7 @@ export default class CommentsView extends React.Component {
         author: loggedInUser._id,
         content: data.content,
       }
-      api.put(`/posts/${postData._id}/comment/${id}`, {}, true, commentContent)
+      ApiClient.put(`/posts/${postData._id}/comment/${id}`, {}, true, commentContent)
         .then(() => {
           var updatedPost = {
             ...postData,
@@ -157,7 +157,7 @@ export default class CommentsView extends React.Component {
     }
 
     else if (type === 'deleteComment') {
-      api.delete(`/posts/${postData._id}/comment/${id}`, {}, true)
+      ApiClient.delete(`/posts/${postData._id}/comment/${id}`, {}, true)
         .then(() => {
           var updatedPost = {
             ...postData,

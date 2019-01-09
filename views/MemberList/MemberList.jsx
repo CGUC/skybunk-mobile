@@ -6,7 +6,7 @@ import { Font } from "expo";
 import UserListItem from '../../components/UserListItem/UserListItem';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import styles from './MemberListStyle';
-import api from '../../ApiClient';
+import ApiClient from '../../ApiClient';
 import _ from 'lodash';
 
 /**
@@ -74,7 +74,7 @@ export default class MemberList extends React.Component {
       useFiltered: false,
     });
 
-    api.get('/users', {}, true)
+    ApiClient.get('/users', {}, true)
       .then(users => {
         this.setState({
           members: this.sortAlphabetically(users),

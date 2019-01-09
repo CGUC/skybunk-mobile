@@ -3,7 +3,7 @@ import { View, TouchableOpacity, KeyboardAvoidingView, Keyboard} from 'react-nat
 import { Icon, Item, Text, Input, Textarea, Spinner } from 'native-base';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import _ from 'lodash';
-import api from '../../ApiClient';
+import ApiClient from '../../ApiClient';
 import styles from './EditProfileStyle';
 
 export default class EditProfile extends React.Component {
@@ -83,7 +83,7 @@ export default class EditProfile extends React.Component {
     this.props.navigation.setParams({ saveState: 'saving' });
 
     try {
-      let result = await api.put(`/users/${user._id}`, {}, true, userData);
+      let result = await ApiClient.put(`/users/${user._id}`, {}, true, userData);
 
       this.props.navigation.setParams({ saveState: 'saved' });
 

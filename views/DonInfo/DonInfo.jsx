@@ -5,7 +5,7 @@ import { Font} from "expo";
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import DonStatusCard from '../../components/DonStatusCard/DonStatusCard';
 import styles from './DonInfoStyle';
-import api from '../../ApiClient';
+import ApiClient from '../../ApiClient';
 
 export default class DonInfo extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -115,7 +115,7 @@ export default class DonInfo extends React.Component {
       loading: true,
     });
 
-    api.get('/users', {}, true)
+    ApiClient.get('/users', {}, true)
       .then(users => {
         this.setState({
           dons: this.sortDons(this.filterDons(users)),
@@ -156,7 +156,7 @@ export default class DonInfo extends React.Component {
       const dons = this.state.dons;
 
       for(var i=0; i<dons.length; i++){
-        await api.post(`/users/${dons[i]._id}/doninfo`,  {}, true, dons[i].donInfo);
+        await ApiClient.post(`/users/${dons[i]._id}/doninfo`,  {}, true, dons[i].donInfo);
       }
 
       this.props.navigation.setParams({ saveState: 'saved' });
