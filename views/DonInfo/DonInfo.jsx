@@ -115,7 +115,7 @@ export default class DonInfo extends React.Component {
       loading: true,
     });
 
-    ApiClient.get('/users', {}, true)
+    ApiClient.get('/users', {authorized: true})
       .then(users => {
         this.setState({
           dons: this.sortDons(this.filterDons(users)),
@@ -156,7 +156,7 @@ export default class DonInfo extends React.Component {
       const dons = this.state.dons;
 
       for(var i=0; i<dons.length; i++){
-        await ApiClient.post(`/users/${dons[i]._id}/doninfo`,  {}, true, dons[i].donInfo);
+        await ApiClient.post(`/users/${dons[i]._id}/doninfo`, dons[i].donInfo, {authorized: true});
       }
 
       this.props.navigation.setParams({ saveState: 'saved' });

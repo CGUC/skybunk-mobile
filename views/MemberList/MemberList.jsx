@@ -74,7 +74,7 @@ export default class MemberList extends React.Component {
       useFiltered: false,
     });
 
-    ApiClient.get('/users', {}, true)
+    ApiClient.get('/users',  {authorized: true})
       .then(users => {
         this.setState({
           members: this.sortAlphabetically(users),

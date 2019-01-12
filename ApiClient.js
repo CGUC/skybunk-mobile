@@ -19,8 +19,9 @@ export default class ApiClient {
 		token = undefined;
 	}
 
-	static async get(endpoint, headers, authorized) {
-		if(authorized) headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...headers}
+	static async get(endpoint, options={}) {
+		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...headers}
+		else var headers = options.headers
 
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 				method: 'GET',
@@ -40,9 +41,10 @@ export default class ApiClient {
 			});
 	}
 
-	static async post(endpoint, headers, authorized, body) {
+	static async post(endpoint, body, options={}) {
 
-		if(authorized) headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...headers}
+		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...headers}
+		else var headers = options.headers
 
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 			method: 'POST',
@@ -59,7 +61,7 @@ export default class ApiClient {
 		});
 	};
 
-	static async put(endpoint, headers, authorized, body) {
+	static async put(endpoint, body, options={}) {
 		/**
 		 * HACKFIX (Neil): Sending too many notification objects with requests has
 		 * returned 413s and crashed the app. Here we're limiting the saved notifications to 30.
@@ -70,7 +72,8 @@ export default class ApiClient {
 			body.notifications = body.notifications.slice(0, 30);
 		} else console.log("No notifications being sent");
 
-		if(authorized) headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...headers}
+		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...headers}
+		else var headers = options.headers
 
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 			method: 'PUT',
@@ -93,7 +96,9 @@ export default class ApiClient {
 		});
 	}
 
-	static async uploadPhoto(endpoint, headers, authorized, uri, name, method = 'PUT') {
+	static async uploadPhoto(endpoint, uri, name, options={}) {
+		method = options.method ? options.method : 'PUT'
+
 		let uriParts = uri.split('.');
 		let fileType = uriParts[uriParts.length - 1];
 
@@ -104,7 +109,8 @@ export default class ApiClient {
 			type: `image/${fileType}`,
 		});
 
-		if(authorized) headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...headers}
+		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...headers}
+		else var headers = options.headers
 
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 			method: method,
@@ -124,8 +130,9 @@ export default class ApiClient {
 		});
 	}
 
-	static async delete(endpoint, headers, authorized) {
-		if(authorized) headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...headers}
+	static async delete(endpoint, options={}) {
+		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...headers}
+		else var headers = options.headers
 
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 			method: 'DELETE',

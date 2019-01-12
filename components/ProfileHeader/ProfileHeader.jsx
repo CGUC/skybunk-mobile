@@ -17,7 +17,7 @@ export default class ProfileHeader extends React.Component {
   }
 
   componentDidMount() {
-    ApiClient.get(`/users/${this.props.user._id}/profilePicture`, {}, true).then(pic => {
+    ApiClient.get(`/users/${this.props.user._id}/profilePicture`, {authorized: true}).then(pic => {
       this.setState({
         profilePicture: pic,
       });
@@ -95,10 +95,9 @@ export default class ProfileHeader extends React.Component {
     if (!result.cancelled) {
       ApiClient.uploadPhoto(
         `/users/${this.props.user._id}/profilePicture`,
-        {}, 
-        true,
         result.uri,
-        'profilePicture'
+        'profilePicture',
+        {authorized: true}
       )
         .then(pic => {
           this.setState({

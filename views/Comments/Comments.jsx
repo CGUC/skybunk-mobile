@@ -68,7 +68,7 @@ export default class CommentsView extends React.Component {
 
     var postUri = `/posts/${postData._id}`;
 
-    await ApiClient.get(postUri, {}, true)
+    await ApiClient.get(postUri, {authorized: true})
       .then(response => {
         if (response.usersLiked.find(user => user._id === loggedInUser._id)) {
           response.isLiked = true;
@@ -98,7 +98,7 @@ export default class CommentsView extends React.Component {
     const updateParentState = navigation.getParam('updateParentState');
 
     if (['toggleLike', 'editPost'].includes(type)) {
-      ApiClient.put(`/posts/${postData._id}`,{}, true, data)
+      ApiClient.put(`/posts/${postData._id}`, data, {authorized: true})
         .then(() => {
           this.setState({ postData: data });
           updateParentState('updatePost', data);
@@ -110,7 +110,7 @@ export default class CommentsView extends React.Component {
     }
 
     else if (type === 'deletePost') {
-      ApiClient.delete(`/posts/${postData._id}`, {}, true)
+      ApiClient.delete(`/posts/${postData._id}`, {authorized: true})
         .then(() => {
           updateParentState('deletePost', postData._id);
         })
@@ -125,7 +125,7 @@ export default class CommentsView extends React.Component {
         author: loggedInUser._id,
         content: data.content,
       }
-      ApiClient.post(`/posts/${postData._id}/comment`, {}, true, commentContent)
+      ApiClient.post(`/posts/${postData._id}/comment`, commentContent, {authorized: true})
         .then(() => {
           this.loadData();
         })
@@ -139,7 +139,7 @@ export default class CommentsView extends React.Component {
         author: loggedInUser._id,
         content: data.content,
       }
-      ApiClient.put(`/posts/${postData._id}/comment/${id}`, {}, true, commentContent)
+      ApiClient.put(`/posts/${postData._id}/comment/${id}`, commentContent, {authorized: true})
         .then(() => {
           var updatedPost = {
             ...postData,
@@ -157,7 +157,7 @@ export default class CommentsView extends React.Component {
     }
 
     else if (type === 'deleteComment') {
-      ApiClient.delete(`/posts/${postData._id}/comment/${id}`, {}, true)
+      ApiClient.delete(`/posts/${postData._id}/comment/${id}`, {authorized: true})
         .then(() => {
           var updatedPost = {
             ...postData,

@@ -55,7 +55,7 @@ export default class LoginView extends React.Component {
     // Register the user
     if (this.state.registering) {
       this.setState({ processing: true });
-      ApiClient.post('/users', {}, false, {
+      ApiClient.post('/users', {
         username: this.state.username,
         password: this.state.password,
         firstName: this.state.firstName,
@@ -90,7 +90,7 @@ export default class LoginView extends React.Component {
     // Login the user
     else {
       this.setState({ processing: true });
-      ApiClient.post('/users/login', {}, false, {
+      ApiClient.post('/users/login', {
         username: this.state.username,
         password: this.state.password,
       })
@@ -105,7 +105,7 @@ export default class LoginView extends React.Component {
           }
           else {
             ApiClient.setAuthToken(jsonResponse.token).then(() => {
-              ApiClient.get('/users/loggedInUser', {}, true).then(user => {
+              ApiClient.get('/users/loggedInUser',  {authorized: true}).then(user => {
                 notificationToken.registerForPushNotificationsAsync(user);
                 this.props.navigation.navigate('Home', {token: jsonResponse.token, user});
               })

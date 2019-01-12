@@ -29,7 +29,7 @@ export default class DonStatusCard extends React.Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
-    ApiClient.get(`/users/${this.props.don._id}/profilePicture`, {}, true).then(pic => {
+    ApiClient.get(`/users/${this.props.don._id}/profilePicture`, {authorized: true}).then(pic => {
       this.setState({
         profilePicture: pic,
       });

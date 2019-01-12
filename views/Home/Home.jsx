@@ -31,7 +31,7 @@ export default class HomeView extends React.Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
-    ApiClient.get('/channels', {}, true)
+    ApiClient.get('/channels',  {authorized: true})
     .then(response => {
       this.setState({ channels: response, loading: false });
     })
@@ -42,7 +42,7 @@ export default class HomeView extends React.Component {
 
   handleNewNotification = () => {
     ApiClient.get(
-      '/users/loggedInUser', {}, true
+      '/users/loggedInUser',  {authorized: true}
     )
     .then(user => {
       if (user._id) {
@@ -75,7 +75,7 @@ export default class HomeView extends React.Component {
 
   updateNotificationState = (notif) => {
     ApiClient.post(
-      `/notifications/${notif._id}/markSeen`, {}, true
+      `/notifications/${notif._id}/markSeen`, {}, {authorized: true}
     ).catch(err => console.error(err));
 
     this.setState({
@@ -99,7 +99,7 @@ export default class HomeView extends React.Component {
 
   markNotifsSeen = () => {
     ApiClient.post(
-      `/users/${this.state.user._id}/markNotifsSeen`, {}, true
+      `/users/${this.state.user._id}/markNotifsSeen`, {}, {authorized: true}
     )
     .then(res => {
       this.setState({

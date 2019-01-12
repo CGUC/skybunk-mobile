@@ -83,7 +83,7 @@ export default class FeedView extends React.Component {
       loadedLastPage: false
     });
     const loggedInUser = this.props.navigation.getParam('loggedInUser');
-    await ApiClient.get(this.getUri(), {}, true)
+    await ApiClient.get(this.getUri(), {authorized: true})
       .then(response => {
         // This doesn't look like it does anything, but it does. ¯\_(ツ)_/¯
         var posts = _.map(response, post => {
@@ -123,17 +123,15 @@ export default class FeedView extends React.Component {
       content: data.content,
       tags: tags
     }
-    ApiClient.post('/posts', {}, true, postContent)
+    ApiClient.post('/posts', postContent, {authorized: true})
     .then(response => response.json())
     .then(post => {
       if (data.image) {
         ApiClient.uploadPhoto(
           `/posts/${post._id}/image`,
-          {},
-          true,
           data.image,
           'image',
-          'POST'
+          {authorized: true, method: 'POST'}
         ).then(() => this.loadData());
       }
       else {
@@ -157,7 +155,7 @@ export default class FeedView extends React.Component {
       });
     }
     else if (type === 'deletePost') {
-      return ApiClient.delete(`/posts/${postId}`, {}, true)
+      return ApiClient.delete(`/posts/${postId}`, {authorized: true})
         .then(() => {
           this.updateState('deletePost', postId);
         })
@@ -169,7 +167,7 @@ export default class FeedView extends React.Component {
       this.updateState('updatePost', data);
     }
 
-    ApiClient.put(`/posts/${postId}`, {}, true, data)
+    ApiClient.put(`/posts/${postId}`, data, {authorized: true})
       .then(() => {
         //this.loadData();
       })
@@ -278,7 +276,7 @@ export default class FeedView extends React.Component {
       page: this.state.page + 1,
       loadingPage: true,
     }, state =>
-        ApiClient.get(this.getUri(), { 'page': this.state.page }, true).then(response => {
+        ApiClient.get(this.getUri(), {authorized: true, headers: { 'page': this.state.page }}).then(response => {
           this.setState({
             posts: [...this.state.posts, ...response],
             loadingPage: false,

@@ -23,7 +23,7 @@ export default class UserProfile extends React.Component {
 
     if (prevProps.user && _.isEqual(prevProps.user, user)) return;
 
-    ApiClient.get(`/users/${user._id}/profilePicture`, {}, true).then(pic => {
+    ApiClient.get(`/users/${user._id}/profilePicture`, {authorized: true}).then(pic => {
       this.setState({ profilePicture: pic });
     }).catch(error => {
       console.error(error);

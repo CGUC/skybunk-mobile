@@ -10,7 +10,7 @@ export default class SplashScreen extends React.Component {
   static navigationOptions = { header: null };
 
   componentWillMount() {
-    ApiClient.get('/users/loggedInUser', {}, true).then(user => {
+    ApiClient.get('/users/loggedInUser',  {authorized: true}).then(user => {
       if (user._id) {
         notificationToken.registerForPushNotificationsAsync(user);
         this.props.navigation.navigate('Home', {user: user});

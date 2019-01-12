@@ -83,7 +83,7 @@ export default class EditProfile extends React.Component {
     this.props.navigation.setParams({ saveState: 'saving' });
 
     try {
-      let result = await ApiClient.put(`/users/${user._id}`, {}, true, userData);
+      let result = await ApiClient.put(`/users/${user._id}`, userData, {authorized: true});
 
       this.props.navigation.setParams({ saveState: 'saved' });
 
