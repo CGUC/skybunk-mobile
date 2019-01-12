@@ -200,6 +200,7 @@ export default class DonStatusCard extends React.Component {
                   onConfirm={this.handleDatePicked}
                   onCancel={this.hideDateTimePicker}
                   mode={'datetime'}
+                  minimumDate={date.addMinutes((new Date()),5)}
                 />
               </View>
             </CardItem>
