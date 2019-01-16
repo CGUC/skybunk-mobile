@@ -20,7 +20,7 @@ export default class ApiClient {
 	}
 
 	static async get(endpoint, options={}) {
-		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...headers}
+		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...options.headers}
 		else var headers = options.headers
 
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
@@ -43,7 +43,7 @@ export default class ApiClient {
 
 	static async post(endpoint, body, options={}) {
 
-		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...headers}
+		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...options.headers}
 		else var headers = options.headers
 
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
@@ -72,7 +72,7 @@ export default class ApiClient {
 			body.notifications = body.notifications.slice(0, 30);
 		} else console.log("No notifications being sent");
 
-		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...headers}
+		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...options.headers}
 		else var headers = options.headers
 
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
@@ -109,7 +109,7 @@ export default class ApiClient {
 			type: `image/${fileType}`,
 		});
 
-		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...headers}
+		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...options.headers}
 		else var headers = options.headers
 
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
@@ -131,7 +131,7 @@ export default class ApiClient {
 	}
 
 	static async delete(endpoint, options={}) {
-		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...headers}
+		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...options.headers}
 		else var headers = options.headers
 
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
