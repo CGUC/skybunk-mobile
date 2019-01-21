@@ -1,15 +1,47 @@
 var config = require('./config');
 import {AsyncStorage} from 'react-native';
+
+var token;
 export default class ApiClient {
-	static async get(endpoint, headers) {
+	static async formatHeaders(options){
+		const contentType = options.contentType ? options.contentType : 'application/json'
+		if(options.authorized){
+			return  {
+				'Accept': 'application/json',
+				'Content-Type': contentType,
+				'Authorization': 'Bearer ' + await this.getAuthToken(),
+				...options.headers
+			}
+		}
+		else {
+			return  {
+				'Accept': 'application/json',
+				'Content-Type': contentType,
+				...options.headers
+			}
+		}
+	}
+	static async getAuthToken(){
+		if(token != undefined) return token;
+		token = await AsyncStorage.getItem('@Skybunk:token');
+		return token;
+	}
+
+	static async setAuthToken(_token){
+		token = _token;
+		await AsyncStorage.setItem('@Skybunk:token', token);
+	}
+
+	static async clearAuthToken(){
+		await AsyncStorage.removeItem('@Skybunk:token');
+		token = undefined;
+	}
+
+	static async get(endpoint, options={}) {
+
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 				method: 'GET',
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json',
-					 'Authorization': 'Bearer ' + await AsyncStorage.getItem('@Skybunk:token'),
-					...headers,
-				},
+				headers: await this.formatHeaders(options),
 			})
 			.then(response => response.json())
 			.then(responseJSON => {
@@ -21,15 +53,11 @@ export default class ApiClient {
 			});
 	}
 
-	static async post(endpoint, headers, body) {
+	static async post(endpoint, body, options={}) {
+
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + await AsyncStorage.getItem('@Skybunk:token'),
-				...headers,
-			},
+			headers: await this.formatHeaders(options),
 			body: JSON.stringify(body),
 		})
 		.catch(err => {
@@ -38,7 +66,7 @@ export default class ApiClient {
 		});
 	};
 
-	static async put(endpoint, headers, body) {
+	static async put(endpoint, body, options={}) {
 		/**
 		 * HACKFIX (Neil): Sending too many notification objects with requests has
 		 * returned 413s and crashed the app. Here we're limiting the saved notifications to 30.
@@ -51,12 +79,7 @@ export default class ApiClient {
 
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 			method: 'PUT',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + await AsyncStorage.getItem('@Skybunk:token'),
-				...headers,
-			},
+			headers: await this.formatHeaders(options),
 			body: JSON.stringify(body),
 		})
 		.then(response => {
@@ -71,7 +94,9 @@ export default class ApiClient {
 		});
 	}
 
-	static async uploadPhoto(endpoint, headers, uri, name, method = 'PUT') {
+	static async uploadPhoto(endpoint, uri, name, options={}) {
+		method = options.method ? options.method : 'PUT'
+
 		let uriParts = uri.split('.');
 		let fileType = uriParts[uriParts.length - 1];
 
@@ -84,11 +109,7 @@ export default class ApiClient {
 
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 			method: method,
-			headers: {
-				Accept: 'application/json',
-				'Authorization': 'Bearer ' + await AsyncStorage.getItem('@Skybunk:token'),
-				...headers,
-			},
+			headers: await this.formatHeaders({...options, contentType: 'multipart/form-data'}),
 			body: formData,
 		})
 		.then(response => {
@@ -101,15 +122,11 @@ export default class ApiClient {
 		});
 	}
 
-	static async delete(endpoint, headers) {
+	static async delete(endpoint, options={}) {
+
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 			method: 'DELETE',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + await AsyncStorage.getItem('@Skybunk:token'),
-				...headers,
-			}
+			headers: await this.formatHeaders(options)
 		})
 		.catch(err => {
 			err = err.replace(/</g, '').replace(/>/g, '');

@@ -28,8 +28,8 @@ module.exports = {
       if (token) {
         ApiClient.post(
           `/users/${user._id}/notificationToken`,
-          {},
-          {notificationToken: token}
+          {notificationToken: token},
+          {authorized: true}
         )
         .then(response => {})
         .catch(err => console.error(err));

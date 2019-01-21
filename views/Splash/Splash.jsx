@@ -1,7 +1,7 @@
 import React from 'react';
-import { AsyncStorage, ImageBackground, Dimensions } from 'react-native';
+import { ImageBackground, Dimensions } from 'react-native';
 import { Spinner, Container, Content } from 'native-base';
-import api from '../../ApiClient';
+import ApiClient from '../../ApiClient';
 import style from './SplashStyle';
 import notificationToken from '../../helpers/notificationToken';
 
@@ -10,7 +10,7 @@ export default class SplashScreen extends React.Component {
   static navigationOptions = { header: null };
 
   componentWillMount() {
-    api.get('/users/loggedInUser').then(user => {
+    ApiClient.get('/users/loggedInUser',  {authorized: true}).then(user => {
       if (user._id) {
         notificationToken.registerForPushNotificationsAsync(user);
         this.props.navigation.navigate('Home', {user: user});

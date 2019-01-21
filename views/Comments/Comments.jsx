@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, AsyncStorage } from 'react-native';
+import { ScrollView} from 'react-native';
 import { Container, Footer, Content, Text, Spinner } from 'native-base';
 import { Font } from "expo";
 
@@ -7,7 +7,7 @@ import Post from '../../components/Post/Post';
 import Comment from '../../components/Comment/Comment';
 import ContentBar from '../../components/ContentBar/ContentBar';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
-import api from '../../ApiClient';
+import ApiClient from '../../ApiClient';
 import style from './CommentsStyle';
 import _ from 'lodash'
 
@@ -68,7 +68,7 @@ export default class CommentsView extends React.Component {
 
     var postUri = `/posts/${postData._id}`;
 
-    await api.get(postUri)
+    await ApiClient.get(postUri, {authorized: true})
       .then(response => {
         if (response.usersLiked.find(user => user._id === loggedInUser._id)) {
           response.isLiked = true;
@@ -97,62 +97,55 @@ export default class CommentsView extends React.Component {
     const loggedInUser = this.props.navigation.getParam('loggedInUser');
     const updateParentState = navigation.getParam('updateParentState');
 
-    AsyncStorage.getItem('@Skybunk:token')
-      .then(value => {
+    if (['toggleLike', 'editPost'].includes(type)) {
+      ApiClient.put(`/posts/${postData._id}`, data, {authorized: true})
+        .then(() => {
+          this.setState({ postData: data });
+          updateParentState('updatePost', data);
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Error updating post. Sorry about that!");
+        });
+    }
 
-        if (['toggleLike', 'editPost'].includes(type)) {
-          api.put(`/posts/${postData._id}`,{}, data)
-            .then(() => {
-              this.setState({ postData: data });
-              updateParentState('updatePost', data);
-            })
-            .catch(err => {
-              console.error(err);
-              alert("Error updating post. Sorry about that!");
-            });
-        }
+    else if (type === 'deletePost') {
+      ApiClient.delete(`/posts/${postData._id}`, {authorized: true})
+        .then(() => {
+          updateParentState('deletePost', postData._id);
+        })
+        .catch(err => {
+          alert("Error deleting post. Sorry about that!")
+        });
+      navigation.goBack();
+    }
 
-        else if (type === 'deletePost') {
-          api.delete(`/posts/${postData._id}`)
-            .then(() => {
-              updateParentState('deletePost', postData._id);
-            })
-            .catch(err => {
-              alert("Error deleting post. Sorry about that!")
-            });
-          navigation.goBack();
-        }
+    else if (type === 'addComment') {
+      var commentContent = {
+        author: loggedInUser._id,
+        content: data.content,
+      }
+      ApiClient.post(`/posts/${postData._id}/comment`, commentContent, {authorized: true})
+        .then(() => {
+          this.loadData();
+        })
+        .catch(err => {
+          alert("Error adding comment. Sorry about that!")
+        });
+    }
 
-        else if (type === 'addComment') {
-          var commentContent = {
-            author: loggedInUser._id,
-            content: data.content,
-          }
-          api.post(`/posts/${postData._id}/comment`, commentContent)
-            .then(() => {
-              this.loadData();
-            })
-            .catch(err => {
-              alert("Error adding comment. Sorry about that!")
-            });
-        }
-
-        else if (type === 'updateComment') {
-          var commentContent = {
-            author: loggedInUser._id,
-            content: data.content,
-          }
-          api.put(`/posts/${postData._id}/comment/${id}`, commentContent)
-            .then(() => {
-              var updatedPost = {
-                ...postData,
-                comments: postData.comments.map(comment => {
-                  if (comment._id === id) return data;
-                  return comment;
-                })
-              };
-              this.setState({ postData: updatedPost });
-              updateParentState('updatePost', updatedPost);
+    else if (type === 'updateComment') {
+      var commentContent = {
+        author: loggedInUser._id,
+        content: data.content,
+      }
+      ApiClient.put(`/posts/${postData._id}/comment/${id}`, commentContent, {authorized: true})
+        .then(() => {
+          var updatedPost = {
+            ...postData,
+            comments: postData.comments.map(comment => {
+              if (comment._id === id) return data;
+              return comment;
             })
           };
           this.setState({ postData: updatedPost });
@@ -164,7 +157,7 @@ export default class CommentsView extends React.Component {
     }
 
     else if (type === 'deleteComment') {
-      api.delete(`/posts/${postData._id}/comment/${id}`)
+      ApiClient.delete(`/posts/${postData._id}/comment/${id}`, {authorized: true})
         .then(() => {
           var updatedPost = {
             ...postData,
@@ -176,6 +169,7 @@ export default class CommentsView extends React.Component {
           updateParentState('updatePost', updatedPost);
         })
         .catch(err => {
+          console.error(err)
           alert("Error deleting comment. Sorry about that!")
         });
     }

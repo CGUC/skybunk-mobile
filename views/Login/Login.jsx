@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageBackground, View, AsyncStorage, Image, KeyboardAvoidingView, Platform, Linking, StatusBar } from 'react-native';
+import { ImageBackground, View, Image, KeyboardAvoidingView, Platform, Linking, StatusBar } from 'react-native';
 import { Font, AppLoading } from "expo";
 import { Container, Content, Text, Button, Input, Item, Spinner } from 'native-base';
 import notificationToken from '../../helpers/notificationToken';
@@ -55,7 +55,7 @@ export default class LoginView extends React.Component {
     // Register the user
     if (this.state.registering) {
       this.setState({ processing: true });
-      ApiClient.post('/users', {}, {
+      ApiClient.post('/users', {
         username: this.state.username,
         password: this.state.password,
         firstName: this.state.firstName,
@@ -90,7 +90,7 @@ export default class LoginView extends React.Component {
     // Login the user
     else {
       this.setState({ processing: true });
-      ApiClient.post('/users/login', {}, {
+      ApiClient.post('/users/login', {
         username: this.state.username,
         password: this.state.password,
       })
@@ -104,8 +104,8 @@ export default class LoginView extends React.Component {
             });
           }
           else {
-            AsyncStorage.setItem('@Skybunk:token', jsonResponse.token).then(() => {
-              ApiClient.get('/users/loggedInUser').then(user => {
+            ApiClient.setAuthToken(jsonResponse.token).then(() => {
+              ApiClient.get('/users/loggedInUser',  {authorized: true}).then(user => {
                 notificationToken.registerForPushNotificationsAsync(user);
                 this.props.navigation.navigate('Home', {token: jsonResponse.token, user});
               })

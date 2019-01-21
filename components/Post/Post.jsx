@@ -30,7 +30,8 @@ export default class Post extends React.Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
-    getProfilePicture(this.props.data.author._id).then(pic => {
+
+    ApiClient.get(`/users/${this.props.data.author._id}/profilePicture`, {authorized: true}).then(pic => {
       this.setState({
         profilePicture: pic,
       });
@@ -38,7 +39,7 @@ export default class Post extends React.Component {
       console.error(error);
     });
     if (this.props.data.image) {
-      getPostPicture(this.props.data._id).then(pic => {
+      ApiClient.get(`/posts/${this.props.data._id}/image`, {authorized: true}).then(pic => {
         this.setState({
           image: pic,
         });

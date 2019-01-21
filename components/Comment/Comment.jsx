@@ -33,7 +33,8 @@ export default class Comment extends React.Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
-    getProfilePicture(this.props.data.author._id).then(pic => {
+
+    ApiClient.get(`/users/${this.props.data.author._id}/profilePicture`, {authorized: true}).then(pic => {
       this.setState({
         profilePicture: pic,
       });

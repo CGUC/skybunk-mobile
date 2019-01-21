@@ -6,14 +6,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { FlatList, AsyncStorage, View } from 'react-native';
+import { FlatList} from 'react-native';
 import { Container, Footer, Content, Spinner, Text } from 'native-base';
 import { Font, AppLoading } from "expo";
 import ContentBar from '../../components/ContentBar/ContentBar';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import Post from '../../components/Post/Post';
 import NoData from '../../components/NoData/NoData';
-import api from '../../ApiClient';
+import ApiClient from '../../ApiClient';
 import styles from './FeedStyle';
 import {setPostPicture} from '../../helpers/imageCache';
 
@@ -84,7 +84,7 @@ export default class FeedView extends React.Component {
       loadedLastPage: false
     });
     const loggedInUser = this.props.navigation.getParam('loggedInUser');
-    await api.get(this.getUri())
+    await ApiClient.get(this.getUri(), {authorized: true})
       .then(response => {
         // This doesn't look like it does anything, but it does. ¯\_(ツ)_/¯
         var posts = _.map(response, post => {
@@ -124,11 +124,16 @@ export default class FeedView extends React.Component {
       content: data.content,
       tags: tags
     }
-    api.post('/posts', {}, postContent)
+    ApiClient.post('/posts', postContent, {authorized: true})
     .then(response => response.json())
     .then(post => {
       if (data.image) {
-        setPostPicture(post._id, data.image).then(() => this.loadData());
+        ApiClient.uploadPhoto(
+          `/posts/${post._id}/image`,
+          data.image,
+          'image',
+          {authorized: true, method: 'POST'}
+        ).then(() => this.loadData());
       }
       else {
         this.loadData();
@@ -151,7 +156,7 @@ export default class FeedView extends React.Component {
       });
     }
     else if (type === 'deletePost') {
-      return api.delete(`/posts/${postId}`)
+      return ApiClient.delete(`/posts/${postId}`, {authorized: true})
         .then(() => {
           this.updateState('deletePost', postId);
         })
@@ -163,7 +168,7 @@ export default class FeedView extends React.Component {
       this.updateState('updatePost', data);
     }
 
-    api.put(`/posts/${postId}`, {}, data)
+    ApiClient.put(`/posts/${postId}`, data, {authorized: true})
       .then(() => {
         //this.loadData();
       })
@@ -272,7 +277,7 @@ export default class FeedView extends React.Component {
       page: this.state.page + 1,
       loadingPage: true,
     }, state =>
-        api.get(this.getUri(), { 'page': this.state.page }).then(response => {
+        ApiClient.get(this.getUri(), {authorized: true, headers: { 'page': this.state.page }}).then(response => {
           this.setState({
             posts: [...this.state.posts, ...response],
             loadingPage: false,
