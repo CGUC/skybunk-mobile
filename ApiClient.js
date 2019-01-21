@@ -3,6 +3,24 @@ import {AsyncStorage} from 'react-native';
 
 var token;
 export default class ApiClient {
+	static async formatHeaders(options){
+		const contentType = options.contentType ? options.contentType : 'application/json'
+		if(options.authorized){
+			return  {
+				'Accept': 'application/json',
+				'Content-Type': contentType,
+				'Authorization': 'Bearer ' + await this.getAuthToken(),
+				...options.headers
+			}
+		}
+		else {
+			return  {
+				'Accept': 'application/json',
+				'Content-Type': contentType,
+				...options.headers
+			}
+		}
+	}
 	static async getAuthToken(){
 		if(token != undefined) return token;
 		token = await AsyncStorage.getItem('@Skybunk:token');
@@ -20,16 +38,10 @@ export default class ApiClient {
 	}
 
 	static async get(endpoint, options={}) {
-		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...options.headers}
-		else var headers = options.headers
 
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 				method: 'GET',
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json',
-					...headers,
-				},
+				headers: await this.formatHeaders(options),
 			})
 			.then(response => response.json())
 			.then(responseJSON => {
@@ -43,16 +55,9 @@ export default class ApiClient {
 
 	static async post(endpoint, body, options={}) {
 
-		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...options.headers}
-		else var headers = options.headers
-
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-				...headers,
-			},
+			headers: await this.formatHeaders(options),
 			body: JSON.stringify(body),
 		})
 		.catch(err => {
@@ -72,16 +77,9 @@ export default class ApiClient {
 			body.notifications = body.notifications.slice(0, 30);
 		} else console.log("No notifications being sent");
 
-		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...options.headers}
-		else var headers = options.headers
-
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 			method: 'PUT',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-				...headers,
-			},
+			headers: await this.formatHeaders(options),
 			body: JSON.stringify(body),
 		})
 		.then(response => {
@@ -109,15 +107,9 @@ export default class ApiClient {
 			type: `image/${fileType}`,
 		});
 
-		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...options.headers}
-		else var headers = options.headers
-
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 			method: method,
-			headers: {
-				Accept: 'application/json',
-				...headers,
-			},
+			headers: await this.formatHeaders({...options, contentType: 'multipart/form-data'}),
 			body: formData,
 		})
 		.then(response => {
@@ -131,16 +123,10 @@ export default class ApiClient {
 	}
 
 	static async delete(endpoint, options={}) {
-		if(options.authorized) var headers = {'Authorization': 'Bearer ' + await this.getAuthToken(), ...options.headers}
-		else var headers = options.headers
 
 		return fetch(`${config.API_ADDRESS}${endpoint}`, {
 			method: 'DELETE',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-				...headers,
-			}
+			headers: await this.formatHeaders(options)
 		})
 		.catch(err => {
 			err = err.replace(/</g, '').replace(/>/g, '');
