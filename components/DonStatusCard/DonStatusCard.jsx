@@ -63,7 +63,7 @@ export default class DonStatusCard extends React.Component {
       var nextClockOut = this.state.clockOut
 
       //check for valid time
-      if(this.props.editable && (!date.isValid(new Date(this.state.clockOut))|| date.isPast(this.state.clockOut))){
+      if(!date.isValid(new Date(this.state.clockOut))|| date.isPast(this.state.clockOut)){
         //set the time to 8:30, then find the next weekday
         nextClockOut = date.setHours(date.setMinutes(new Date(),30),8)
         if(date.isFriday(nextClockOut)){
@@ -90,6 +90,32 @@ export default class DonStatusCard extends React.Component {
 
   handleUpdatedLocation = (text) => {this.update({location: text})}
 
+  getRightHeaderJSX(){
+    if(this.props.isSuperintendent){
+      return null;
+    }else if(this.props.togglable){
+      const icon = this.state.isLateSupper ? require('../../assets/supper-on.png') : require('../../assets/supper-off.png')
+      return (
+        <View style={styles.headerRight}>
+          <TouchableOpacity onPress={this.handleToggleLateSupper}>
+            <Thumbnail medium square  source={icon} />
+          </TouchableOpacity>
+          <Switch value={this.state.isOn} onSyncPress={this.handleToggleOn}/>
+        </View>
+      )
+    }else if(this.state.isOn){
+      const icon = this.state.isLateSupper ? require('../../assets/don-on-supper.png') : require('../../assets/don-on.png')
+      return (
+        <View style={styles.headerRight}>
+            <Thumbnail medium square  source={icon} />
+        </View>
+      )
+    }else{
+      return null;
+    }
+    
+  }
+
   render() {
     const {don} = this.props
 
@@ -100,16 +126,13 @@ export default class DonStatusCard extends React.Component {
     if (!don) donName = "Ghost Don";
     else donName = `${don.firstName} ${don.lastName}`;
 
-    if(this.props.togglable){
-      var icon = this.state.isLateSupper ? require('../../assets/fork-knife-on.png') : require('../../assets/fork-knife-off.png')
-    }else{
-      var icon = (this.state.isLateSupper && this.state.isOn) ? require('../../assets/fork-knife-on.png') : null
-    }
-
     //Figure out what information should be displayed on the 2 lines of text beside the profile
     var line1 = ''
     var line2 = '';
-    if(this.props.editable){
+    if(this.props.isSuperintendent){
+      line1 = don.info ? don.info.phone : '';
+      line2 = 'Apartment Superintendent'
+    }else if(this.props.editable){
       if(this.state.isOn){
         line1 = 'On until'
         if(!date.isValid(new Date(this.state.clockOut)) || date.isPast(this.state.clockOut)){
@@ -123,10 +146,8 @@ export default class DonStatusCard extends React.Component {
         }
       }
     }else{
-      if(don.info){
-        line1 = don.info.phone;
-      }
-      line2 = don.donInfo.location;
+      line1 = don.info ? don.info.phone: '';
+      line2 = this.state.isOn ? don.donInfo.location : '';
     }
     if(line1==undefined) line1='';
     if(line2==undefined) line2='';
@@ -151,16 +172,10 @@ export default class DonStatusCard extends React.Component {
                     <Text>{donName}</Text>
                   </View>
                   <Autolink text={line1}/>
-                  {this.state.isOn ?<Text note>{line2}</Text>:null}
+                  <Text note>{line2}</Text>
                 </View>
               </View>
-
-              <View style={styles.headerRight}>
-                <TouchableOpacity onPress={this.handleToggleLateSupper}>
-                  <Thumbnail medium square  source={icon} />
-                </TouchableOpacity>
-                <Switch value={this.state.isOn} disabled={!this.props.togglable} onSyncPress={this.handleToggleOn}/>
-              </View>
+              {this.getRightHeaderJSX()}
             </View>
           </CardItem>
           {this.props.editable ?
@@ -185,6 +200,7 @@ export default class DonStatusCard extends React.Component {
                   onConfirm={this.handleDatePicked}
                   onCancel={this.hideDateTimePicker}
                   mode={'datetime'}
+                  minimumDate={date.addMinutes((new Date()),5)}
                 />
               </View>
             </CardItem>
