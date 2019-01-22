@@ -95,7 +95,7 @@ export default class ApiClient {
 	}
 
 	static async uploadPhoto(endpoint, uri, name, options={}) {
-		method = options.method ? options.method : 'PUT'
+		const method = options.method ? options.method : 'PUT'
 
 		let uriParts = uri.split('.');
 		let fileType = uriParts[uriParts.length - 1];
