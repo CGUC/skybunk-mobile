@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, TouchableOpacity, KeyboardAvoidingView, Keyboard, AsyncStorage } from 'react-native';
+import { View, TouchableOpacity, KeyboardAvoidingView, Keyboard} from 'react-native';
 import { Icon, Item, Text, Input, Textarea, Spinner } from 'native-base';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import _ from 'lodash';
-import api from '../../ApiClient';
+import ApiClient from '../../ApiClient';
 import styles from './EditProfileStyle';
 
 export default class EditProfile extends React.Component {
@@ -83,8 +83,7 @@ export default class EditProfile extends React.Component {
     this.props.navigation.setParams({ saveState: 'saving' });
 
     try {
-      let token = await AsyncStorage.getItem('@Skybunk:token');
-      let result = await api.put(`/users/${user._id}`,  { 'Authorization': 'Bearer ' + token }, userData);
+      let result = await ApiClient.put(`/users/${user._id}`, userData, {authorized: true});
 
       this.props.navigation.setParams({ saveState: 'saved' });
 

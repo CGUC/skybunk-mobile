@@ -6,7 +6,7 @@ import ChannelList from "../../components/ChannelList/ChannelList";
 import NotificationList from "../../components/NotificationList/NotificationList";
 import HomeTabBar from "./HomeTabBar/HomeTabBar";
 import style from "./HomeStyle";
-import api from '../../ApiClient';
+import ApiClient from '../../ApiClient';
 import { Font} from "expo";
 import { Notifications } from 'expo';
 import _ from 'lodash';
@@ -21,7 +21,6 @@ export default class HomeView extends React.Component {
       loading: true,
       channels: [],
       user: props.navigation.getParam('user'),
-      token: props.navigation.getParam('token'),
       notifications: props.navigation.getParam('user').notifications,
       currentTab: 'channels'
     }
@@ -32,7 +31,7 @@ export default class HomeView extends React.Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
-    api.get('/channels')
+    ApiClient.get('/channels',  {authorized: true})
     .then(response => {
       this.setState({ channels: response, loading: false });
     })
@@ -42,9 +41,8 @@ export default class HomeView extends React.Component {
   }
 
   handleNewNotification = () => {
-    api.get(
-      '/users/loggedInUser',
-      { Authorization: `Bearer ${this.state.token}`}
+    ApiClient.get(
+      '/users/loggedInUser',  {authorized: true}
     )
     .then(user => {
       if (user._id) {
@@ -76,10 +74,8 @@ export default class HomeView extends React.Component {
   }
 
   updateNotificationState = (notif) => {
-    api.post(
-      `/notifications/${notif._id}/markSeen`,
-      { Authorization: `Bearer ${this.state.token}`},
-      {}
+    ApiClient.post(
+      `/notifications/${notif._id}/markSeen`, {}, {authorized: true}
     ).catch(err => console.error(err));
 
     this.setState({
@@ -102,10 +98,8 @@ export default class HomeView extends React.Component {
   };
 
   markNotifsSeen = () => {
-    api.post(
-      `/users/${this.state.user._id}/markNotifsSeen`,
-      { Authorization: `Bearer ${this.state.token}`},
-      {}
+    ApiClient.post(
+      `/users/${this.state.user._id}/markNotifsSeen`, {}, {authorized: true}
     )
     .then(res => {
       this.setState({
@@ -119,7 +113,7 @@ export default class HomeView extends React.Component {
   }
 
   render() {
-    const { channels, loading, user, token } = this.state;
+    const { channels, loading, user } = this.state;
     
     StatusBar.setBarStyle('dark-content', true);
     if (loading) {
@@ -135,13 +129,12 @@ export default class HomeView extends React.Component {
         <Container>
           <Content>
             <ScrollView>
-              <ProfileHeader user={user} token={token} navigation={this.props.navigation}/>
+              <ProfileHeader user={user} navigation={this.props.navigation}/>
               {this.state.currentTab === 'channels' ? 
                 <ChannelList
                   channels={channels}
                   onPressChannel={this.onPressChannel}
                   user={user}
-                  token={token}
                 /> :
               <View>
                 <TouchableOpacity style={style.markAllSeen} onPress={this.markNotifsSeen}>

@@ -1,12 +1,12 @@
 import React from 'react';
-import { AsyncStorage, FlatList, Text, TouchableOpacity } from 'react-native';
+import { FlatList, Text, TouchableOpacity } from 'react-native';
 import { Container, Content, Spinner, Item, Button, Input, Icon, Header } from 'native-base';
 import { Font } from "expo";
 
 import UserListItem from '../../components/UserListItem/UserListItem';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import styles from './MemberListStyle';
-import api from '../../ApiClient';
+import ApiClient from '../../ApiClient';
 import _ from 'lodash';
 
 /**
@@ -74,21 +74,15 @@ export default class MemberList extends React.Component {
       useFiltered: false,
     });
 
-    await AsyncStorage.getItem('@Skybunk:token')
-      .then(token => {
-        api.get('/users')
-          .then(users => {
-            this.setState({
-              members: this.sortAlphabetically(users),
-              loading: false
-            });
-          })
-          .catch((err) => {
-            console.error(err);
-          });
+    ApiClient.get('/users',  {authorized: true})
+      .then(users => {
+        this.setState({
+          members: this.sortAlphabetically(users),
+          loading: false
+        });
       })
-      .catch(error => {
-        this.props.navigation.navigate('Auth');
+      .catch((err) => {
+        console.error(err);
       });
   }
 

@@ -6,14 +6,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { FlatList, AsyncStorage, View } from 'react-native';
+import { FlatList} from 'react-native';
 import { Container, Footer, Content, Spinner, Text } from 'native-base';
 import { Font, AppLoading } from "expo";
 import ContentBar from '../../components/ContentBar/ContentBar';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import Post from '../../components/Post/Post';
 import NoData from '../../components/NoData/NoData';
-import api from '../../ApiClient';
+import ApiClient from '../../ApiClient';
 import styles from './FeedStyle';
 
 export default class FeedView extends React.Component {
@@ -83,7 +83,7 @@ export default class FeedView extends React.Component {
       loadedLastPage: false
     });
     const loggedInUser = this.props.navigation.getParam('loggedInUser');
-    await api.get(this.getUri())
+    await ApiClient.get(this.getUri(), {authorized: true})
       .then(response => {
         // This doesn't look like it does anything, but it does. ¯\_(ツ)_/¯
         var posts = _.map(response, post => {
@@ -118,33 +118,26 @@ export default class FeedView extends React.Component {
 
     var tags = channel.tags;
 
-    AsyncStorage.getItem('@Skybunk:token')
-      .then(value => {
-        var postContent = {
-          author: loggedInUser._id,
-          content: data.content,
-          tags: tags
-        }
-        api.post('/posts', { 'Authorization': 'Bearer ' + value }, postContent)
-        .then(response => response.json())
-        .then(post => {
-          if (data.image) {
-            api.uploadPhoto(
-              `/posts/${post._id}/image`,
-              { 'Authorization': 'Bearer ' + value },
-              data.image,
-              'image',
-              'POST'
-            ).then(() => this.loadData());
-          }
-          else {
-            this.loadData();
-          }
-        });
-      })
-      .catch(error => {
-        this.props.navigation.navigate('Auth');
-      });
+    var postContent = {
+      author: loggedInUser._id,
+      content: data.content,
+      tags: tags
+    }
+    ApiClient.post('/posts', postContent, {authorized: true})
+    .then(response => response.json())
+    .then(post => {
+      if (data.image) {
+        ApiClient.uploadPhoto(
+          `/posts/${post._id}/image`,
+          data.image,
+          'image',
+          {authorized: true, method: 'POST'}
+        ).then(() => this.loadData());
+      }
+      else {
+        this.loadData();
+      }
+    });
   }
 
   updatePost = async (postId, data, type) => {
@@ -161,34 +154,25 @@ export default class FeedView extends React.Component {
         })
       });
     }
+    else if (type === 'deletePost') {
+      return ApiClient.delete(`/posts/${postId}`, {authorized: true})
+        .then(() => {
+          this.updateState('deletePost', postId);
+        })
+        .catch(err => {
+          alert("Error deleting post. Sorry about that!")
+        });
+    }
+    else if (type === 'editPost') {
+      this.updateState('updatePost', data);
+    }
 
-    AsyncStorage.getItem('@Skybunk:token')
-      .then(value => {
-
-        if (type === 'deletePost') {
-          return api.delete(`/posts/${postId}`, { 'Authorization': 'Bearer ' + value })
-            .then(() => {
-              this.updateState('deletePost', postId);
-            })
-            .catch(err => {
-              alert("Error deleting post. Sorry about that!")
-            });
-        }
-        else if (type === 'editPost') {
-          this.updateState('updatePost', data);
-        }
-
-        api.put(`/posts/${postId}`, { 'Authorization': 'Bearer ' + value }, data)
-          .then(() => {
-            //this.loadData();
-          })
-          .catch(err => {
-            alert("Error updating post. Sorry about that!");
-          });
+    ApiClient.put(`/posts/${postId}`, data, {authorized: true})
+      .then(() => {
+        //this.loadData();
       })
-      .catch(error => {
-        console.error(error);
-        this.props.navigation.navigate('Auth');
+      .catch(err => {
+        alert("Error updating post. Sorry about that!");
       });
   }
 
@@ -292,7 +276,7 @@ export default class FeedView extends React.Component {
       page: this.state.page + 1,
       loadingPage: true,
     }, state =>
-        api.get(this.getUri(), { 'page': this.state.page }).then(response => {
+        ApiClient.get(this.getUri(), {authorized: true, headers: { 'page': this.state.page }}).then(response => {
           this.setState({
             posts: [...this.state.posts, ...response],
             loadingPage: false,
