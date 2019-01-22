@@ -32,7 +32,6 @@ export default class SettingsView extends React.Component {
   
   logout = () => {
     clearCache();
-    console.log("hm?")
     ApiClient.clearAuthToken().then(() => {
       this.props.navigation.navigate('Auth');
     })
