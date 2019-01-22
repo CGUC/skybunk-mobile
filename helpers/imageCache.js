@@ -26,9 +26,9 @@ module.exports = {
 			profilePicCache.getItem(userID, function(err, cachedPic) {
 				if(err){
 					reject(err);
-				}else if(!cachedPic || !cachedPic.image || date.differenceInHours(new Date(),cachedPic.timeFetched)>2){
+				}else if(!cachedPic || !cachedPic.image || date.differenceInHours(new Date(),cachedPic.timeFetched)>24){
 					console.log("Missed profile!")
-					//cache miss, or over 2 hours old, so go fetch a new copy
+					//cache miss, or over 24 hours old, so go fetch a new copy
 					ApiClient.get(`/users/${userID}/profilePicture`, {}).then(pic => {
 
 						//save fetched item to cache
@@ -54,10 +54,10 @@ module.exports = {
 		return new Promise(function(resolve, reject) {
 			ApiClient.uploadPhoto(
 				`/users/${userID}/profilePicture`,
-				{},
 				pictureURI,
-				'profilePicture'
-			)
+				'profilePicture',
+				{authorized: true}
+			  )
 				.then(pic => {
 					profilePicCache.setItem(userID, {timeFetched: new Date(), image: pic}, err => {
 						if(err){
@@ -78,9 +78,9 @@ module.exports = {
 			postPicCache.getItem(postID, function(err, cachedPic) {
 				if(err){
 					reject(err);
-				}else if(!cachedPic || !cachedPic.image || date.differenceInHours(new Date(),cachedPic.timeFetched)>2){
+				}else if(!cachedPic || !cachedPic.image || date.differenceInHours(new Date(),cachedPic.timeFetched)>24){
 					console.log("Missed!")
-					//cache miss, or over 2 hours old, so go fetch a new copy
+					//cache miss, or over 24 hours old, so go fetch a new copy
 					ApiClient.get(`/posts/${postID}/image`, {}).then(pic => {
 
 						//save fetched item to cache
@@ -106,11 +106,10 @@ module.exports = {
 		return new Promise(function(resolve, reject) {
 			ApiClient.uploadPhoto(
 				`/posts/${postID}/image`,
-				{},
 				pictureURI,
 				'image',
-				'POST'
-				).then(pic => {
+				{authorized: true, method: 'POST'}
+			  ).then(pic => {
 					postPicCache.setItem(postID, {timeFetched: new Date(), image: pic}, err => {
 						if(err){
 							reject(err)
@@ -126,11 +125,14 @@ module.exports = {
 	},
 	clearCache: function(){
 		return new Promise(function(resolve, reject) {
-			profilePicCache.clearAll(function(err) {
+			profilePicCache.clearAll(err => {
 				if(err){
-					resolve();
-				}else{
 					reject(err);
+				}else{
+					postPicCache.clearAll(err => {
+						if(err) reject(err);
+						resolve();
+					})
 				}
 			});
 		});

@@ -6,7 +6,7 @@ import Switch from 'react-native-switch-pro'
 import Autolink from 'react-native-autolink';
 import _ from 'lodash';
 import { Font} from "expo";
-import ApiClient from '../../ApiClient';
+import {getProfilePicture} from "../../helpers/imageCache"
 import styles from "./DonStatusCardStyle";
 import date from 'date-fns';
 
@@ -29,7 +29,7 @@ export default class DonStatusCard extends React.Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
-    ApiClient.get(`/users/${this.props.don._id}/profilePicture`, {authorized: true}).then(pic => {
+    getProfilePicture(this.props.don._id).then(pic => {
       this.setState({
         profilePicture: pic,
       });
