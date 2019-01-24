@@ -27,6 +27,7 @@
     "react-native": "~0.55.2",
     "react-native-autolink": "^1.4.0",
     "react-native-modal-datetime-picker": "^6.0.0",
+    "react-native-cache": "^1.1.5",
     "react-native-nav": "2.0.2",
     "react-native-popover-view": "^1.0.10",
     "react-native-scalable-image": "^0.4.0",

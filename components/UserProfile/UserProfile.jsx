@@ -4,8 +4,8 @@ import { Text, Icon, Card, CardItem } from 'native-base';
 import { Font, AppLoading } from "expo";
 import _ from 'lodash';
 
-import ApiClient from '../../ApiClient';
 import styles from './UserProfileStyle';
+import {getProfilePicture} from '../../helpers/imageCache'
 
 export default class UserProfile extends React.Component {
 
@@ -23,7 +23,7 @@ export default class UserProfile extends React.Component {
 
     if (prevProps.user && _.isEqual(prevProps.user, user)) return;
 
-    ApiClient.get(`/users/${user._id}/profilePicture`, {authorized: true}).then(pic => {
+    getProfilePicture(user._id).then(pic => {
       this.setState({ profilePicture: pic });
     }).catch(error => {
       console.error(error);
