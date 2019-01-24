@@ -27,9 +27,8 @@ module.exports = {
 				if(err){
 					reject(err);
 				}else if(!cachedPic || !cachedPic.image || date.differenceInHours(new Date(),cachedPic.timeFetched)>24){
-					console.log("Missed profile!")
 					//cache miss, or over 24 hours old, so go fetch a new copy
-					ApiClient.get(`/users/${userID}/profilePicture`, {}).then(pic => {
+					ApiClient.get(`/users/${userID}/profilePicture`, {authorized: true}).then(pic => {
 
 						//save fetched item to cache
 						profilePicCache.setItem(userID, {timeFetched: new Date(), image: pic}, function(err) {
@@ -43,7 +42,6 @@ module.exports = {
 						reject(error);
 					  });
 				}else{
-					console.log("Hit profile!")
 					//cache hit, so just return the picture
 					resolve(cachedPic.image);
 				}
@@ -79,9 +77,8 @@ module.exports = {
 				if(err){
 					reject(err);
 				}else if(!cachedPic || !cachedPic.image || date.differenceInHours(new Date(),cachedPic.timeFetched)>24){
-					console.log("Missed!")
 					//cache miss, or over 24 hours old, so go fetch a new copy
-					ApiClient.get(`/posts/${postID}/image`, {}).then(pic => {
+					ApiClient.get(`/posts/${postID}/image`, {authorized: true}).then(pic => {
 
 						//save fetched item to cache
 						postPicCache.setItem(postID, {timeFetched: new Date(), image: pic}, function(err) {
@@ -95,7 +92,6 @@ module.exports = {
 						reject(error);
 					  });
 				}else{
-					console.log("Hit!")
 					//cache hit, so just return the picture
 					resolve(cachedPic.image);
 				}
