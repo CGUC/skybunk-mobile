@@ -1,14 +1,18 @@
 import { Cache } from "react-native-cache";
 import ApiClient from '../ApiClient';
-import {AsyncStorage} from 'react-native';
+import {AsyncStorage, MemoryStore, Platform} from 'react-native';
 import date from 'date-fns';
+
+var backend
+if(Platform.OS == 'android') backend = MemoryStore
+else backend = AsyncStorage
 
 const profilePicCache = new Cache({
 	namespace: "skybunk-profile-pictures",
 	policy: {
 		maxEntries: 30
 	},
-	backend: AsyncStorage
+	backend: backend
 });
 
 const postPicCache = new Cache({
@@ -16,7 +20,7 @@ const postPicCache = new Cache({
 	policy: {
 		maxEntries: 15
 	},
-	backend: AsyncStorage
+	backend: backend
 });
 
 module.exports = {
