@@ -1,4 +1,4 @@
-import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
+import { createStackNavigator, createSwitchNavigator, createAppContainer } from 'react-navigation';
 import LoginView from './views/Login/Login';
 import HomeView from './views/Home/Home';
 import FeedView from './views/Feed/Feed';
@@ -19,13 +19,13 @@ const AppStack = createStackNavigator(
     DonInfo: DonInfoView,
     EditProfile: EditProfileView,
   }
-)
+);
 
-export default createSwitchNavigator(
+export default createAppContainer(createSwitchNavigator(
   {
     Splash: SplashScreen,
     Auth: LoginView,
     App: AppStack
   },
   { initialRouteName: 'Splash' }
-)
+));

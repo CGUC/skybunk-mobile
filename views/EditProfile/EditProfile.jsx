@@ -5,6 +5,7 @@ import GestureRecognizer from 'react-native-swipe-gestures';
 import _ from 'lodash';
 import ApiClient from '../../ApiClient';
 import styles from './EditProfileStyle';
+import defaultStyles from "../../styles/styles";
 
 export default class EditProfile extends React.Component {
 
@@ -180,7 +181,7 @@ export default class EditProfile extends React.Component {
       <KeyboardAvoidingView
         behavior='position'
         enabled={this.state.avoidKeyboard}
-        style={styles.container}
+        style={{...defaultStyles.backgroundTheme, ...styles.container}}
       >
         <GestureRecognizer
           onSwipeDown={() => Keyboard.dismiss()}

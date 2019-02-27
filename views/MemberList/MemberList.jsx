@@ -6,6 +6,7 @@ import { Font } from "expo";
 import UserListItem from '../../components/UserListItem/UserListItem';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import styles from './MemberListStyle';
+import defaultStyles from '../../styles/styles';
 import ApiClient from '../../ApiClient';
 import _ from 'lodash';
 
@@ -232,7 +233,7 @@ export default class MemberList extends React.Component {
 
     if (loading) {
       return (
-        <Container>
+        <Container style={defaultStyles.backgroundTheme}>
           <Content>
             <Spinner color='#cd8500' />
           </Content>
@@ -240,7 +241,7 @@ export default class MemberList extends React.Component {
       )
     } else {
       return (
-        <Container>
+        <Container style={defaultStyles.backgroundTheme}>
           <Header
             searchBar
             rounded

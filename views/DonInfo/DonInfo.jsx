@@ -5,6 +5,7 @@ import { Font} from "expo";
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import DonStatusCard from '../../components/DonStatusCard/DonStatusCard';
 import styles from './DonInfoStyle';
+import defaultStyles from "../../styles/styles";
 import ApiClient from '../../ApiClient';
 
 export default class DonInfo extends React.Component {
@@ -207,7 +208,7 @@ export default class DonInfo extends React.Component {
 
     if (loading) {
       return (
-        <Container>
+        <Container style={defaultStyles.backgroundTheme}>
           <Content>
             <Spinner color='#cd8500' />
           </Content>
@@ -215,7 +216,7 @@ export default class DonInfo extends React.Component {
       )
     } else {
       return (
-        <Container>
+        <Container style={defaultStyles.backgroundTheme}>
           <FlatList
             data={this.buildListItems()}
             renderItem={this.renderListItem}

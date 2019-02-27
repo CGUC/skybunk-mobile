@@ -20,4 +20,7 @@ export default (styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center"
   },
+  backgroundTheme: {
+    backgroundColor: "#e4e3eb"
+  }
 }));
