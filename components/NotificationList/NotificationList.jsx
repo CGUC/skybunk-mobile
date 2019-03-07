@@ -40,6 +40,12 @@ export default class NotificationList extends React.Component {
             createdAt = date.distanceInWordsToNow(notif.createdAt, {addSuffix: true});
           }
 
+          // Slight hack (Neil): don't advertise notifications for deleted posts.
+          // Ideally there should be server-side logic to clean out all invalid notifications.
+          if (!notif.data.post) {
+            return null;
+          }
+
           return (
             <TouchableOpacity 
               key={key}
