@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, KeyboardAvoidingView, Keyboard} from 'react-native';
+import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Keyboard} from 'react-native';
 import { Icon, Item, Text, Input, Textarea, Spinner } from 'native-base';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import _ from 'lodash';
@@ -177,6 +177,7 @@ export default class EditProfile extends React.Component {
 
   render() {
     return (
+      <ScrollView>
       <KeyboardAvoidingView
         behavior='position'
         enabled={this.state.avoidKeyboard}
@@ -194,6 +195,7 @@ export default class EditProfile extends React.Component {
           {this.generateFieldJSX('bio', 'Bio', 'Share something about yourself')}
         </GestureRecognizer>
       </KeyboardAvoidingView>
+      </ScrollView>
     )
   }
 }
