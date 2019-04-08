@@ -276,6 +276,15 @@ export default class FeedView extends React.Component {
       loadingPage: true,
     }, state =>
         ApiClient.get(this.getUri(), {authorized: true, headers: { 'page': this.state.page }}).then(response => {
+          // This doesn't look like it does anything, but it does. ¯\_(ツ)_/¯
+          const loggedInUser = this.props.navigation.getParam('loggedInUser');
+          var posts = _.map(response, post => {
+            if (post.usersLiked.find((user) => user._id === loggedInUser._id)) {
+              post.isLiked = true;
+            } else post.isLiked = false;
+            return post;
+          });
+
           this.setState({
             posts: [...this.state.posts, ...response],
             loadingPage: false,
