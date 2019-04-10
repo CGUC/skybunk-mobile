@@ -147,7 +147,6 @@ export default class Post extends React.Component {
     if (data.usersLiked.find((user) => user._id === loggedInUser._id)) {
       data.likes--;
       data.usersLiked = _.filter(data.usersLiked, user => user._id !== loggedInUser._id);
-      data.isLiked = false;
     } else {
       data.likes++;
       data.usersLiked.push({
@@ -155,7 +154,6 @@ export default class Post extends React.Component {
         firstname: loggedInUser.firstName,
         lastName: loggedInUser.lastName
       });
-      data.isLiked = true;
     }
 
     if (data.likes < 0) data.likes = 0; // (Grebel's a positive community, come on!)
@@ -165,14 +163,11 @@ export default class Post extends React.Component {
 
   generateLikesList = () => {
     let {
-      usersLiked,
-      isLiked
+      usersLiked
     } = this.props.data;
 
-    const { loggedInUser } = this.props;
-
-    if (isLiked) {
-      usersLiked = usersLiked.filter(user => user._id !== loggedInUser._id);
+    if (usersLiked.filter(e => e._id == this.props.loggedInUser._id).length) {
+      usersLiked = usersLiked.filter(user => user._id !== this.props.loggedInUser._id);
       usersLiked.unshift({ firstName: 'You' }); // a wee hack
     }
 
@@ -232,21 +227,20 @@ export default class Post extends React.Component {
     var {
       author,
       content,
-      likes,
       usersLiked,
-      isLiked,
       comments,
       createdAt,
       tags,
     } = data;
-
+    const isLiked = usersLiked.filter(e => e._id == this.props.loggedInUser._id).length > 0;
     var likeIcon = isLiked ? require('../../assets/liked-cookie.png') : require('../../assets/cookie-icon.png');
 
     if (isLiked) {
-      usersLiked = usersLiked.filter(user => user._id !== loggedInUser._id);
+      usersLiked = usersLiked.filter(user => user._id !== this.props.loggedInUser._id);
       usersLiked.unshift({ firstName: 'You' });
     }
     var likesDialog;
+    var likes = usersLiked.length;
     if (likes === 0) {
       likesDialog = "No cookies yet";
     } else if (likes === 1) {
@@ -277,7 +271,6 @@ export default class Post extends React.Component {
     }
 
     var numComments = comments ? comments.length : 0;
-    var likes = likes ? likes : 0;
 
     return (
       <View>
