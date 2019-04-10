@@ -70,10 +70,6 @@ export default class CommentsView extends React.Component {
 
     await ApiClient.get(postUri, {authorized: true})
       .then(response => {
-        if (response.usersLiked.find(user => user._id === loggedInUser._id)) {
-          response.isLiked = true;
-        } else response.isLiked = false;
-
         this.setState({ postData: response });
 
         // Ensure feed view is up-to-date with current:
