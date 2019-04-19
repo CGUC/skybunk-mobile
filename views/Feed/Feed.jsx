@@ -140,18 +140,14 @@ export default class FeedView extends React.Component {
   }
 
   updatePost = async (postId, data, type) => {
-
-    const {
-      navigation,
-    } = this.props;
-
     if (type === 'toggleLike') {
-      this.setState({
-        posts: this.state.posts.map(post => {
-          if (post._id === postId) return data;
-          return post;
+      return ApiClient.post(`/posts/${postId}/like`, {'addLike': data.isLiked}, {authorized: true})
+        .then(() => {
+          this.updateState('updatePost', postId);
         })
-      });
+        .catch(err => {
+          alert("Error deleting post. Sorry about that!")
+        });
     }
     else if (type === 'deletePost') {
       return ApiClient.delete(`/posts/${postId}`, {authorized: true})
@@ -166,7 +162,7 @@ export default class FeedView extends React.Component {
       this.updateState('updatePost', data);
     }
 
-    ApiClient.put(`/posts/${postId}`, data, {authorized: true})
+    ApiClient.put(`/posts/${postId}`, _.pick(data, ['content', 'image']), {authorized: true})
       .then(() => {
         //this.loadData();
       })
