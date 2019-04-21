@@ -143,10 +143,10 @@ export default class FeedView extends React.Component {
     if (type === 'toggleLike') {
       return ApiClient.post(`/posts/${postId}/like`, {'addLike': data.isLiked}, {authorized: true})
         .then(() => {
-          this.updateState('updatePost', postId);
+          this.updateState('updatePost', data);
         })
         .catch(err => {
-          alert("Error deleting post. Sorry about that!")
+          alert("Error liking post. Sorry about that!")
         });
     }
     else if (type === 'deletePost') {
