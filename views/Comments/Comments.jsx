@@ -93,8 +93,20 @@ export default class CommentsView extends React.Component {
     const loggedInUser = this.props.navigation.getParam('loggedInUser');
     const updateParentState = navigation.getParam('updateParentState');
 
-    if (['toggleLike', 'editPost'].includes(type)) {
-      ApiClient.put(`/posts/${postData._id}`, data, {authorized: true})
+    if (['editPost'].includes(type)) {
+      ApiClient.put(`/posts/${postData._id}`, _.pick(data, ['content', 'image']), {authorized: true})
+        .then(() => {
+          this.setState({ postData: data });
+          updateParentState('updatePost', data);
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Error updating post. Sorry about that!");
+        });
+    }
+
+    else if (['toggleLike'].includes(type)) {
+      ApiClient.post(`/posts/${postData._id}/like`, {'addLike': data.isLiked}, {authorized: true})
         .then(() => {
           this.setState({ postData: data });
           updateParentState('updatePost', data);
