@@ -18,15 +18,23 @@ export default class HomeView extends React.Component {
     return (
       <View style={{flex: 1, flexDirection: 'row', backgroundColor:'#FFF'}}>
         <HomeTabBarButton
+          text='Channels'
+          image = {require('../../../assets/cookie-icon.png')}
+          selected={this.props.currentTab === 'channels'}
+          onPress={ () => {this.props.onSwitchTab('channels')} }
+        />
+        <HomeTabBarButton
           text='Notifications'
+          image = {require('../../../assets/bell-OFF.png')}
           selected={this.props.currentTab === 'notifs'}
           onPress={ () => {this.props.onSwitchTab('notifs')} }
           showNotice={this.props.newNotifications}
         />
         <HomeTabBarButton
-          text='Channels'
-          selected={this.props.currentTab === 'channels'}
-          onPress={ () => {this.props.onSwitchTab('channels')} }
+          text='Widgets'
+          image = {require('../../../assets/small-logo.png')}
+          selected={this.props.currentTab === 'widgets'}
+          onPress={ () => {this.props.onSwitchTab('widgets')} }
         />
       </View>
     );

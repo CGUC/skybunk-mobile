@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, ScrollView, StatusBar, TouchableOpacity } from 'react-native';
+import { View, ScrollView, StatusBar, TouchableOpacity, Image } from 'react-native';
 import { Container, Header, Content, Text, Spinner, Footer, Icon } from 'native-base';
 import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
 import ChannelList from "../../components/ChannelList/ChannelList";
 import NotificationList from "../../components/NotificationList/NotificationList";
 import HomeTabBar from "./HomeTabBar/HomeTabBar";
-import style from "./HomeStyle";
+import styles from "./HomeStyle";
 import ApiClient from '../../ApiClient';
 import { Font} from "expo";
 import { Notifications } from 'expo';
@@ -13,7 +13,24 @@ import _ from 'lodash';
 
 export default class HomeView extends React.Component {
 
-  static navigationOptions = { header: null };
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Home',
+    headerTintColor: '#FFFFFF',
+    headerStyle: {
+      backgroundColor: '#C1464E'
+      },
+      get headerRight() {
+          return (
+            <TouchableOpacity onPress={() => { 
+              console.log(props.navigation.getParam('user'))
+                this.props.navigation.navigate('Settings', { user: props.navigation.getParam('user') }) }}>
+              <Image source={require('../../assets/settings-with-word-icon.png')} style={styles.settingsIcon} />
+            </TouchableOpacity>
+          )
+      }
+    }
+  };
 
   constructor(props) {
     super(props);
@@ -119,7 +136,7 @@ export default class HomeView extends React.Component {
     if (loading) {
       return (
         <Container>
-          <Content contentContainerStyle={style.contentContainer}>
+          <Content contentContainerStyle={styles.contentContainer}>
             <Spinner color='#cd8500' />
           </Content>
         </Container>
@@ -129,7 +146,6 @@ export default class HomeView extends React.Component {
         <Container>
           <Content>
             <ScrollView>
-              <ProfileHeader user={user} navigation={this.props.navigation}/>
               {this.state.currentTab === 'channels' ? 
                 <ChannelList
                   channels={channels}
@@ -137,8 +153,8 @@ export default class HomeView extends React.Component {
                   user={user}
                 /> :
               <View>
-                <TouchableOpacity style={style.markAllSeen} onPress={this.markNotifsSeen}>
-                  <Text style={style.markAllSeenText}>Mark all as seen</Text>
+                <TouchableOpacity style={styles.markAllSeen} onPress={this.markNotifsSeen}>
+                  <Text style={styles.markAllSeenText}>Mark all as seen</Text>
                 </TouchableOpacity>
                 <NotificationList
                   notifications={this.state.notifications.slice(0, 30)}

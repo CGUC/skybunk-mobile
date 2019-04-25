@@ -20,5 +20,9 @@ export default (StyleSheet.create({
 		marginLeft: 6,
 		fontWeight: 'bold',
 		fontSize: 18
-	}
+	},
+	settingsIcon: {
+		width: 50,
+		height: 50,
+	  },
 }));

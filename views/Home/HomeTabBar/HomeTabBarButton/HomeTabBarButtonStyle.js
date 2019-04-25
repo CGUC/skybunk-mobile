@@ -5,13 +5,14 @@ export default (styles = StyleSheet.create({
     flex: 0.5,
     justifyContent: 'center',
     alignItems:'center',
-    backgroundColor:'#71d3d1'
+    backgroundColor:'#C1464E'
   },
   buttonSelected: {
     flex: 0.5,
     justifyContent: 'center',
     alignItems:'center',
-    backgroundColor:'#408785'
+    backgroundColor:'#943036',
+
   },
   text: {
     color: 'white'
@@ -20,9 +21,10 @@ export default (styles = StyleSheet.create({
     backgroundColor: 'red',
     position: 'absolute',
     marginLeft: -4,
-    alignSelf: 'flex-start',
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    alignSelf: 'center',
+  },
+  image: {
+    height:40,
+    width: 40
   }
 }));
