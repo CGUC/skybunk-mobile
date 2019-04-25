@@ -12,6 +12,8 @@ export default (StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		backgroundColor: '#FFF',
+		borderBottomColor: '#CCCCCC',
+    borderBottomWidth: 1,
 		marginBottom: 1
 	},
 	markAllSeenText: {

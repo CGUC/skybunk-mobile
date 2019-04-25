@@ -5,23 +5,9 @@ import {
   Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon,
   Left, Label, Body, Right, Title, Form, Input, Item, Spinner
 } from 'native-base';
-import { StyleSheet } from "react-native";
+import styles from "./ContentBarStyle";
 
 import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
-
-const { height, width } = Dimensions.get('window');
-
-const styles = StyleSheet.create({
-  bar: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    height: height/8,
-    width: width
-  }
-})
 
 export default class ContentBar extends React.Component {
 
@@ -57,7 +43,7 @@ export default class ContentBar extends React.Component {
 
   render() {
     return (
-      <View style={styles.asdf}>
+      <View>
         <View style={styles.bar}>
           <Button transparent onPress={this.openModal}>
             <Icon style={{color: '#fc4970'}} type='Feather' name='plus-square' />

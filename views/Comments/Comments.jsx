@@ -9,6 +9,7 @@ import ContentBar from '../../components/ContentBar/ContentBar';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import ApiClient from '../../ApiClient';
 import style from './CommentsStyle';
+import defaultStyles from "../../styles/styles";
 import _ from 'lodash'
 
 export default class CommentsView extends React.Component {
@@ -207,7 +208,7 @@ export default class CommentsView extends React.Component {
 
     if (!postData) {
       return (
-        <Container>
+        <Container style={defaultStyles.backgroundTheme}>
           <Content>
             <Text style={style.noDataText}>This post doesn't seem to exist :/</Text>
           </Content>
@@ -222,7 +223,7 @@ export default class CommentsView extends React.Component {
 
     if (loading) {
       return (
-        <Container>
+        <Container style={defaultStyles.backgroundTheme}>
           <Content>
             <Spinner color='#cd8500' />
           </Content>
@@ -230,7 +231,7 @@ export default class CommentsView extends React.Component {
       );
     } else {
       return (
-        <Container>
+        <Container style={defaultStyles.backgroundTheme}>
           <Content>
             <Post
               data={postData}
