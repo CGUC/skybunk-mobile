@@ -87,12 +87,6 @@ export default class FeedView extends React.Component {
     const loggedInUser = this.props.navigation.getParam('loggedInUser');
     await ApiClient.get(this.getUri(), {authorized: true})
       .then(response => {
-        _.each(response, post => {
-          if (post.usersLiked.find((user) => user._id === loggedInUser._id)) {
-            post.isLiked = true;
-          } else post.isLiked = false;
-        });
-
         this.setState({
           posts: response,
           loading: false,
@@ -139,18 +133,14 @@ export default class FeedView extends React.Component {
   }
 
   updatePost = async (postId, data, type) => {
-
-    const {
-      navigation,
-    } = this.props;
-
     if (type === 'toggleLike') {
-      this.setState({
-        posts: this.state.posts.map(post => {
-          if (post._id === postId) return data;
-          return post;
+      return ApiClient.post(`/posts/${postId}/like`, {'addLike': data.isLiked}, {authorized: true})
+        .then(() => {
+          this.updateState('updatePost', data);
         })
-      });
+        .catch(err => {
+          alert("Error liking post. Sorry about that!")
+        });
     }
     else if (type === 'deletePost') {
       return ApiClient.delete(`/posts/${postId}`, {authorized: true})
@@ -165,7 +155,7 @@ export default class FeedView extends React.Component {
       this.updateState('updatePost', data);
     }
 
-    ApiClient.put(`/posts/${postId}`, data, {authorized: true})
+    ApiClient.put(`/posts/${postId}`, _.pick(data, ['content', 'image']), {authorized: true})
       .then(() => {
         //this.loadData();
       })
@@ -275,6 +265,7 @@ export default class FeedView extends React.Component {
       loadingPage: true,
     }, state =>
         ApiClient.get(this.getUri(), {authorized: true, headers: { 'page': this.state.page }}).then(response => {
+
           this.setState({
             posts: [...this.state.posts, ...response],
             loadingPage: false,
