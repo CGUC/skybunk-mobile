@@ -5,7 +5,7 @@ import styles from './HomeTabBarButtonStyle';
 
 export default class HomeView extends React.Component {
   showNotice = () => {
-    if (this.props.showNotice) return <Badge style={styles.notice}/>;
+    if (this.props.showNotice) return null;
     return null;
   }
 

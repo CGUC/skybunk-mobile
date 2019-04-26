@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Keyboard} from 'react-native';
-import { Icon, Item, Text, Input, Textarea, Spinner } from 'native-base';
+import { Icon, Item, Text, Input, Textarea, Spinner, Content, Container } from 'native-base';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import _ from 'lodash';
 import ApiClient from '../../ApiClient';
@@ -12,10 +12,7 @@ export default class EditProfile extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: 'My Profile',
-      headerTintColor: '#FFFFFF',
-      headerStyle: {
-        backgroundColor: '#fc4970'
-      },
+      headerTitle: null,
       get headerRight() {
         var state = navigation.getParam('saveState');
         if (!state || state === 'disabled') return null;
@@ -178,12 +175,8 @@ export default class EditProfile extends React.Component {
 
   render() {
     return (
-      <ScrollView>
-      <KeyboardAvoidingView
-        behavior='position'
-        enabled={this.state.avoidKeyboard}
-        style={{...defaultStyles.backgroundTheme, ...styles.container}}
-      >
+      <Container contentContainerStyle={defaultStyles.backgroundTheme}>
+      <Content contentContainerStyle={{...defaultStyles.backgroundTheme, ...styles.container}}>
         <GestureRecognizer
           onSwipeDown={() => Keyboard.dismiss()}
           style={styles.gestureRecognizer}
@@ -195,8 +188,8 @@ export default class EditProfile extends React.Component {
           {this.generateFieldJSX('phone', 'Phone Number', 'Let others contact you')}
           {this.generateFieldJSX('bio', 'Bio', 'Share something about yourself')}
         </GestureRecognizer>
-      </KeyboardAvoidingView>
-      </ScrollView>
+      </Content>
+      </Container>
     )
   }
 }

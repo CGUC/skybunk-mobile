@@ -72,7 +72,6 @@ export default class UserProfile extends React.Component {
       phone,
       affiliation,
     } = this.props.user.info;
-    console.log(this.props.user.username)
 
     return (
       <View style={styles.infoBlock}>

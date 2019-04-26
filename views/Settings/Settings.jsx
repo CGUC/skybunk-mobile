@@ -10,10 +10,7 @@ export default class SettingsView extends React.Component {
 
   static navigationOptions = {
     title: 'Settings',
-    headerTintColor: '#FFFFFF',
-    headerStyle: {
-      backgroundColor: '#fc4970'
-    },
+    headerTitle: null
   };
 
   showUserProfile = () => {

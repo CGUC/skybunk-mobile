@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, StatusBar, TouchableOpacity, Image } from 'react-native';
-import { Container, Header, Content, Text, Spinner, Footer, Icon } from 'native-base';
+import { Container, Header, Content, Text, Spinner, Footer, Button, Fab, Icon } from 'native-base';
 import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
 import ChannelList from "../../components/ChannelList/ChannelList";
 import NotificationList from "../../components/NotificationList/NotificationList";
@@ -15,16 +15,9 @@ export default class HomeView extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'Home',
-    headerTintColor: '#FFFFFF',
-    headerStyle: {
-      backgroundColor: '#C1464E'
-      },
       get headerRight() {
           return (
-            <TouchableOpacity onPress={() => { 
-              console.log(props.navigation.getParam('user'))
-                this.props.navigation.navigate('Settings', { user: props.navigation.getParam('user') }) }}>
+            <TouchableOpacity onPress={() => {navigation.navigate('Settings', { user: navigation.getParam('user') }) }}>
               <Image source={require('../../assets/settings-with-word-icon.png')} style={styles.settingsIcon} />
             </TouchableOpacity>
           )
@@ -58,6 +51,10 @@ export default class HomeView extends React.Component {
   }
 
   handleNewNotification = () => {
+    this.refreshNotifications();
+  }
+
+  refreshNotifications = () => {
     ApiClient.get(
       '/users/loggedInUser',  {authorized: true}
     )
@@ -144,26 +141,21 @@ export default class HomeView extends React.Component {
     } else {
       return (
         <Container>
-          <Content>
-            <ScrollView>
+          <Container>
               {this.state.currentTab === 'channels' ? 
                 <ChannelList
                   channels={channels}
                   onPressChannel={this.onPressChannel}
                   user={user}
                 /> :
-              <View>
-                <TouchableOpacity style={styles.markAllSeen} onPress={this.markNotifsSeen}>
-                  <Text style={styles.markAllSeenText}>Mark all as seen</Text>
-                </TouchableOpacity>
                 <NotificationList
                   notifications={this.state.notifications.slice(0, 30)}
                   onPressNotif={this.onPressNotif}
+                  markNotifsSeen={this.markNotifsSeen}
+                  refreshNotifications={this.refreshNotifications}
                 />
-              </View>
               }
-            </ScrollView>
-          </Content>
+          </Container>
           <Footer>
             <HomeTabBar 
               onSwitchTab={ (tab) => {this.setState({currentTab: tab})} }

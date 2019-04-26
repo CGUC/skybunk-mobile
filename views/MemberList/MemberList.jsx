@@ -21,10 +21,7 @@ export default class MemberList extends React.Component {
 
   static navigationOptions = {
     title: 'Member List',
-    headerTintColor: '#FFFFFF',
-    headerStyle: {
-      backgroundColor: '#fc4970'
-    },
+    headerTitle: null
   };
 
   constructor(props) {

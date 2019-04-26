@@ -1,6 +1,6 @@
 import React from "react";
 import { View, TouchableOpacity, Image } from "react-native";
-import { Container, Text, Button } from 'native-base';
+import { Container, Text, Content } from 'native-base';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Font, AppLoading } from "expo";
@@ -102,7 +102,7 @@ export default class ChannelList extends React.Component {
         return (
           <View style={styles.channelCard} key={`channel${key}`}>
             <TouchableOpacity onPress={this.updateSubscription(channel.id, subIndex)} activeOpacity={0.5}>
-              <Image opacity={opacity} source={icon} style={styles.notificationBell} />
+              <Image opacity={opacity} source={icon} style={[styles.notificationBell]} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.channelListButton} onPress={() => this.onPressChannel(channel.id, channel.name)}>
               <Text style={styles.channelText}>{channel.name}</Text>
@@ -136,9 +136,9 @@ export default class ChannelList extends React.Component {
       );
     } else {
       return (
-        <View style={{ backgroundColor: '#FFFFFF' }}>
+        <Content>
           {channelCards}
-        </View>
+        </Content>
       );
     }
   }
