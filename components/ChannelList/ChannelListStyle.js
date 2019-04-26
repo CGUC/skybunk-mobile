@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-
+import defaultStyles from '../../styles/styles'
 export default (styles = StyleSheet.create({
   channelCard: {
     flex: 1,
@@ -26,9 +26,11 @@ export default (styles = StyleSheet.create({
   notificationBell: {
     width: 60,
     height: 60,
+    ...defaultStyles.primaryColorImageTint
   },
   rightArrow: {
     width: 50,
     height: 50,
+    ...defaultStyles.primaryColorImageTint
   },
 }));

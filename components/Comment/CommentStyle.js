@@ -1,5 +1,6 @@
 import { StyleSheet, Dimensions } from "react-native";
 const { height, width } = Dimensions.get('window');
+import defaultStyles from'../../styles/styles'
 
 export default (styles = StyleSheet.create({
   card: {
@@ -11,13 +12,12 @@ export default (styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.0)',
   },
   cardItem: {
-    backgroundColor: 'rgba(42, 42, 42, 0.0)',
+    backgroundColor: 'rgba(0, 0, 0, 0.0)',
     borderBottomWidth: 1,
     borderBottomColor: '#dbdbdb'
   },
   profilePicThumbnail: {
     borderWidth: 1,
-    borderColor: "#71d3d1",
     marginRight: 5,
     marginTop: 5
   },
@@ -53,7 +53,7 @@ export default (styles = StyleSheet.create({
     height: 40,
     marginLeft: 5,
     marginRight: 5,
-    backgroundColor: '#71d3d1',
+    ...defaultStyles.primaryColor
   },
   deleteButton: {
     marginTop: 5,

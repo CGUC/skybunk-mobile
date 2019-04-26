@@ -1,6 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
 const { height, width } = Dimensions.get('window');
+import defaultStyles from '../../styles/styles'
 
 export default (styles = StyleSheet.create({
   modal: {
@@ -17,10 +18,10 @@ export default (styles = StyleSheet.create({
     alignItems: 'center',
     width: width * 0.85,
     backgroundColor: 'white',
-    borderColor: '#fc4970',
     borderWidth: 5,
     borderRadius: 5,
-    marginTop: 10
+    marginTop: 10,
+    ...defaultStyles.primaryBorderColor
   },
   cardFull: {
     height: height * 0.85,
@@ -41,9 +42,7 @@ export default (styles = StyleSheet.create({
     alignSelf: "center",
     width: 180,
     height: 180,
-    borderRadius: 90,
-    borderColor: "#71d3d1",
-    borderWidth: 3,
+    borderRadius: 90
   },
   name: {
     fontWeight: "400",

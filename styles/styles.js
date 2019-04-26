@@ -15,5 +15,8 @@ export default (styles = StyleSheet.create({
   },
   primaryColorImageTint: {
     tintColor: primaryColor
+  },
+  primaryBorderColor: {
+    borderColor: primaryColor
   }
 }));

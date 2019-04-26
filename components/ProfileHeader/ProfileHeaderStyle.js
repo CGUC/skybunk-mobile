@@ -4,7 +4,6 @@ export default (styles = StyleSheet.create({
 	profileHeader: {
     alignSelf: "stretch",
     height: 180,
-    backgroundColor: "#71d3d1",
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-evenly",
@@ -16,9 +15,7 @@ export default (styles = StyleSheet.create({
     alignSelf: "center",
     width: 100,
     height: 100,
-    borderRadius: 50,
-    borderColor: '#fc4970',
-    borderWidth: 2,
+    borderRadius: 50
   },
   profileNameText: {
     color: "#ffffff",

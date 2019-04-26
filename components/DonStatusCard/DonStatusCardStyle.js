@@ -3,8 +3,7 @@ const { height, width } = Dimensions.get('window');
 
 export default (styles = StyleSheet.create({
 	profilePicThumbnail: {
-		borderWidth: 2,
-		borderColor: "#71d3d1"
+		borderWidth: 0
 	},
 	card: {
 		flex: 1,

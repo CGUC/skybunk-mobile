@@ -1,17 +1,18 @@
 import { StyleSheet } from "react-native";
+import defaultStyles from '../../../../styles/styles'
 
 export default (styles = StyleSheet.create({
 	buttonUnselected: {
     flex: 0.5,
     justifyContent: 'center',
     alignItems:'center',
-    backgroundColor:'#C1464E'
+    ...defaultStyles.primaryColor
   },
   buttonSelected: {
     flex: 0.5,
     justifyContent: 'center',
     alignItems:'center',
-    backgroundColor:'#943036',
+    ...defaultStyles.darkenedPrimaryColor
 
   },
   text: {
