@@ -5,7 +5,7 @@ import { ListItem, Thumbnail, Text } from 'native-base';
 import _ from 'lodash';
 
 import styles from './UserListItemStyle';
-import ApiClient from '../../ApiClient';
+import ImageCache from '../../helpers/imageCache'
 
 export default class UserListItem extends React.Component {
 
@@ -16,6 +16,16 @@ export default class UserListItem extends React.Component {
       profilePicture: null
     }
   }
+
+  async componentWillMount() {
+    ImageCache.getProfilePicture(this.props.user._id)
+    .then(response => {
+      this.setState({
+        profilePicture: response
+      })
+    })
+  }
+
 
   /**
    * Limit re-rendering for optimisation
@@ -34,22 +44,19 @@ export default class UserListItem extends React.Component {
     var { profilePicture } = this.state;
 
     return (
-      <ListItem>
         <TouchableOpacity
           hitSlop={{ top: 10, right: 300, bottom: 10, left: 0 }}
           onPress={() => showUserProfile(user)}
         >
           <View style={styles.rowContainer}>
-          {/* This has critical performance issues so has been excluded for now (Neil) */}
-            {/* <View>
+            <View>
               <Thumbnail style={styles.profilePicThumbnail} source={{ uri: `data:image/png;base64,${profilePicture}` }} />
-            </View> */}
+            </View>
             <Text style={styles.userName}>
               {`${user.firstName} ${user.lastName}`}
             </Text>
           </View>
         </TouchableOpacity>
-      </ListItem>
     )
   }
 }

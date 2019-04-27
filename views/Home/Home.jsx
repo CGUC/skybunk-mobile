@@ -6,6 +6,7 @@ import NotificationList from "../../components/NotificationList/NotificationList
 import HomeTabBar from "./HomeTabBar/HomeTabBar";
 import styles from "./HomeStyle";
 import ApiClient from '../../ApiClient';
+import ImageCache from '../../helpers/imageCache'
 import { Font} from "expo";
 import { Notifications } from 'expo';
 import _ from 'lodash';
@@ -28,7 +29,7 @@ export default class HomeView extends React.Component {
         return (
           <TouchableOpacity 
             hitSlop={{ top: 10, bottom: 10, left: 0, right: 40 }} 
-            onPress={() => {navigation.navigate('MemberList'); }}>
+            onPress={() => {navigation.navigate('MemberList', {user: navigation.getParam('user')}); }}>
             <Thumbnail
                   small
                   style={styles.profilePicThumbnail}
@@ -62,7 +63,7 @@ export default class HomeView extends React.Component {
     })
     .catch(err => console.error(err));
 
-    ApiClient.get(`/users/${this.state.user._id}/profilePicture`, {authorized: true})
+    ImageCache.getProfilePicture(this.state.user._id)
     .then(response => {
       this.props.navigation.setParams({
         'profilePic': response

@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, Text, TouchableOpacity } from 'react-native';
-import { Container, Content, Spinner, Item, Button, Input, Icon, Header } from 'native-base';
+import { Container, Content, Spinner, Item, Button, Input, Icon, Header, View, Thumbnail, ListItem } from 'native-base';
 import { Font } from "expo";
 
 import UserListItem from '../../components/UserListItem/UserListItem';
@@ -37,7 +37,6 @@ export default class MemberList extends React.Component {
 
 
   async componentWillMount() {
-
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
@@ -165,10 +164,12 @@ export default class MemberList extends React.Component {
 
   renderListItem = ({ item }) => {
     return (
+      <ListItem>
       <UserListItem
         user={item}
         showUserProfile={this.showUserProfile}
       />
+      </ListItem>
     )
   }
 
@@ -232,7 +233,15 @@ export default class MemberList extends React.Component {
         </Container>
       )
     } else {
+      let user = this.props.navigation.getParam('user')
       return (
+        <Container style={defaultStyles.backgroundTheme}>
+        <View>
+          <UserListItem
+            user={this.props.navigation.getParam('user')}
+            showUserProfile={this.showUserProfile}
+          />
+          </View>
         <Container style={defaultStyles.backgroundTheme}>
           <Header
             searchBar
@@ -270,6 +279,7 @@ export default class MemberList extends React.Component {
             onClose={this.closeProfileModal}
             isModalOpen={showProfileModal}
           />
+        </Container>
         </Container>
       )
     }
