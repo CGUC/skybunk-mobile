@@ -19,11 +19,6 @@ const chunk_limit = 15;
 
 export default class MemberList extends React.Component {
 
-  static navigationOptions = {
-    title: 'Member List',
-    headerTitle: null
-  };
-
   constructor(props) {
     super(props);
     this.state = {

@@ -24,5 +24,11 @@ export default (StyleSheet.create({
 	settingsIcon: {
 		width: 50,
 		height: 50,
-	  },
+		},
+		profilePicThumbnail: {
+			borderWidth: 1,
+			marginLeft: 15,
+			marginBottom: 5,
+			borderColor: 'white'
+		},
 }));

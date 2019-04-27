@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, ScrollView, StatusBar, TouchableOpacity, Image } from 'react-native';
-import { Container, Header, Content, Text, Spinner, Footer, Button, Fab, Icon } from 'native-base';
-import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
+import { StatusBar, TouchableOpacity, Image } from 'react-native';
+import { Container, Content, Spinner, Footer, Thumbnail} from 'native-base';
 import ChannelList from "../../components/ChannelList/ChannelList";
 import NotificationList from "../../components/NotificationList/NotificationList";
 import HomeTabBar from "./HomeTabBar/HomeTabBar";
@@ -21,7 +20,23 @@ export default class HomeView extends React.Component {
               <Image source={require('../../assets/settings-with-word-icon.png')} style={styles.settingsIcon} />
             </TouchableOpacity>
           )
-      }
+      },
+      get headerLeft() {
+        if(!navigation.getParam('profilePic')){
+          return null;
+        }
+        return (
+          <TouchableOpacity 
+            hitSlop={{ top: 10, bottom: 10, left: 0, right: 40 }} 
+            onPress={() => {navigation.navigate('MemberList'); }}>
+            <Thumbnail
+                  small
+                  style={styles.profilePicThumbnail}
+                  source={{ uri: `data:image/png;base64,${navigation.getParam('profilePic')}` }}
+            />
+          </TouchableOpacity>
+        )
+    }
     }
   };
 
@@ -46,6 +61,13 @@ export default class HomeView extends React.Component {
       this.setState({ channels: response, loading: false });
     })
     .catch(err => console.error(err));
+
+    ApiClient.get(`/users/${this.state.user._id}/profilePicture`, {authorized: true})
+    .then(response => {
+      this.props.navigation.setParams({
+        'profilePic': response
+      })
+    })
 
     this.notificationSubscription = Notifications.addListener(this.handleNewNotification);
   }
