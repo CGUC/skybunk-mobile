@@ -237,10 +237,7 @@ export default class MemberList extends React.Component {
       return (
         <Container style={defaultStyles.backgroundTheme}>
         <View>
-          <UserListItem
-            user={this.props.navigation.getParam('user')}
-            showUserProfile={this.showUserProfile}
-          />
+  
           </View>
         <Container style={defaultStyles.backgroundTheme}>
           <Header

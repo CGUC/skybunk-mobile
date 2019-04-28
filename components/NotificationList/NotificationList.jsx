@@ -70,7 +70,7 @@ export default class NotificationList extends React.Component {
       );
     } else {
       return (
-        <Container style={[defaultStyles.backgroundTheme, {"flex-wrap": "wrap-reverse"}]}>
+        <Container style={defaultStyles.backgroundTheme}>
           <FlatList 
             data={this.buildListItems()}
             renderItem={this.renderListItem}

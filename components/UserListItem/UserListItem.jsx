@@ -42,7 +42,9 @@ export default class UserListItem extends React.Component {
   render() {
     var { user, showUserProfile } = this.props;
     var { profilePicture } = this.state;
-
+    if(!user){
+     return null
+    }
     return (
         <TouchableOpacity
           hitSlop={{ top: 10, right: 300, bottom: 10, left: 0 }}

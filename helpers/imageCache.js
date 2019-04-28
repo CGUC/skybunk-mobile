@@ -30,8 +30,9 @@ module.exports = {
 			profilePicCache.getItem(userID, function(err, cachedPic) {
 				if(err){
 					reject(err);
-				}else if(!cachedPic || !cachedPic.image || date.differenceInHours(new Date(),cachedPic.timeFetched)>24){
-					//cache miss, or over 24 hours old, so go fetch a new copy
+				}else if(!cachedPic || !cachedPic.image || date.differenceInDays(new Date(),cachedPic.timeFetched)>7){
+					console.log("miss!")
+					//cache miss, or over a week, so go fetch a new copy
 					ApiClient.get(`/users/${userID}/profilePicture`, {authorized: true}).then(pic => {
 
 						//save fetched item to cache
