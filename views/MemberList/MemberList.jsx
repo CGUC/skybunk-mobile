@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, Text, TouchableOpacity } from 'react-native';
-import { Container, Content, Spinner, Item, Button, Input, Icon, Header, View, Thumbnail, ListItem } from 'native-base';
+import { Container, Content, Spinner, Item, Image, Input, Icon, Header, View, Thumbnail, ListItem } from 'native-base';
 import { Font } from "expo";
 
 import UserListItem from '../../components/UserListItem/UserListItem';
@@ -8,6 +8,7 @@ import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import styles from './MemberListStyle';
 import defaultStyles from '../../styles/styles';
 import ApiClient from '../../ApiClient';
+import ImageCache from '../../helpers/imageCache'
 import _ from 'lodash';
 
 /**
@@ -31,7 +32,8 @@ export default class MemberList extends React.Component {
       loadingPage: false,
       loadedLastPage: false,
       userDataToShow: undefined,
-      showProfileModal: false
+      showProfileModal: false,
+      profilePicture: undefined
     }
   }
 
@@ -41,6 +43,13 @@ export default class MemberList extends React.Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
+
+    ImageCache.getProfilePicture(this.props.navigation.getParam('user')._id)
+      .then(response => {
+        this.setState({
+          profilePicture: response
+        })
+      })
 
     await this.loadMembers();
   }
@@ -236,9 +245,14 @@ export default class MemberList extends React.Component {
       let user = this.props.navigation.getParam('user')
       return (
         <Container style={defaultStyles.backgroundTheme}>
-        <View>
-  
-          </View>
+          <TouchableOpacity onPress={() => {this.props.navigation.navigate('EditProfile', { user })}} style={styles.editProfileButton}>
+            <View>
+              <Thumbnail source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }} />
+            </View>
+            <Text style={styles.editProfileText}>
+              {`Edit My Profile`}
+            </Text>
+          </TouchableOpacity>
         <Container style={defaultStyles.backgroundTheme}>
           <Header
             searchBar

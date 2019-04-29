@@ -6,6 +6,7 @@ import _ from 'lodash';
 import ApiClient from '../../ApiClient';
 import styles from './EditProfileStyle';
 import defaultStyles from "../../styles/styles";
+import ProfileHeader from "../../components/ProfileHeader/ProfileHeader"
 
 export default class EditProfile extends React.Component {
 
@@ -177,6 +178,7 @@ export default class EditProfile extends React.Component {
     return (
       <Container contentContainerStyle={defaultStyles.backgroundTheme}>
       <Content contentContainerStyle={{...defaultStyles.backgroundTheme, ...styles.container}}>
+      <ProfileHeader user={this.props.navigation.getParam('user')}/>
         <GestureRecognizer
           onSwipeDown={() => Keyboard.dismiss()}
           style={styles.gestureRecognizer}

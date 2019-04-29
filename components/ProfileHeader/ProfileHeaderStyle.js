@@ -15,10 +15,10 @@ export default (styles = StyleSheet.create({
     alignSelf: "center",
     width: 100,
     height: 100,
-    borderRadius: 50
+    borderRadius: 50,
+    marginTop: 20
   },
   profileNameText: {
-    color: "#ffffff",
     fontFamily: "Roboto",
     fontSize: 20,
     textAlign: 'center'
