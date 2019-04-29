@@ -25,11 +25,9 @@ export default class HomeView extends React.Component {
         />
         <HomeTabBarButton
           text='Notifications'
-          image = {require('../../../assets/bell-OFF.png')}
+          image = {this.props.newNotifications ? require('../../../assets/Bell-ON.png') : require('../../../assets/bell-OFF.png')}
           selected={this.props.currentTab === 'notifs'}
-          onPress={ () => {this.props.onSwitchTab('notifs')} }
-          showNotice={this.props.newNotifications}
-        />
+          onPress={ () => {this.props.onSwitchTab('notifs')} }        />
         <HomeTabBarButton
           text='Widgets'
           image = {require('../../../assets/small-logo.png')}

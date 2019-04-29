@@ -26,6 +26,7 @@ export default (styles = StyleSheet.create({
   },
   image: {
     height:40,
-    width: 40
+    width: 40,
+    tintColor: 'white'
   }
 }));

@@ -4,11 +4,6 @@ import { Badge} from 'native-base';
 import styles from './HomeTabBarButtonStyle';
 
 export default class HomeView extends React.Component {
-  showNotice = () => {
-    if (this.props.showNotice) return null;
-    return null;
-  }
-
   render() {
     return (
       <TouchableOpacity 
@@ -18,7 +13,6 @@ export default class HomeView extends React.Component {
       >
         <View>
           <Image source={this.props.image} style={styles.image}/>
-          {this.showNotice()}
         </View>
       </TouchableOpacity>
     );
