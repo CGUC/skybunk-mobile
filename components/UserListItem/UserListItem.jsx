@@ -26,7 +26,19 @@ export default class UserListItem extends React.Component {
     })
   }
 
-
+  /**
+   * Update profile picture if the user has changed
+   */
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.user && !_.isEqual(this.props.user, nextProps.user)){
+      ImageCache.getProfilePicture(nextProps.user._id)
+      .then(response => {
+        this.setState({
+          profilePicture: response
+        })
+      })
+    }
+  }
   /**
    * Limit re-rendering for optimisation
    */
@@ -35,7 +47,7 @@ export default class UserListItem extends React.Component {
     var currentProps = this.props;
 
     if (!_.isEqual(currentProps.user, nextProps.user)) return true;
-    if (!profilePicture && nextState.profilePicture) return true;
+    if (!_.isEqual(profilePicture, nextState.profilePicture)) return true;
     return false;
   }
 

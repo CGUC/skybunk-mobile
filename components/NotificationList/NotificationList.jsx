@@ -69,8 +69,14 @@ export default class NotificationList extends React.Component {
         </Container>
       );
     } else {
+      
       return (
         <Container style={defaultStyles.backgroundTheme}>
+          {this.props.hasNewNotifications ? 
+          <Button style={styles.markNotifsSeenButton} onPress={this.props.markNotifsSeen}>
+            <Text>Mark All as Read</Text>
+          </Button>
+          : null}
           <FlatList 
             data={this.buildListItems()}
             renderItem={this.renderListItem}

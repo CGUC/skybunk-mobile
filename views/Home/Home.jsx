@@ -162,6 +162,7 @@ export default class HomeView extends React.Component {
         </Container>
       );
     } else {
+      const hasNewNotifications = this.hasNewNotifications()
       return (
         <Container>
           <Container>
@@ -176,6 +177,7 @@ export default class HomeView extends React.Component {
                   onPressNotif={this.onPressNotif}
                   markNotifsSeen={this.markNotifsSeen}
                   refreshNotifications={this.refreshNotifications}
+                  hasNewNotifications={hasNewNotifications}
                 />
               }
           </Container>
@@ -183,7 +185,7 @@ export default class HomeView extends React.Component {
             <HomeTabBar 
               onSwitchTab={ (tab) => {this.setState({currentTab: tab})} }
               currentTab={this.state.currentTab}
-              newNotifications={this.hasNewNotifications()}
+              newNotifications={hasNewNotifications}
             />
           </Footer>
         </Container>
