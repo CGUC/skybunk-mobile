@@ -21,5 +21,9 @@ export default (styles = StyleSheet.create({
     marginLeft: 20, 
     fontSize: 16, 
     fontFamily: 'System'
+  },
+  rightArrow: {
+    width: 40,
+    height: 40
   }
 }));

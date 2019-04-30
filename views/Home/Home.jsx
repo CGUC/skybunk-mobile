@@ -18,7 +18,7 @@ export default class HomeView extends React.Component {
       get headerRight() {
           return (
             <TouchableOpacity onPress={() => {navigation.navigate('Settings', { user: navigation.getParam('user') }) }}>
-              <Image source={require('../../assets/settings-with-word-icon.png')} style={styles.settingsIcon} />
+              <Image source={require('../../assets/settings.png')} style={styles.settingsIcon} />
             </TouchableOpacity>
           )
       },

@@ -25,8 +25,7 @@ export default (styles = StyleSheet.create({
     alignSelf: 'center',
   },
   image: {
-    height:40,
-    width: 40,
-    tintColor: 'white'
+    height:30,
+    width: 30
   }
 }));

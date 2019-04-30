@@ -24,13 +24,11 @@ export default (styles = StyleSheet.create({
     textAlign:'left',
   },
   notificationBell: {
-    width: 60,
-    height: 60,
-    ...defaultStyles.primaryColorImageTint
+    width: 40,
+    height: 40
   },
   rightArrow: {
-    width: 50,
-    height: 50,
-    ...defaultStyles.primaryColorImageTint
+    width: 40,
+    height: 40
   },
 }));

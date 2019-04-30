@@ -1,10 +1,12 @@
 import React from 'react';
-import {TouchableOpacity, ImageBackground, Dimensions, Text } from 'react-native';
-import { Container, Content, View, List, ListItem } from 'native-base';
+import {TouchableOpacity, Linking, Text } from 'react-native';
+import { Container, Content, List, ListItem, Footer } from 'native-base';
 
 import styles from './SettingsStyle';
+import defaultStyles from '../../styles/styles'
 import ApiClient from '../../ApiClient';
 import {clearCache} from '../../helpers/imageCache'
+import config from '../../config'
 
 export default class SettingsView extends React.Component {
 
@@ -12,15 +14,6 @@ export default class SettingsView extends React.Component {
     title: 'Settings',
     headerTitle: null
   };
-
-  showUserProfile = () => {
-    const user = this.props.navigation.getParam('user');
-    this.props.navigation.navigate('EditProfile', { user });
-  }
-  
-  showMemberList = () => {
-    this.props.navigation.navigate('MemberList');
-  }
 
   showDonInfo = () => {
     const user = this.props.navigation.getParam('user');
@@ -42,19 +35,6 @@ export default class SettingsView extends React.Component {
       <Container>
         <Content contentContainerStyle={styles.contentContainer}>
           <List>
-
-            <ListItem style={{ margin: 0 }}>
-              <TouchableOpacity style={styles.itemContainer} onPress={this.showUserProfile}>
-                <Text style={styles.itemText}>My Profile</Text>
-              </TouchableOpacity>
-            </ListItem>
-
-            <ListItem style={{ margin: 0 }}>
-              <TouchableOpacity style={styles.itemContainer} onPress={this.showMemberList}>
-                <Text style={styles.itemText}>Members</Text>
-              </TouchableOpacity>
-            </ListItem>
-
             <ListItem style={{ margin: 0 }}>
               <TouchableOpacity style={styles.itemContainer} onPress={this.showDonInfo}>
                 <Text style={styles.itemText}>Find A Don</Text>
@@ -67,8 +47,25 @@ export default class SettingsView extends React.Component {
               </TouchableOpacity>
             </ListItem>
 
+            <ListItem style={{ margin: 0 }}>
+              <TouchableOpacity style={styles.itemContainer} 
+              onPress={() => {Linking.openURL('https://grebelife.com/skybunk/feedback')}}>
+                <Text style={styles.itemText}>Send Feedback</Text>
+              </TouchableOpacity>
+            </ListItem>
+
+            <ListItem style={{ margin: 0 }}>
+              <TouchableOpacity style={styles.itemContainer} 
+              onPress={ () => {Linking.openURL(`mailto:webmaster@grebelife.com?subject=Skybunk%20Question%20v${config.VERSION}`)}}>
+                <Text style={styles.itemText}>Contact Webmasters</Text>
+              </TouchableOpacity>
+            </ListItem>
+
           </List>
         </Content>
+        <Footer style={defaultStyles.backgroundTheme}>
+          <Text style={styles.versionText}>{`Version ${config.VERSION}`}</Text>
+        </Footer>
       </Container>
     );
   }

@@ -27,7 +27,7 @@ const AppStack = createStackNavigator(
       return {
         headerTitle: 
         <TouchableOpacity style={{marginLeft: "auto", marginRight: "auto"}} onPress={() => {navigation.navigate('Home')}}>
-          <Image source={require('./assets/small-logo.png')} style={{height:40, width:40}}/>
+          <Image source={require('./assets/header-logo.png')} style={{height:40, width:40}}/>
         </TouchableOpacity>,
         headerStyle: defaultStyle.primaryColor,
         headerTintColor: '#FFFFFF'

@@ -22,13 +22,15 @@ export default (StyleSheet.create({
 		fontSize: 18
 	},
 	settingsIcon: {
-		width: 50,
-		height: 50,
+		width: 30,
+		height: 30,
+		marginRight: 15,
+		marginBottom: 5
 		},
-		profilePicThumbnail: {
-			borderWidth: 1,
-			marginLeft: 15,
-			marginBottom: 5,
-			borderColor: 'white'
-		},
+	profilePicThumbnail: {
+		borderWidth: 1,
+		marginLeft: 15,
+		marginBottom: 5,
+		borderColor: 'white'
+	},
 }));

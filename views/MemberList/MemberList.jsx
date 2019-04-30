@@ -1,6 +1,6 @@
 import React from 'react';
-import { FlatList, Text, TouchableOpacity } from 'react-native';
-import { Container, Content, Spinner, Item, Image, Input, Icon, Header, View, Thumbnail, ListItem } from 'native-base';
+import { FlatList, Text, Image, TouchableOpacity } from 'react-native';
+import { Container, Content, Spinner, Item, Input, Icon, Header, View, Thumbnail, ListItem } from 'native-base';
 import { Font } from "expo";
 
 import UserListItem from '../../components/UserListItem/UserListItem';
@@ -250,8 +250,11 @@ export default class MemberList extends React.Component {
               <Thumbnail source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }} />
             </View>
             <Text style={styles.editProfileText}>
-              {`Edit My Profile`}
+              {`${user.firstName} ${user.lastName}`}
             </Text>
+            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}}>
+            <Image source={require('../../assets/arrowright.png')} style={styles.rightArrow} />
+            </View>
           </TouchableOpacity>
         <Container style={defaultStyles.backgroundTheme}>
           <Header
