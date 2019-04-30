@@ -14,9 +14,6 @@ export default (styles = StyleSheet.create({
   darkenedPrimaryColor: {
     backgroundColor: "#943036"
   },
-  primaryColorImageTint: {
-    tintColor: primaryColor
-  },
   primaryBorderColor: {
     borderColor: primaryColor
   }

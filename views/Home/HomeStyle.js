@@ -31,6 +31,6 @@ export default (StyleSheet.create({
 		borderWidth: 1,
 		marginLeft: 15,
 		marginBottom: 5,
-		borderColor: 'white'
+		borderColor: '#fff'
 	},
 }));

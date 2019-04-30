@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, Text, Image, TouchableOpacity } from 'react-native';
-import { Container, Content, Spinner, Item, Input, Icon, Header, View, Thumbnail, ListItem } from 'native-base';
+import { Container, Content, Spinner, Item, Input, Icon, Header, View, Thumbnail} from 'native-base';
 import { Font } from "expo";
 
 import UserListItem from '../../components/UserListItem/UserListItem';
@@ -173,12 +173,10 @@ export default class MemberList extends React.Component {
 
   renderListItem = ({ item }) => {
     return (
-      <ListItem>
       <UserListItem
         user={item}
         showUserProfile={this.showUserProfile}
       />
-      </ListItem>
     )
   }
 
@@ -245,6 +243,7 @@ export default class MemberList extends React.Component {
       let user = this.props.navigation.getParam('user')
       return (
         <Container style={defaultStyles.backgroundTheme}>
+        {/* Edit profile button */}
           <TouchableOpacity onPress={() => {this.props.navigation.navigate('EditProfile', { user })}} style={styles.editProfileButton}>
             <View>
               <Thumbnail source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }} />

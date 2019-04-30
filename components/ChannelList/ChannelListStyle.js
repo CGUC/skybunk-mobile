@@ -1,5 +1,4 @@
 import { StyleSheet } from "react-native";
-import defaultStyles from '../../styles/styles'
 export default (styles = StyleSheet.create({
   channelCard: {
     flex: 1,

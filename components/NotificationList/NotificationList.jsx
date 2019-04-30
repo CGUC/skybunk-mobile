@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableOpacity, FlatList } from "react-native";
+import { TouchableOpacity, FlatList } from "react-native";
 import { Container, Text, Button} from 'native-base';
 import { Font, AppLoading } from "expo";
 import date from 'date-fns';

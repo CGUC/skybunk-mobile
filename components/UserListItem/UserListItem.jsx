@@ -58,6 +58,7 @@ export default class UserListItem extends React.Component {
      return null
     }
     return (
+      <ListItem>
         <TouchableOpacity
           hitSlop={{ top: 10, right: 300, bottom: 10, left: 0 }}
           onPress={() => showUserProfile(user)}
@@ -71,6 +72,7 @@ export default class UserListItem extends React.Component {
             </Text>
           </View>
         </TouchableOpacity>
+      </ListItem>
     )
   }
 }

@@ -102,7 +102,7 @@ export default class ChannelList extends React.Component {
         return (
           <View style={styles.channelCard} key={`channel${key}`}>
             <TouchableOpacity onPress={this.updateSubscription(channel.id, subIndex)} activeOpacity={0.5}>
-              <Image opacity={opacity} source={icon} style={[styles.notificationBell]} />
+              <Image opacity={opacity} source={icon} style={styles.notificationBell} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.channelListButton} onPress={() => this.onPressChannel(channel.id, channel.name)}>
               <Text style={styles.channelText}>{channel.name}</Text>

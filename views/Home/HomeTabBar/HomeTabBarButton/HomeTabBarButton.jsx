@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, TouchableOpacity, Image } from 'react-native';
-import { Badge} from 'native-base';
 import styles from './HomeTabBarButtonStyle';
 
 export default class HomeView extends React.Component {

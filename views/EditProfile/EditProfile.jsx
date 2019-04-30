@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Keyboard} from 'react-native';
-import { Icon, Item, Text, Input, Textarea, Spinner, Content, Container } from 'native-base';
+import { Icon, Item, Text, Input, Textarea, Spinner } from 'native-base';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import _ from 'lodash';
 import ApiClient from '../../ApiClient';
@@ -177,23 +177,23 @@ export default class EditProfile extends React.Component {
   render() {
     return (
       <ScrollView>
-      <KeyboardAvoidingView
-        behavior='position'
-        enabled={this.state.avoidKeyboard}
-        style={styles.container}
-      >
-      <ProfileHeader user={this.props.navigation.getParam('user')}/>
-        <GestureRecognizer
-          onSwipeDown={() => Keyboard.dismiss()}
-          style={styles.gestureRecognizer}
+        <KeyboardAvoidingView
+          behavior='position'
+          enabled={this.state.avoidKeyboard}
+          style={{...defaultStyles.backgroundTheme, ...styles.container}}
         >
-          {this.generateFieldJSX('name', 'Name', 'Enter your name')}
-          {this.generateFieldJSX('program', 'Program', 'What are you studying?')}
-          {this.generateFieldJSX('address', 'Room Number / Address', 'Where can you be found?')}
-          {this.generateFieldJSX('affiliation', 'Affiliation with Grebel', 'i.e. Resident')}
-          {this.generateFieldJSX('phone', 'Phone Number', 'Let others contact you')}
-          {this.generateFieldJSX('bio', 'Bio', 'Share something about yourself')}
-        </GestureRecognizer>
+          <ProfileHeader user={this.props.navigation.getParam('user')}/>
+          <GestureRecognizer
+            onSwipeDown={() => Keyboard.dismiss()}
+            style={styles.gestureRecognizer}
+          >
+            {this.generateFieldJSX('name', 'Name', 'Enter your name')}
+            {this.generateFieldJSX('program', 'Program', 'What are you studying?')}
+            {this.generateFieldJSX('address', 'Room Number / Address', 'Where can you be found?')}
+            {this.generateFieldJSX('affiliation', 'Affiliation with Grebel', 'i.e. Resident')}
+            {this.generateFieldJSX('phone', 'Phone Number', 'Let others contact you')}
+            {this.generateFieldJSX('bio', 'Bio', 'Share something about yourself')}
+          </GestureRecognizer>
         </KeyboardAvoidingView>
       </ScrollView>
     )
