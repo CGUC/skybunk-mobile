@@ -17,7 +17,7 @@ export default (styles = StyleSheet.create({
     borderBottomColor: '#dbdbdb'
   },
   profilePicThumbnail: {
-    borderWidth: 1,
+    borderWidth: 0,
     marginRight: 5,
     marginTop: 5
   },
