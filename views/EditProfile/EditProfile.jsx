@@ -176,8 +176,12 @@ export default class EditProfile extends React.Component {
 
   render() {
     return (
-      <Container contentContainerStyle={defaultStyles.backgroundTheme}>
-      <Content contentContainerStyle={{...defaultStyles.backgroundTheme, ...styles.container}}>
+      <ScrollView>
+      <KeyboardAvoidingView
+        behavior='position'
+        enabled={this.state.avoidKeyboard}
+        style={styles.container}
+      >
       <ProfileHeader user={this.props.navigation.getParam('user')}/>
         <GestureRecognizer
           onSwipeDown={() => Keyboard.dismiss()}
@@ -190,8 +194,8 @@ export default class EditProfile extends React.Component {
           {this.generateFieldJSX('phone', 'Phone Number', 'Let others contact you')}
           {this.generateFieldJSX('bio', 'Bio', 'Share something about yourself')}
         </GestureRecognizer>
-      </Content>
-      </Container>
+        </KeyboardAvoidingView>
+      </ScrollView>
     )
   }
 }
