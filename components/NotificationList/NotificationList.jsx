@@ -51,10 +51,9 @@ export default class NotificationList extends React.Component {
 
   buildListItems() {
     //add key for FlatList
-    items = this.props.notifications.map(notif => {
-      if (!notif.data.post) {
-        return;
-      }
+    items = this.props.notifications
+    .filter(notif => notif.data.post)
+    .map(notif => {
       notif.key = notif._id;
       return notif;
     });
