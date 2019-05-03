@@ -39,7 +39,6 @@ export default class DonStatusCard extends React.Component {
   }
 
   update = (newState) => {
-    console.log(newState)
     this.setState(newState);
 
     if(this.props.togglable){

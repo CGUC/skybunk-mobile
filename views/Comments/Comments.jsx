@@ -8,7 +8,7 @@ import Comment from '../../components/Comment/Comment';
 import ContentBar from '../../components/ContentBar/ContentBar';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import ApiClient from '../../ApiClient';
-import style from './CommentsStyle';
+import styles from './CommentsStyle';
 import defaultStyles from "../../styles/styles";
 import _ from 'lodash'
 
@@ -25,11 +25,8 @@ export default class CommentsView extends React.Component {
     }
 
     return {
-      title,
-      headerTintColor: '#FFFFFF',
-      headerStyle: {
-        backgroundColor: '#fc4970',
-      },
+      headerTitle: null,
+      title: title
     };
   };
 
@@ -210,7 +207,7 @@ export default class CommentsView extends React.Component {
       return (
         <Container style={defaultStyles.backgroundTheme}>
           <Content>
-            <Text style={style.noDataText}>This post doesn't seem to exist :/</Text>
+            <Text style={styles.noDataText}>This post doesn't seem to exist :/</Text>
           </Content>
         </Container>
       )
@@ -261,7 +258,7 @@ export default class CommentsView extends React.Component {
                     )
                   })
                 :
-                <Text style={style.noDataText}>
+                <Text style={styles.noDataText}>
                   No comments yet - You could be the first!
                 </Text>
               }

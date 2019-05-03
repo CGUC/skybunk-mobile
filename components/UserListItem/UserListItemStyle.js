@@ -7,8 +7,7 @@ export default (styles = StyleSheet.create({
     justifyContent: 'flex-start'
   },
   profilePicThumbnail: {
-		borderWidth: 2,
-		borderColor: "#71d3d1"
+		borderWidth: 0
   },
   userName: {
     marginLeft: 20

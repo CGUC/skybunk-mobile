@@ -1,6 +1,6 @@
 import React from 'react';
-import { FlatList, Text, TouchableOpacity } from 'react-native';
-import { Container, Content, Spinner, Item, Button, Input, Icon, Header } from 'native-base';
+import { FlatList, Text, Image, TouchableOpacity } from 'react-native';
+import { Container, Content, Spinner, Item, Input, Icon, Header, View, Thumbnail} from 'native-base';
 import { Font } from "expo";
 
 import UserListItem from '../../components/UserListItem/UserListItem';
@@ -8,6 +8,7 @@ import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import styles from './MemberListStyle';
 import defaultStyles from '../../styles/styles';
 import ApiClient from '../../ApiClient';
+import ImageCache from '../../helpers/imageCache'
 import _ from 'lodash';
 
 /**
@@ -20,11 +21,8 @@ const chunk_limit = 15;
 export default class MemberList extends React.Component {
 
   static navigationOptions = {
-    title: 'Member List',
-    headerTintColor: '#FFFFFF',
-    headerStyle: {
-      backgroundColor: '#fc4970'
-    },
+    title: 'Members',
+    headerTitle: null
   };
 
   constructor(props) {
@@ -39,17 +37,24 @@ export default class MemberList extends React.Component {
       loadingPage: false,
       loadedLastPage: false,
       userDataToShow: undefined,
-      showProfileModal: false
+      showProfileModal: false,
+      profilePicture: undefined
     }
   }
 
 
   async componentWillMount() {
-
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
+
+    ImageCache.getProfilePicture(this.props.navigation.getParam('user')._id)
+      .then(response => {
+        this.setState({
+          profilePicture: response
+        })
+      })
 
     await this.loadMembers();
   }
@@ -240,7 +245,21 @@ export default class MemberList extends React.Component {
         </Container>
       )
     } else {
+      let user = this.props.navigation.getParam('user')
       return (
+        <Container style={defaultStyles.backgroundTheme}>
+        {/* Edit profile button */}
+          <TouchableOpacity onPress={() => {this.props.navigation.navigate('EditProfile', { user })}} style={styles.editProfileButton}>
+            <View>
+              <Thumbnail source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }} />
+            </View>
+            <Text style={styles.editProfileText}>
+              {`${user.firstName} ${user.lastName}`}
+            </Text>
+            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}}>
+            <Image source={require('../../assets/arrowright.png')} style={styles.rightArrow} />
+            </View>
+          </TouchableOpacity>
         <Container style={defaultStyles.backgroundTheme}>
           <Header
             searchBar
@@ -278,6 +297,7 @@ export default class MemberList extends React.Component {
             onClose={this.closeProfileModal}
             isModalOpen={showProfileModal}
           />
+        </Container>
         </Container>
       )
     }

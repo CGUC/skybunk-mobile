@@ -11,11 +11,8 @@ import ApiClient from '../../ApiClient';
 export default class DonInfo extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
+      headerTitle: null,
       title: 'Find a Don',
-      headerTintColor: '#FFFFFF',
-      headerStyle: {
-        backgroundColor: '#fc4970'
-      },
       get headerRight() {
         var state = navigation.getParam('saveState');
         if (!state || state === 'disabled') return null;

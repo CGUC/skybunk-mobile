@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
-
+import defaultStyles from '../../styles/styles'
 export default (styles = StyleSheet.create({
 	background: {
 		width: Dimensions.get('window').width,
@@ -22,7 +22,7 @@ export default (styles = StyleSheet.create({
 	},
 	loginButton: {
 		width: 300,
-		backgroundColor: "#71d3d1",
+		...defaultStyles.primaryColor
 	},
 	loginTitle: {
 		fontSize: 30,

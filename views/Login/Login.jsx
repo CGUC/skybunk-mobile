@@ -242,7 +242,7 @@ export default class LoginView extends React.Component {
                   <Text>{"Contact the webmasters!"}</Text>
                 </Button>
 
-                {this.state.processing ? <Spinner color='blue' /> : null}
+                {this.state.processing ? <Spinner color='black' /> : null}
               </View>
             </Content>
           </Container>

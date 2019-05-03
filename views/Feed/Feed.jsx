@@ -26,11 +26,8 @@ export default class FeedView extends React.Component {
     else title = 'Feed';
 
     return {
-      title,
-      headerTintColor: '#FFFFFF',
-      headerStyle: {
-        backgroundColor: '#fc4970'
-      },
+      title: title,
+      headerTitle: null,
     };
   };
 

@@ -28,14 +28,7 @@ export default class ProfileHeader extends React.Component {
 
   render() {
     return (
-      <ImageBackground
-        style={styles.profileHeader}
-        source={require('../../assets/Menu-Header.png')}
-      >
-        <TouchableOpacity onPress={() => { this.props.navigation.navigate('Settings', { user: this.props.user }) }}>
-          <Image source={require('../../assets/settings-with-word-icon.png')} style={styles.settingsIcon} />
-        </TouchableOpacity>
-        <View>
+        <View style={styles.ProfileHeader}>
           <TouchableOpacity onPress={this.pickImage}>
             <Image
               style={styles.profilePicture}
@@ -45,20 +38,10 @@ export default class ProfileHeader extends React.Component {
           <Text style={styles.profileNameText}>
             {this.props.user.firstName} {this.props.user.lastName}
           </Text>
+          <Text style={styles.profileNameText}>
+            {`( ${this.props.user.username} )`}
+          </Text>
         </View>
-        <TouchableOpacity onPress={() => {Alert.alert(
-            'Help',
-            `Version: ${config.VERSION}`,
-            [
-              {text: 'Send feedback', onPress: () => Linking.openURL('https://grebelife.com/skybunk/feedback')},
-              {text: 'Contact webmasters', onPress: () => Linking.openURL(`mailto:webmaster@grebelife.com?subject=Skybunk%20Question%20v${config.VERSION}`)},
-              {text: 'Close', style: 'cancel'}
-            ],
-            { cancelable: true }
-          ) }}>
-          <Image source={require('../../assets/help-with-words-icon.png')} style={styles.helpIcon} />
-        </TouchableOpacity>
-      </ImageBackground>
     );
   }
 

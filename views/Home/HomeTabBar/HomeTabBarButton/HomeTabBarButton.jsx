@@ -1,14 +1,8 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import { Container, Header, Content, Text, Spinner, Footer } from 'native-base';
+import { View, TouchableOpacity, Image } from 'react-native';
 import styles from './HomeTabBarButtonStyle';
 
 export default class HomeView extends React.Component {
-  showNotice = () => {
-    if (this.props.showNotice) return <View style={styles.notice}/>;
-    return null;
-  }
-
   render() {
     return (
       <TouchableOpacity 
@@ -17,8 +11,7 @@ export default class HomeView extends React.Component {
         onPress={this.props.onPress}
       >
         <View>
-          <Text style={styles.text}>{this.props.text}</Text>
-          {this.showNotice()}
+          <Image source={this.props.image} style={styles.image}/>
         </View>
       </TouchableOpacity>
     );

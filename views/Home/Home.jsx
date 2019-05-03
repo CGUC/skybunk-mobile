@@ -1,19 +1,45 @@
 import React from 'react';
-import { View, ScrollView, StatusBar, TouchableOpacity } from 'react-native';
-import { Container, Header, Content, Text, Spinner, Footer, Icon } from 'native-base';
-import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
+import { StatusBar, TouchableOpacity, Image } from 'react-native';
+import { Container, Content, Spinner, Footer, Thumbnail} from 'native-base';
 import ChannelList from "../../components/ChannelList/ChannelList";
 import NotificationList from "../../components/NotificationList/NotificationList";
 import HomeTabBar from "./HomeTabBar/HomeTabBar";
-import style from "./HomeStyle";
+import styles from "./HomeStyle";
 import ApiClient from '../../ApiClient';
+import ImageCache from '../../helpers/imageCache'
 import { Font} from "expo";
 import { Notifications } from 'expo';
 import _ from 'lodash';
 
 export default class HomeView extends React.Component {
 
-  static navigationOptions = { header: null };
+  static navigationOptions = ({ navigation }) => {
+    return {
+      get headerRight() {
+          return (
+            <TouchableOpacity onPress={() => {navigation.navigate('Settings', { user: navigation.getParam('user') }) }}>
+              <Image source={require('../../assets/settings.png')} style={styles.settingsIcon} />
+            </TouchableOpacity>
+          )
+      },
+      get headerLeft() {
+        if(!navigation.getParam('profilePic')){
+          return null;
+        }
+        return (
+          <TouchableOpacity 
+            hitSlop={{ top: 10, bottom: 10, left: 0, right: 40 }} 
+            onPress={() => {navigation.navigate('MemberList', {user: navigation.getParam('user')}); }}>
+            <Thumbnail
+                  small
+                  style={styles.profilePicThumbnail}
+                  source={{ uri: `data:image/png;base64,${navigation.getParam('profilePic')}` }}
+            />
+          </TouchableOpacity>
+        )
+    }
+    }
+  };
 
   constructor(props) {
     super(props);
@@ -37,10 +63,21 @@ export default class HomeView extends React.Component {
     })
     .catch(err => console.error(err));
 
+    ImageCache.getProfilePicture(this.state.user._id)
+    .then(response => {
+      this.props.navigation.setParams({
+        'profilePic': response
+      })
+    })
+
     this.notificationSubscription = Notifications.addListener(this.handleNewNotification);
   }
 
   handleNewNotification = () => {
+    this.refreshNotifications();
+  }
+
+  refreshNotifications = () => {
     ApiClient.get(
       '/users/loggedInUser',  {authorized: true}
     )
@@ -119,40 +156,36 @@ export default class HomeView extends React.Component {
     if (loading) {
       return (
         <Container>
-          <Content contentContainerStyle={style.contentContainer}>
+          <Content contentContainerStyle={styles.contentContainer}>
             <Spinner color='#cd8500' />
           </Content>
         </Container>
       );
     } else {
+      const hasNewNotifications = this.hasNewNotifications()
       return (
         <Container>
-          <Content>
-            <ScrollView>
-              <ProfileHeader user={user} navigation={this.props.navigation}/>
+          <Container>
               {this.state.currentTab === 'channels' ? 
                 <ChannelList
                   channels={channels}
                   onPressChannel={this.onPressChannel}
                   user={user}
                 /> :
-              <View>
-                <TouchableOpacity style={style.markAllSeen} onPress={this.markNotifsSeen}>
-                  <Text style={style.markAllSeenText}>Mark all as seen</Text>
-                </TouchableOpacity>
                 <NotificationList
                   notifications={this.state.notifications.slice(0, 30)}
                   onPressNotif={this.onPressNotif}
+                  markNotifsSeen={this.markNotifsSeen}
+                  refreshNotifications={this.refreshNotifications}
+                  hasNewNotifications={hasNewNotifications}
                 />
-              </View>
               }
-            </ScrollView>
-          </Content>
+          </Container>
           <Footer>
             <HomeTabBar 
               onSwitchTab={ (tab) => {this.setState({currentTab: tab})} }
               currentTab={this.state.currentTab}
-              newNotifications={this.hasNewNotifications()}
+              newNotifications={hasNewNotifications}
             />
           </Footer>
         </Container>

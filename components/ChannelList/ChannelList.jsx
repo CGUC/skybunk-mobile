@@ -1,6 +1,6 @@
 import React from "react";
 import { View, TouchableOpacity, Image } from "react-native";
-import { Container, Text, Button } from 'native-base';
+import { Container, Text, Content } from 'native-base';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Font, AppLoading } from "expo";
@@ -96,7 +96,7 @@ export default class ChannelList extends React.Component {
           opacity = 0;
         }
         else if (subIndex !== -1) {
-          icon = require('../../assets/Bell-ON.png');
+          icon = require('../../assets/bell-ON.png');
         }
 
         return (
@@ -136,9 +136,9 @@ export default class ChannelList extends React.Component {
       );
     } else {
       return (
-        <View style={{ backgroundColor: '#FFFFFF' }}>
+        <Content>
           {channelCards}
-        </View>
+        </Content>
       );
     }
   }
