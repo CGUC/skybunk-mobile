@@ -19,7 +19,7 @@ export default class NoDataCell extends React.Component {
         </Content>
         {!this.props.hideFooter ?
         <Footer>
-          <ContentBar addResource={addResource} />
+          <ContentBar addResource={addResource} showModalToolbar={true}/>
         </Footer> : null}
       </Container>
     )
