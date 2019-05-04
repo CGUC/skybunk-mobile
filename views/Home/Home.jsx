@@ -73,8 +73,16 @@ export default class HomeView extends React.Component {
     this.notificationSubscription = Notifications.addListener(this.handleNewNotification);
   }
 
-  handleNewNotification = () => {
-    this.refreshNotifications();
+  handleNewNotification = (notification) => {
+    if(notification.origin == 'selected'){
+      ApiClient.get(`/posts/${notification.data.post}`, {authorized: true})
+      .then(postData => {
+        const loggedInUser = this.state.user;
+        updateParentState = () => ({});
+        this.props.navigation.navigate('Comments', { postData, loggedInUser, updateParentState });
+      })
+    }
+    this.refreshNotifications()
   }
 
   refreshNotifications = () => {
