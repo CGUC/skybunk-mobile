@@ -88,17 +88,19 @@ export default class DonInfo extends React.Component {
   }
   sortDons(dons) {
     dons.sort((m1, m2) => {
+      if(m1.role.includes("superintendent")) return 1
+      if(m2.role.includes("superintendent")) return -1
       //Put yourself at the top
       if(m1._id == this.props.navigation.getParam('user')._id) return -1
       if(m2._id == this.props.navigation.getParam('user')._id) return 1
 
-      //Put late supper dons next
-      if (m1.donInfo.isOnLateSupper && !m2.donInfo.isOnLateSupper) return -1;
-      if (m2.donInfo.isOnLateSupper && !m1.donInfo.isOnLateSupper) return 1;
-
       //Put on dons next
       if (m1.donInfo.isOn && !m2.donInfo.isOn) return -1;
       if (m2.donInfo.isOn && !m1.donInfo.isOn) return 1;
+
+      //Put late supper dons next
+      if (m1.donInfo.isOnLateSupper && !m2.donInfo.isOnLateSupper) return -1;
+      if (m2.donInfo.isOnLateSupper && !m1.donInfo.isOnLateSupper) return 1;
 
       //Alphabetically sort the rest
       if (m1.firstName < m2.firstName) return -1;
