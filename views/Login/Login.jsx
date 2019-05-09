@@ -164,11 +164,11 @@ export default class LoginView extends React.Component {
       );
     } else {
       return (
-        <ImageBackground
+        <Container>
+          <ImageBackground
           style={styles.background}
           source={require('../../assets/login-bg.png')}
-        >
-          <Container>
+          >
             <Content contentContainerStyle={{ flex: 1, alignItems: 'center' }}>
               <KeyboardAvoidingView
                 style={styles.loginInputGroup}
@@ -245,8 +245,9 @@ export default class LoginView extends React.Component {
                 {this.state.processing ? <Spinner color='black' /> : null}
               </View>
             </Content>
-          </Container>
-        </ImageBackground>
+          </ImageBackground>
+        </Container>
+        
       );
     }
   }
