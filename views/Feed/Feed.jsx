@@ -15,6 +15,7 @@ import Post from '../../components/Post/Post';
 import NoData from '../../components/NoData/NoData';
 import ApiClient from '../../ApiClient';
 import styles from './FeedStyle';
+import defaultStyles from '../../styles/styles';
 import {setPostPicture} from '../../helpers/imageCache';
 
 export default class FeedView extends React.Component {
@@ -25,11 +26,8 @@ export default class FeedView extends React.Component {
     else title = 'Feed';
 
     return {
-      title,
-      headerTintColor: '#FFFFFF',
-      headerStyle: {
-        backgroundColor: '#fc4970'
-      },
+      title: title,
+      headerTitle: null,
     };
   };
 
@@ -303,7 +301,7 @@ export default class FeedView extends React.Component {
 
     if (loading) {
       return (
-        <Container>
+        <Container style={defaultStyles.backgroundTheme}>
           <Content>
             <Spinner color='#cd8500' />
           </Content>
@@ -311,7 +309,7 @@ export default class FeedView extends React.Component {
       );
     } else if (posts.length) {
       return (
-        <Container>
+        <Container style={defaultStyles.backgroundTheme}>
           <FlatList
             data={this.buildListItems()}
             renderItem={this.renderListItem}

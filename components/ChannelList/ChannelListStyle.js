@@ -1,5 +1,4 @@
 import { StyleSheet } from "react-native";
-
 export default (styles = StyleSheet.create({
   channelCard: {
     flex: 1,
@@ -24,11 +23,11 @@ export default (styles = StyleSheet.create({
     textAlign:'left',
   },
   notificationBell: {
-    width: 60,
-    height: 60,
+    width: 40,
+    height: 40
   },
   rightArrow: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40
   },
 }));

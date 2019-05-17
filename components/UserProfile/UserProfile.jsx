@@ -72,13 +72,12 @@ export default class UserProfile extends React.Component {
       phone,
       affiliation,
     } = this.props.user.info;
-    console.log(this.props.user.username)
 
     return (
       <View style={styles.infoBlock}>
         {program && <Text style={styles.infoText}>{'Program: ' + program}</Text>}
         {address && <Text style={styles.infoText}>{'Address: ' + address}</Text>}
-        {phone && <Text style={styles.infoText}>{'Phone:' + phone}</Text>}
+        {phone && <Text style={styles.infoText}>{'Phone: ' + phone}</Text>}
         {this.props.user.username && <Text style={styles.infoText}>{'Username: ' + this.props.user.username}</Text>}
         {affiliation && <Text style={styles.infoText}>{affiliation}</Text>}
       </View>

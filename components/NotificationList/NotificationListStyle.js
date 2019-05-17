@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import defaultStyles from "../../styles/styles"
 
 export default (styles = StyleSheet.create({
   notificationCardUnseen: {
@@ -32,5 +33,11 @@ export default (styles = StyleSheet.create({
   },
   notificationBodySeen: {
     fontSize: 15,
-  }
+  },
+  markNotifsSeenButton: {
+    position:"absolute", 
+    zIndex: 1, 
+    bottom:20, 
+    right:10,
+  ...defaultStyles.primaryColor}
 }));

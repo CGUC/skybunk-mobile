@@ -5,16 +5,14 @@ import { Font} from "expo";
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import DonStatusCard from '../../components/DonStatusCard/DonStatusCard';
 import styles from './DonInfoStyle';
+import defaultStyles from "../../styles/styles";
 import ApiClient from '../../ApiClient';
 
 export default class DonInfo extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
+      headerTitle: null,
       title: 'Find a Don',
-      headerTintColor: '#FFFFFF',
-      headerStyle: {
-        backgroundColor: '#fc4970'
-      },
       get headerRight() {
         var state = navigation.getParam('saveState');
         if (!state || state === 'disabled') return null;
@@ -90,17 +88,19 @@ export default class DonInfo extends React.Component {
   }
   sortDons(dons) {
     dons.sort((m1, m2) => {
+      if(m1.role.includes("superintendent")) return 1
+      if(m2.role.includes("superintendent")) return -1
       //Put yourself at the top
       if(m1._id == this.props.navigation.getParam('user')._id) return -1
       if(m2._id == this.props.navigation.getParam('user')._id) return 1
 
-      //Put late supper dons next
-      if (m1.donInfo.isOnLateSupper && !m2.donInfo.isOnLateSupper) return -1;
-      if (m2.donInfo.isOnLateSupper && !m1.donInfo.isOnLateSupper) return 1;
-
       //Put on dons next
       if (m1.donInfo.isOn && !m2.donInfo.isOn) return -1;
       if (m2.donInfo.isOn && !m1.donInfo.isOn) return 1;
+
+      //Put late supper dons next
+      if (m1.donInfo.isOnLateSupper && !m2.donInfo.isOnLateSupper) return -1;
+      if (m2.donInfo.isOnLateSupper && !m1.donInfo.isOnLateSupper) return 1;
 
       //Alphabetically sort the rest
       if (m1.firstName < m2.firstName) return -1;
@@ -207,7 +207,7 @@ export default class DonInfo extends React.Component {
 
     if (loading) {
       return (
-        <Container>
+        <Container style={defaultStyles.backgroundTheme}>
           <Content>
             <Spinner color='#cd8500' />
           </Content>
@@ -215,7 +215,7 @@ export default class DonInfo extends React.Component {
       )
     } else {
       return (
-        <Container>
+        <Container style={defaultStyles.backgroundTheme}>
           <FlatList
             data={this.buildListItems()}
             renderItem={this.renderListItem}

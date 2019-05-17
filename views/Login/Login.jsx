@@ -164,11 +164,11 @@ export default class LoginView extends React.Component {
       );
     } else {
       return (
-        <ImageBackground
+        <Container>
+          <ImageBackground
           style={styles.background}
           source={require('../../assets/login-bg.png')}
-        >
-          <Container>
+          >
             <Content contentContainerStyle={{ flex: 1, alignItems: 'center' }}>
               <KeyboardAvoidingView
                 style={styles.loginInputGroup}
@@ -214,16 +214,6 @@ export default class LoginView extends React.Component {
                 >
                   <Text>{this.state.registering ? 'Register' : 'Login'}</Text>
                 </Button>
-                { Platform.OS === 'ios' ? 
-                  <Button
-                    transparent
-                    block
-                    dark
-                    onPress={() => Linking.openURL('https://www.grebelife.com/skybunk')}
-                  >
-                    <Text>{"Don't have an account?"}</Text>
-                  </Button>
-                 :
                   <Button
                     transparent
                     block
@@ -231,8 +221,7 @@ export default class LoginView extends React.Component {
                     onPress={this.toggleRegistering.bind(this)}
                   >
                     <Text>{this.state.registering ? 'Already have an account?' : "Don't have an account?"}</Text>
-                  </Button>
-                }
+                </Button>
                 <Button
                   transparent
                   block
@@ -242,11 +231,12 @@ export default class LoginView extends React.Component {
                   <Text>{"Contact the webmasters!"}</Text>
                 </Button>
 
-                {this.state.processing ? <Spinner color='blue' /> : null}
+                {this.state.processing ? <Spinner color='black' /> : null}
               </View>
             </Content>
-          </Container>
-        </ImageBackground>
+          </ImageBackground>
+        </Container>
+        
       );
     }
   }

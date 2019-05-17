@@ -2,7 +2,7 @@ import React from 'react';
 import { ImageBackground, Dimensions } from 'react-native';
 import { Spinner, Container, Content } from 'native-base';
 import ApiClient from '../../ApiClient';
-import style from './SplashStyle';
+import styles from './SplashStyle';
 import notificationToken from '../../helpers/notificationToken';
 
 export default class SplashScreen extends React.Component {
@@ -24,11 +24,11 @@ export default class SplashScreen extends React.Component {
   render() {
     return (
       <ImageBackground
-        style={style.background}
+        style={styles.background}
         source={require('../../assets/splash.png')}
       >
         <Container>
-          <Content contentContainerStyle={style.contentContainer}>
+          <Content contentContainerStyle={styles.contentContainer}>
             <Spinner color='#cd8500' />
           </Content>
         </Container>

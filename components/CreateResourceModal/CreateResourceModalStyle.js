@@ -1,5 +1,6 @@
 import { StyleSheet, Dimensions } from "react-native";
 const { height, width } = Dimensions.get('window');
+import defaultStyles from '../../styles/styles'
 
 export default (styles = StyleSheet.create({
    modal: {
@@ -33,7 +34,7 @@ export default (styles = StyleSheet.create({
     height: 40,
     marginLeft: 5,
     marginRight: 5,
-    backgroundColor: '#71d3d1',
+    ...defaultStyles.primaryColor
   },
   gestureRecognizer: {
     backgroundColor: 'rgba(0, 0, 0, 0.0)',

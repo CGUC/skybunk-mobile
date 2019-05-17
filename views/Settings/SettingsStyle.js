@@ -15,5 +15,8 @@ export default (styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 16,
+  },
+  versionText: {
+    color: '#C1BBBB'
   }
 }));
