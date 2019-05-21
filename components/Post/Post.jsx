@@ -148,7 +148,6 @@ export default class Post extends React.Component {
       data.likes--;
       data.usersLiked = _.filter(data.usersLiked, user => user._id !== loggedInUser._id);
     } else {
-      data.isLiked = true;
       data.likes++;
       data.usersLiked.push({
         _id: loggedInUser._id,
