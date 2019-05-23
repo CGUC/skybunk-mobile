@@ -104,7 +104,10 @@ export default class CommentsView extends React.Component {
     }
 
     else if (['toggleLike'].includes(type)) {
-      ApiClient.post(`/posts/${postData._id}/like`, {'addLike': data.isLiked}, {authorized: true})
+      const loggedInUser = navigation.getParam('loggedInUser');
+      const addLike = data.usersLiked.includes(loggedInUser._id)
+
+      ApiClient.post(`/posts/${postData._id}/like`, { addLike }, {authorized: true})
         .then(() => {
           this.setState({ postData: data });
           updateParentState('updatePost', data);
