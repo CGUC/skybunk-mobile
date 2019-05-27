@@ -131,9 +131,9 @@ export default class FeedView extends React.Component {
 
   updatePost = async (postId, data, type) => {
     if (type === 'toggleLike') {
-      const loggedInUser = navigation.getParam('loggedInUser');
-      const addLike = data.usersLiked.includes(loggedInUser._id)
-
+      const loggedInUser = this.props.navigation.getParam('loggedInUser');
+      const addLike = data.usersLiked.some(user => user._id === loggedInUser._id);
+      
       return ApiClient.post(`/posts/${postId}/like`, { addLike }, {authorized: true})
         .then(() => {
           this.updateState('updatePost', data);

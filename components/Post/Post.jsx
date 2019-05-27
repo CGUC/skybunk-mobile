@@ -3,7 +3,6 @@ import Autolink from 'react-native-autolink';
 import { View, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Modal, Alert, Dimensions } from 'react-native';
 import Image from 'react-native-scalable-image';
 import { Body, Card, CardItem, Text, Thumbnail, Button, Icon } from 'native-base';
-import _ from 'lodash';
 import { Font } from "expo";
 import date from 'date-fns';
 import Popover from 'react-native-popover-view';
@@ -146,7 +145,7 @@ export default class Post extends React.Component {
 
     if (data.usersLiked.find((user) => user._id === loggedInUser._id)) {
       data.likes--;
-      data.usersLiked = _.filter(data.usersLiked, user => user._id !== loggedInUser._id);
+      data.usersLiked = data.usersLiked.filter(user => user._id !== loggedInUser._id);
     } else {
       data.likes++;
       data.usersLiked.push({
