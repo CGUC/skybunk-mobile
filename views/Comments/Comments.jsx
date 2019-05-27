@@ -104,8 +104,7 @@ export default class CommentsView extends React.Component {
     }
 
     else if (['toggleLike'].includes(type)) {
-      const loggedInUser = navigation.getParam('loggedInUser');
-      const addLike = data.usersLiked.includes(loggedInUser._id)
+      const addLike = data.usersLiked.some(user => user._id === loggedInUser._id);
 
       ApiClient.post(`/posts/${postData._id}/like`, { addLike }, {authorized: true})
         .then(() => {
