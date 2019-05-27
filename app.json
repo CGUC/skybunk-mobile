@@ -3,7 +3,7 @@
     "name": "Skybunk",
     "description": "By Grebel, for Grebel.",
     "primaryColor": "#ffffff",
-    "version": "6.1.0",
+    "version": "6.1.1",
     "orientation": "portrait",
     "sdkVersion": "32.0.0",
     "icon": "./assets/app-icon.png",
