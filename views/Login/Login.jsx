@@ -57,14 +57,13 @@ export default class LoginView extends React.Component {
     // Register the user
     if (this.state.registering) {
       this.setState({ processing: true });
-      ApiClient.post('/users', {
+      ApiClient.register({
         username: this.state.username,
         password: this.state.password,
         firstName: this.state.firstName,
         lastName: this.state.lastName,
         goldenTicket: this.state.goldenTicket,
       })
-        .then(response => response.json())
         .then(jsonResponse => {
           if (jsonResponse.message) {
             this.setState({
@@ -92,10 +91,7 @@ export default class LoginView extends React.Component {
     // Login the user
     else {
       this.setState({ processing: true });
-      ApiClient.post('/users/login', {
-        username: this.state.username,
-        password: this.state.password,
-      })
+      ApiClient.login(this.state.username, this.state.password)
         .then(response => response.json())
         .then(jsonResponse => {
           if (jsonResponse.err) {
@@ -106,10 +102,11 @@ export default class LoginView extends React.Component {
             });
           }
           else {
-            ApiClient.setAuthToken(jsonResponse.token).then(() => {
-              ApiClient.get('/users/loggedInUser',  {authorized: true}).then(user => {
+            ApiClient.setServers(jsonResponse)
+            .then(() => {
+              ApiClient.get('/users/loggedInUser', {authorized: true}).then(user => {
                 notificationToken.registerForPushNotificationsAsync(user);
-                this.props.navigation.navigate('Home', {token: jsonResponse.token, user});
+                this.props.navigation.navigate('Home', {token: jsonResponse[0].token, user});
               })
               .catch(err => console.error(err));
             }).catch(error => {
