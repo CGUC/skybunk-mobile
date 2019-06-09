@@ -1,4 +1,4 @@
 module.exports = {
-  API_ADDRESS: 'http://api.grebelife.com',
+  AUTH_ADDRESS: 'http://cb4aff4a.ngrok.io',
   VERSION: '6.0.0'
 }
