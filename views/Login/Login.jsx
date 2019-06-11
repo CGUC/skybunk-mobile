@@ -129,7 +129,6 @@ export default class LoginView extends React.Component {
 
   render() {
     StatusBar.setBarStyle('dark-content', true);
-    console.log('Rendering LoginView');
 
     const registerFields =
       <View>
@@ -160,7 +159,6 @@ export default class LoginView extends React.Component {
         </Container>
       );
     } else {
-      console.log('Here?');
       return (
         <Container>
           <ImageBackground
