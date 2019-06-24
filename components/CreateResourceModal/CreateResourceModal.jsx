@@ -5,6 +5,8 @@ import { Text, Button, Textarea, Icon } from 'native-base';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { ImagePicker, Permissions } from 'expo';
 import Toolbar from './Toolbar/Toolbar'
+import Poll from '../Poll/Poll';
+import PollPreview from '../PollPreview/PollPreview';
 import styles from './CreateResourceModalStyle';
 
 export default class CreateResourceModal extends React.Component {
@@ -15,7 +17,9 @@ export default class CreateResourceModal extends React.Component {
 
     this.state = {
       resourceText: existingText || "",
-      image: null
+      image: null,
+      isPoll: false,
+      pollData: null
     };
   }
 
@@ -101,6 +105,15 @@ export default class CreateResourceModal extends React.Component {
     });
   }
 
+  togglePoll = async () => {
+    this.setState({
+      isPoll: !this.state.isPoll,
+    });
+    if (!this.state.isPoll) {
+      return null;
+    }
+  }
+
   render() {
     var {
       onClose,
@@ -109,6 +122,19 @@ export default class CreateResourceModal extends React.Component {
     } = this.props;
 
     if (!submitButtonText) submitButtonText = 'Submit';
+
+    let content;
+    if (this.state.isPoll) {
+      content = <PollPreview data={this.state.pollData} />;
+    } else {
+      content = <Textarea
+                    bordered
+                    placeholder="What's on your mind?"
+                    style={styles.textBox}
+                    onChangeText={this.textUpdate}
+                    value={this.state.resourceText}
+                  />
+    }
 
     return (
       <Modal
@@ -136,6 +162,7 @@ export default class CreateResourceModal extends React.Component {
                   Toolbar({
                     pickImage: this.pickImage,
                     takeImage: this.takeImage,
+                    togglePoll: this.togglePoll,
                     image: this.state.image,
                   }) : null}
                 {/* A bit hacky, but we need another GestureRecognizer to register swipe over the text box */}
@@ -143,13 +170,7 @@ export default class CreateResourceModal extends React.Component {
                   onSwipeDown={this.hideKeyboard}
                   style={styles.gestureRecognizer}
                 >
-                  <Textarea
-                    bordered
-                    placeholder="What's on your mind?"
-                    style={styles.textBox}
-                    onChangeText={this.textUpdate}
-                    value={this.state.resourceText}
-                  />
+                  {content}
                 </GestureRecognizer>
                 <View style={styles.buttonGroup}>
                   <Button block style={styles.button} onPress={this.saveResource}>
