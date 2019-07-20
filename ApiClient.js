@@ -84,20 +84,24 @@ export default class ApiClient {
 	};
 
 	static async register(newUser, options={}) {
-		return fetch(`${config.AUTH_ADDRESS}/users`, {
+		if (!newUser.username) return {message: 'Username is required'};
+		if (!newUser.password) return {message: 'Password is required'};
+		if (!newUser.firstName) return {message: 'First name is required'};
+		if (!newUser.lastName) return {message: 'Last name is required'};
+		if (!newUser.goldenTicket) return {message: 'golden ticket is required'};
+		
+		const authResponse = await fetch(`${config.AUTH_ADDRESS}/users`, {
 			method: 'POST',
 			headers: await this.formatHeaders(options),
 			body: JSON.stringify(newUser),
-		}).then(response => response.json()).then(responseJson => {
-			if (responseJson.servers) {
-				this.setServers(responseJson.servers);
-				return this.post('/users', newUser);
-			} else {
-				return {messsage: 'Error, no servers found'};
-			}
-		}).catch(err => {
-			console.error(err);
 		});
+		const authResponseJson = await authResponse.json();
+
+		if (authResponseJson.servers) {
+			this.setServers(authResponseJson.servers);
+			return await this.post('/users', newUser);
+		}
+		return {message: authResponseJson};
 	};
 
 	static async login(username, password, options={},) {
