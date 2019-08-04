@@ -5,7 +5,7 @@ import { Text, Button, Textarea, Icon } from 'native-base';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { ImagePicker, Permissions } from 'expo';
 import Toolbar from './Toolbar/Toolbar'
-import Poll from '../Poll/Poll';
+import PollModal from '../PollModal/PollModal';
 import PollPreview from '../PollPreview/PollPreview';
 import styles from './CreateResourceModalStyle';
 
@@ -14,19 +14,21 @@ export default class CreateResourceModal extends React.Component {
   constructor(props) {
     super(props);
     var existingText = props.existing;
+    var existingPollData = props.existingPoll;
 
     this.state = {
       resourceText: existingText || "",
       image: null,
-      isPoll: false,
-      pollData: null
+      isPoll: !!existingPollData,
+      isEditingPoll: false,
+      pollData: existingPollData || null
     };
   }
 
   saveResource = () => {
     const { saveResource, clearAfterSave } = this.props;
-    if (clearAfterSave) this.setState({ resourceText: '', image: null });
-    return saveResource && saveResource({content: this.state.resourceText, image: this.state.image});
+    if (clearAfterSave) this.setState({ resourceText: '', image: null, isPoll: false, isEditingPoll: false, pollData: null });
+    return saveResource && saveResource({content: this.state.resourceText, image: this.state.image, poll: this.state.pollData});
   }
 
   textUpdate = (text) => {
@@ -35,7 +37,7 @@ export default class CreateResourceModal extends React.Component {
 
   onCancel = () => {
     const { onClose, clearAfterSave } = this.props;
-    if (clearAfterSave) this.setState({ resourceText: '', image: null });
+    if (clearAfterSave) this.setState({ resourceText: '', image: null, isPoll: false, isEditingPoll: false, pollData: null });
     onClose();
   }
 
@@ -108,10 +110,16 @@ export default class CreateResourceModal extends React.Component {
   togglePoll = async () => {
     this.setState({
       isPoll: !this.state.isPoll,
+      isEditingPoll: !this.state.isPoll,
     });
-    if (!this.state.isPoll) {
-      return null;
-    }
+  }
+
+  updatePoll = async (data) => {
+    this.setState({
+      isPoll: !!data,
+      isEditingPoll: false,
+      pollData: data,
+    });
   }
 
   render() {
@@ -125,7 +133,12 @@ export default class CreateResourceModal extends React.Component {
 
     let content;
     if (this.state.isPoll) {
-      content = <PollPreview data={this.state.pollData} />;
+      content = <PollPreview
+                  data={this.state.pollData}
+                  savePoll={this.updatePoll}
+                  isEditing={this.state.isEditingPoll}
+                  clearAfterSave={true} 
+                />;
     } else {
       content = <Textarea
                     bordered

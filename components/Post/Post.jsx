@@ -8,7 +8,6 @@ import date from 'date-fns';
 import Popover from 'react-native-popover-view';
 import {getProfilePicture, getPostPicture} from "../../helpers/imageCache"
 import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
-import Poll from '../Poll/Poll';
 import PollPreview from '../PollPreview/PollPreview';
 import styles from "./PostStyle";
 

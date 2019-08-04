@@ -18,6 +18,7 @@ yarn-error.log*
 
 .vs/
 .vscode
+.idea/
 
 # MacOS
 *.DS_Store
