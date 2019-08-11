@@ -11,8 +11,13 @@ export default (styles = StyleSheet.create({
   },
   view: {
     width: width,
-    height: 330,
+    minHeight: 330,
+    maxHeight: height-200,
     backgroundColor: '#DDDDDD',
+  },
+  poll: {
+    width: width-10,
+    height: height-330,
   },
   textBox: {
     width: width-10,
@@ -27,7 +32,6 @@ export default (styles = StyleSheet.create({
   },
   buttonGroup: {
     height: 100,
-    flex: 1
   },
   button: {
     marginTop: 5,

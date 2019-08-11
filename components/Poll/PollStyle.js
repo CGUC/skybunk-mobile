@@ -1,0 +1,106 @@
+import { StyleSheet, Dimensions } from "react-native";
+const { height, width } = Dimensions.get('window');
+import defaultStyles from '../../styles/styles';
+
+export default (styles = StyleSheet.create({
+  view: {
+    width: width,
+    minHeight: 350,
+    maxHeight: height-330,
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  topCheckboxContainer: {
+    backgroundColor: '#00000000',
+    borderWidth: 0,
+    borderColor: '#00000000',
+    alignSelf: 'flex-end',
+    padding: 0,
+    marginTop: 5,
+    marginRight: 5,
+    marginLeft: 0,
+    marginBottom: 0,
+  },
+  topCheckbox: {
+    width: 24,
+    height: 24,
+  },
+  questionText: {
+    height: 24,
+    marginTop: 5,
+    marginLeft: 5,
+  },
+  textBox: {
+    width: width-10,
+    height: 80,
+    flexWrap: 'wrap',
+    marginLeft: 5,
+    marginRight: 5,
+  },
+  optionView: {
+    width: width-10,
+    flexDirection: 'row',
+    marginLeft: 5,
+    marginTop: 5,
+    alignItems: 'flex-start',
+  },
+  optionButtonContainer: {
+    backgroundColor: '#00000000',
+    borderWidth: 0,
+    borderColor: '#00000000',
+    padding: 0,
+    marginLeft: 2,
+    marginTop: 2,
+    marginBottom: 2,
+    marginRight: 8,
+  },
+  optionButton: {
+    width: 24,
+    height: 24,
+  },
+  optionText: {
+    maxWidth: width-10-24-10-24-4,
+    flex: 1,
+    flexWrap: 'wrap',
+    margin: 2,
+  },
+  optionCount: {
+    width: 24,
+    height: 24,
+    margin: 2,
+    textAlign: 'right',
+  },
+  optionGroup: {
+    width: width-10,
+    height: 28,
+    marginLeft: 5,
+    marginTop: 5,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  addContainingView: {
+    width: 34,
+    height: 28,
+    paddingLeft: 5,
+    paddingTop: 2,
+    paddingBottom: 2,
+    paddingRight: 5,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  addView: {
+    width: 24,
+    height: 24,
+    marginLeft: 2,
+    marginTop: 2,
+    marginBottom: 2,
+    marginRight: 8,
+    alignSelf: 'center',
+  },
+  addOptionText: {
+    width: width-10-34-5,
+    height: 20,
+    marginTop: 4,
+  },
+}));

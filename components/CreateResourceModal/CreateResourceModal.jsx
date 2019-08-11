@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Modal, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
+import { View, Modal, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform, Dimensions } from 'react-native';
 import { Text, Button, Textarea, Icon } from 'native-base';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { ImagePicker, Permissions } from 'expo';
 import Toolbar from './Toolbar/Toolbar'
-import PollModal from '../PollModal/PollModal';
-import PollPreview from '../PollPreview/PollPreview';
+import Poll from '../Poll/Poll';
 import styles from './CreateResourceModalStyle';
 
 export default class CreateResourceModal extends React.Component {
@@ -20,14 +19,13 @@ export default class CreateResourceModal extends React.Component {
       resourceText: existingText || "",
       image: null,
       isPoll: !!existingPollData,
-      isEditingPoll: false,
       pollData: existingPollData || null
     };
   }
 
   saveResource = () => {
     const { saveResource, clearAfterSave } = this.props;
-    if (clearAfterSave) this.setState({ resourceText: '', image: null, isPoll: false, isEditingPoll: false, pollData: null });
+    if (clearAfterSave) this.setState({ resourceText: '', image: null, isPoll: false, pollData: null });
     return saveResource && saveResource({content: this.state.resourceText, image: this.state.image, poll: this.state.pollData});
   }
 
@@ -37,7 +35,7 @@ export default class CreateResourceModal extends React.Component {
 
   onCancel = () => {
     const { onClose, clearAfterSave } = this.props;
-    if (clearAfterSave) this.setState({ resourceText: '', image: null, isPoll: false, isEditingPoll: false, pollData: null });
+    if (clearAfterSave) this.setState({ resourceText: '', image: null, isPoll: false, pollData: null });
     onClose();
   }
 
@@ -110,44 +108,28 @@ export default class CreateResourceModal extends React.Component {
   togglePoll = async () => {
     this.setState({
       isPoll: !this.state.isPoll,
-      isEditingPoll: !this.state.isPoll,
     });
   }
 
   updatePoll = async (data) => {
     this.setState({
       isPoll: !!data,
-      isEditingPoll: false,
       pollData: data,
     });
   }
 
   render() {
+    // TODO fixes: when poll, make touch only cancel outside of modal; also fix keyboard shoving text inputs off screen
     var {
       onClose,
       isModalOpen,
-      submitButtonText
+      submitButtonText,
+      loggedInUser
     } = this.props;
 
     if (!submitButtonText) submitButtonText = 'Submit';
 
-    let content;
-    if (this.state.isPoll) {
-      content = <PollPreview
-                  data={this.state.pollData}
-                  savePoll={this.updatePoll}
-                  isEditing={this.state.isEditingPoll}
-                  clearAfterSave={true} 
-                />;
-    } else {
-      content = <Textarea
-                    bordered
-                    placeholder="What's on your mind?"
-                    style={styles.textBox}
-                    onChangeText={this.textUpdate}
-                    value={this.state.resourceText}
-                  />
-    }
+    const { height, width } = Dimensions.get('window');
 
     return (
       <Modal
@@ -170,21 +152,34 @@ export default class CreateResourceModal extends React.Component {
               onSwipeDown={this.hideKeyboard}
               style={styles.gestureRecognizer}
             >
-              <View style={styles.view}>
-                {this.props.showToolbar ? 
+              <View style={[styles.view, {height: (this.state.isPoll ? height-200 : 330)}]}>
+                {this.props.showToolbar ?
                   Toolbar({
                     pickImage: this.pickImage,
                     takeImage: this.takeImage,
                     togglePoll: this.togglePoll,
                     image: this.state.image,
                   }) : null}
-                {/* A bit hacky, but we need another GestureRecognizer to register swipe over the text box */}
-                <GestureRecognizer
-                  onSwipeDown={this.hideKeyboard}
-                  style={styles.gestureRecognizer}
-                >
-                  {content}
-                </GestureRecognizer>
+                {this.state.isPoll ?
+                  <Poll
+                    style={styles.poll}
+                    data={this.state.pollData}
+                    savePoll={this.updatePoll}
+                    loggedInUser={loggedInUser}
+                  /> :
+                  /* A bit hacky, but we need another GestureRecognizer to register swipe over the text box */
+                  <GestureRecognizer
+                    onSwipeDown={this.hideKeyboard}
+                    style={styles.gestureRecognizer}
+                  >
+                    <Textarea
+                      bordered
+                      placeholder="What's on your mind?"
+                      style={styles.textBox}
+                      onChangeText={this.textUpdate}
+                      value={this.state.resourceText}
+                    />
+                  </GestureRecognizer>}
                 <View style={styles.buttonGroup}>
                   <Button block style={styles.button} onPress={this.saveResource}>
                     <Text>{submitButtonText}</Text>

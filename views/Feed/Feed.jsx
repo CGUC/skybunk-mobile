@@ -59,7 +59,7 @@ export default class FeedView extends React.Component {
 
   getUri() {
     const loggedInUser = this.props.navigation.getParam('loggedInUser');
-    
+
     var channel = this.props.navigation.getParam('channel');
     if (!channel) channel = { _id: 'all' };
 
@@ -76,7 +76,7 @@ export default class FeedView extends React.Component {
   }
 
   loadData = async () => {
-    this.setState({ 
+    this.setState({
       loading: true,
       page: 1,
       loadedLastPage: false
@@ -133,7 +133,7 @@ export default class FeedView extends React.Component {
     if (type === 'toggleLike') {
       const loggedInUser = this.props.navigation.getParam('loggedInUser');
       const addLike = data.usersLiked.some(user => user._id === loggedInUser._id);
-      
+
       return ApiClient.post(`/posts/${postId}/like`, { addLike }, {authorized: true})
         .then(() => {
           this.updateState('updatePost', data);
@@ -212,6 +212,7 @@ export default class FeedView extends React.Component {
     } = this.props;
 
     var channel = navigation.getParam('channel');
+    const loggedInUser = navigation.getParam('loggedInUser');
 
     if (!['all', 'subs', 'myPosts'].includes(channel._id)) {
       return (
@@ -220,6 +221,7 @@ export default class FeedView extends React.Component {
             addResource={this.addPost}
             submitButtonText='Post'
             showModalToolbar={true}
+            loggedInUser={loggedInUser}
           />
         </Footer>
       )
@@ -301,6 +303,7 @@ export default class FeedView extends React.Component {
     } = this.props;
 
     const channelId = navigation.getParam('channel')._id;
+    const loggedInUser = navigation.getParam('loggedInUser');
 
     if (loading) {
       return (
@@ -352,6 +355,7 @@ export default class FeedView extends React.Component {
           message={message}
           addResource={this.addPost}
           hideFooter={['all', 'subs', 'myPosts'].includes(channelId)}
+          loggedInUser={loggedInUser}
         />
       );
     }
