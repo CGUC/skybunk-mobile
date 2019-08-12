@@ -4,7 +4,7 @@ import { Icon, Thumbnail } from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import styles from './ToolbarStyle';
 
-export default function(props) { //TODO size should be 20, why is 28 correct??
+export default function(props) {
 	return (
 		<View style={styles.view}>
 			<TouchableOpacity onPress={props.takeImage}>
