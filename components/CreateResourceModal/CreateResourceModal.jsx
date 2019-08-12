@@ -119,8 +119,7 @@ export default class CreateResourceModal extends React.Component {
   }
 
   render() {
-    // TODO fixes: when poll, make touch only cancel outside of modal; also fix keyboard shoving text inputs off screen
-    // and when editing poll, flatlist keyboardShouldPersistTaps doesn't work for some reason
+    // TODO fix: when editing poll, flatlist keyboardShouldPersistTaps doesn't work for some reason
     var {
       onClose,
       isModalOpen,
@@ -180,14 +179,13 @@ export default class CreateResourceModal extends React.Component {
                 {this.state.isPoll ?
                   <ScrollView
                   style={styles.poll}
-                  keyboardShouldPersistTaps={'handled'}
+                  keyboardShouldPersistTaps={'always'}
                   showsVerticalScrollIndicator={false}>
                     <Poll
                       data={this.state.pollData}
                       savePoll={this.updatePoll}
                       loggedInUser={loggedInUser}
                       isAuthor={this.props.isAuthor}
-                      keyboardShouldPersistTaps={'handled'}
                     />
                   </ScrollView> :
                   /* A bit hacky, but we need another GestureRecognizer to register swipe over the text box */

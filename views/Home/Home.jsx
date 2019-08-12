@@ -43,7 +43,6 @@ export default class HomeView extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log(`Token: ${props.navigation.getParam('token')}`);
     this.state = {
       loading: true,
       channels: [],

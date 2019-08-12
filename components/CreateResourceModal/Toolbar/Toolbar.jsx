@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, TouchableOpacity, PixelRatio } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { Icon, Thumbnail } from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import styles from './ToolbarStyle';
 
-export default function(props) { //TODO size should be 20, convert to dp somehow???
+export default function(props) { //TODO size should be 20, why is 28 correct??
 	return (
 		<View style={styles.view}>
 			<TouchableOpacity onPress={props.takeImage}>

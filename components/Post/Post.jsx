@@ -79,7 +79,7 @@ export default class Post extends React.Component {
     data = {
       ...data,
       content: newContent.content,
-      image: newContent.image || data.image,
+      image: newContent.image || data.image
     }
     this.closeEditingModal();
 
@@ -228,6 +228,7 @@ export default class Post extends React.Component {
   }
 
   render() {
+    // TODO fix: keyboard covers option input when not in modal
     const {
       showEditButtons,
       editing,
@@ -330,12 +331,7 @@ export default class Post extends React.Component {
               {this.state.poll ?
                 (this.props.onPressPost ?
                 <PollPreview data={this.state.poll} loggedInUser={loggedInUser} />
-                : <KeyboardAvoidingView
-                    style={{width: '100%'}}
-                    behavior='padding'
-                  >
-                    <Poll data={this.state.poll} postId={data._id} loggedInUser={loggedInUser} isAuthor={isAuthor} />
-                  </KeyboardAvoidingView>)
+                : <Poll data={this.state.poll} postId={data._id} loggedInUser={loggedInUser} isAuthor={isAuthor} />)
               : <Autolink text={content} numberOfLines={this.props.maxLines} ellipsizeMode='tail' />}
             </Body>
           </CardItem>

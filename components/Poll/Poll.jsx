@@ -223,7 +223,6 @@ export default class Poll extends React.Component {
 
   render() {
     // TODO fix: option text limit, options limit of 10
-    // TODO Important fix: keyboard covers option input when not in modal
     let editing = !!this.props.savePoll;
 
     return (

@@ -138,7 +138,7 @@ export default class Comment extends React.Component {
                     {`${createdAt} `}
                   </Text>
                 </View>
-                <Autolink text={content} style={styles.textContent} />
+                <Autolink text={content} style={styles.textContent}/>
               </TouchableOpacity>
             </View>
           </CardItem>

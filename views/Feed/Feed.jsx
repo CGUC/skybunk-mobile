@@ -104,7 +104,6 @@ export default class FeedView extends React.Component {
     } = this.props;
 
     const loggedInUser = navigation.getParam('loggedInUser');
-    console.log(`my user ID: ${loggedInUser._id}`)
 
     var channel = navigation.getParam('channel');
     if (['all', 'subs'].includes(channel._id)) return console.error(`Can't add post to ${channel._id} feed`);
