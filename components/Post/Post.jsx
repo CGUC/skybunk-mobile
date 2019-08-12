@@ -24,6 +24,7 @@ export default class Post extends React.Component {
       editing: false,
       image: null,
       poll: null,
+      pollCopy: null,
     }
   }
 
@@ -53,6 +54,7 @@ export default class Post extends React.Component {
       getPoll(this.props.data._id).then(poll => {
         this.setState({
           poll: poll,
+          pollCopy: this.copyPollData(poll),
         });
       }).catch(error => {
         console.error(error);
@@ -158,6 +160,13 @@ export default class Post extends React.Component {
     )
   }
 
+  copyPollData = (source) => {
+    if (!source) {
+      return null;
+    }
+    return JSON.parse(JSON.stringify(source));
+  }
+
   toggleLike = () => {
     const {
       updatePost,
@@ -238,7 +247,8 @@ export default class Post extends React.Component {
       showEditButtons,
       editing,
       showLikedList,
-      poll
+      poll,
+      pollCopy
     } = this.state;
 
     const {
@@ -333,10 +343,10 @@ export default class Post extends React.Component {
 
           <CardItem button onPress={this.onPressPost} style={styles.postContent}>
             <Body>
-              {this.state.poll ?
+              {poll ?
                 (this.props.onPressPost ?
-                <PollPreview data={this.state.poll} loggedInUser={loggedInUser} />
-                : <Poll data={this.state.poll} postId={data._id} loggedInUser={loggedInUser} isAuthor={isAuthor} />)
+                <PollPreview data={poll} loggedInUser={loggedInUser} />
+                : <Poll data={poll} postId={data._id} loggedInUser={loggedInUser} isAuthor={isAuthor} />)
               : <Autolink text={content} numberOfLines={this.props.maxLines} ellipsizeMode='tail' />}
             </Body>
           </CardItem>
@@ -406,7 +416,7 @@ export default class Post extends React.Component {
           isModalOpen={editing}
           saveResource={this.saveEdited}
           existing={content}
-          existingPoll={poll}
+          existingPoll={pollCopy}
           submitButtonText='Save'
           clearAfterSave={false}
           loggedInUser={loggedInUser}

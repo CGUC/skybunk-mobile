@@ -119,7 +119,6 @@ export default class CreateResourceModal extends React.Component {
   }
 
   render() {
-    // TODO fix: when editing poll, flatlist keyboardShouldPersistTaps doesn't work for some reason
     var {
       onClose,
       isModalOpen,
