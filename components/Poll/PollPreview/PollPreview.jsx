@@ -4,7 +4,6 @@ import { View, FlatList } from 'react-native';
 import { Text, Button, Textarea } from 'native-base';
 import { Font } from "expo";
 import * as Progress from 'react-native-progress';
-import PollModal from '../PollModal/PollModal';
 import styles from "./PollPreviewStyle";
 
 export default class PollPreview extends React.Component {
@@ -18,8 +17,7 @@ export default class PollPreview extends React.Component {
     this.state = {
       title: cleanTitle,
       options: cleanOpts,
-      total: this.getTotal(cleanOpts),
-      isEditing: this.props.isEditing
+      total: this.getTotal(cleanOpts)
     }
   }
 
@@ -32,50 +30,29 @@ export default class PollPreview extends React.Component {
 
   getTotal = (options) => {
     var total = 0;
-    options.forEach(opt => { total += opt.count; });
+    options.forEach(opt => { total += opt.usersVoted.length; });
     return total;
   }
 
-  /*openModal = async (data) => {
-    this.setState({
-      isEditing: true,
-    });
-  }
-
-  onModalSave = async (data) => {
-    this.setState({
-      question: data.question,
-      options: data.options,
-      total: this.getTotal(data.options),
-      isEditing: false,
-    });
-    return this.props.savePoll && this.props.savePoll(data);
-  }
-
-  onModalCancel = async () => {
-    this.setState({
-      isEditing: false,
-    });
-    return this.props.savePoll && this.props.savePoll(null);
-  }*/
-
   buildListItems = () => {
     let items = this.state.options
-            .sort((a, b) => b.count - a.count)
+            .sort((a, b) => b.usersVoted.length - a.usersVoted.length)
             .slice(0, 3);
+    items.forEach((item) => { item.key = item._id; });
     return items;
   }
 
   renderListItem = ({ item }) => {
+    let userIndex = item.usersVoted.findIndex(voter => voter === this.props.loggedInUser._id);
     var countText;
-    if (item.selected) {
-      if (item.count > 1) {
-        countText = `You + ${item.count - 1}`
+    if (userIndex >= 0) {
+      if (item.usersVoted.length > 1) {
+        countText = `You + ${item.usersVoted.length - 1}`
       } else {
         countText = 'You'
       }
     } else {
-      countText = `${item.count}`
+      countText = `${item.usersVoted.length}`
     }
 
     return(
@@ -84,13 +61,12 @@ export default class PollPreview extends React.Component {
   			  <Text style={styles.optionText}>{item.text}</Text>
   			  <Text style={styles.optionCount}>{countText}</Text>
         </View>
-        <Progress.Bar style={styles.progressbar} progress={this.state.total === 0 ? 0 : item.count / this.state.total * 100} />
+        <Progress.Bar style={styles.progressbar} progress={this.state.total === 0 ? 0 : item.usersVoted.length / this.state.total * 100} />
   		</View>
     );
   }
 
   render() {
-    // TODO fixes: make height variable based on contents, make question text prettier (gray? centered?), add border
     let moreContent;
     let moreCount = this.state.options.length - 3;
     if (moreCount > 0) {
@@ -98,21 +74,6 @@ export default class PollPreview extends React.Component {
     } else {
       moreContent = null;
     }
-
-    /*
-
-    <Button style={styles.button} onPress={this.openModal}>
-      <Text>CHANGE VOTE</Text>
-    </Button>
-    <PollModal
-      question={this.state.question}
-      options={this.state.options}
-      onSave={this.onModalSave}
-      onCancel={this.onModalCancel}
-      isModalOpen={this.state.isEditing}
-    />
-
-    */
 
     return (
       <View style={styles.card}>

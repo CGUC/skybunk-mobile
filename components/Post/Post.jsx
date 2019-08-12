@@ -1,12 +1,15 @@
 import React from 'react';
 import Autolink from 'react-native-autolink';
-import { View, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Modal, Alert, Dimensions } from 'react-native';
+import { View, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Modal, Alert, KeyboardAvoidingView, Keyboard, Platform, Dimensions } from 'react-native';
 import Image from 'react-native-scalable-image';
 import { Body, Card, CardItem, Text, Thumbnail, Button, Icon } from 'native-base';
 import { Font } from "expo";
 import date from 'date-fns';
 import Popover from 'react-native-popover-view';
-import {getProfilePicture, getPostPicture} from "../../helpers/imageCache"
+import {getProfilePicture, getPostPicture} from "../../helpers/imageCache";
+import { getPoll } from '../../helpers/poll';
+import PollPreview from '../Poll/PollPreview/PollPreview';
+import Poll from '../Poll/Poll';
 import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
 import styles from "./PostStyle";
 
@@ -20,6 +23,7 @@ export default class Post extends React.Component {
       showEditButtons: false,
       editing: false,
       image: null,
+      poll: null,
     }
   }
 
@@ -40,6 +44,15 @@ export default class Post extends React.Component {
       getPostPicture(this.props.data._id).then(pic => {
         this.setState({
           image: pic,
+        });
+      }).catch(error => {
+        console.error(error);
+      });
+    }
+    if (this.props.data.media) {
+      getPoll(this.props.data._id).then(poll => {
+        this.setState({
+          poll: poll,
         });
       }).catch(error => {
         console.error(error);
@@ -66,11 +79,15 @@ export default class Post extends React.Component {
     data = {
       ...data,
       content: newContent.content,
-      image: newContent.image || data.image
+      image: newContent.image || data.image,
     }
     this.closeEditingModal();
 
-    updatePost && updatePost(postId, data, 'editPost');
+    if (this.state.poll) {
+      updatePost && updatePost(postId, this.state.poll, 'editPoll');
+    } else {
+      updatePost && updatePost(postId, data, 'editPost');
+    }
   }
 
   closeEditingModal = () => {
@@ -214,7 +231,8 @@ export default class Post extends React.Component {
     const {
       showEditButtons,
       editing,
-      showLikedList
+      showLikedList,
+      poll
     } = this.state;
 
     const {
@@ -230,9 +248,11 @@ export default class Post extends React.Component {
       comments,
       createdAt,
       tags,
+      media,
     } = data;
     const isLiked = usersLiked.filter(e => e._id == this.props.loggedInUser._id).length > 0;
     var likeIcon = isLiked ? require('../../assets/liked-cookie.png') : require('../../assets/cookie-icon.png');
+    let isAuthor = (author._id === loggedInUser._id);
 
     if (isLiked) {
       usersLiked = usersLiked.filter(user => user._id !== this.props.loggedInUser._id);
@@ -307,7 +327,16 @@ export default class Post extends React.Component {
 
           <CardItem button onPress={this.onPressPost} style={styles.postContent}>
             <Body>
-              <Autolink text={content} numberOfLines={this.props.maxLines} ellipsizeMode='tail' />
+              {this.state.poll ?
+                (this.props.onPressPost ?
+                <PollPreview data={this.state.poll} loggedInUser={loggedInUser} />
+                : <KeyboardAvoidingView
+                    style={{width: '100%'}}
+                    behavior='padding'
+                  >
+                    <Poll data={this.state.poll} postId={data._id} loggedInUser={loggedInUser} isAuthor={isAuthor} />
+                  </KeyboardAvoidingView>)
+              : <Autolink text={content} numberOfLines={this.props.maxLines} ellipsizeMode='tail' />}
             </Body>
           </CardItem>
 
@@ -376,9 +405,11 @@ export default class Post extends React.Component {
           isModalOpen={editing}
           saveResource={this.saveEdited}
           existing={content}
+          existingPoll={poll}
           submitButtonText='Save'
           clearAfterSave={false}
           loggedInUser={loggedInUser}
+          isAuthor={isAuthor}
         />
       </View>
     )

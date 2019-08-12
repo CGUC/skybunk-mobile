@@ -4,12 +4,14 @@ import defaultStyles from '../../styles/styles';
 
 export default (styles = StyleSheet.create({
   view: {
-    width: width,
-    minHeight: 350,
-    maxHeight: height-330,
-    flex: 1,
+    width: '100%',
+    paddingLeft: 5,
+    paddingRight: 5,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
+  },
+  fillWidth: {
+    width: '100%',
   },
   topCheckboxContainer: {
     backgroundColor: '#00000000',
@@ -18,7 +20,7 @@ export default (styles = StyleSheet.create({
     alignSelf: 'flex-end',
     padding: 0,
     marginTop: 5,
-    marginRight: 5,
+    marginRight: 0,
     marginLeft: 0,
     marginBottom: 0,
   },
@@ -32,14 +34,14 @@ export default (styles = StyleSheet.create({
     marginLeft: 5,
   },
   textBox: {
-    width: width-10,
+    width: '100%',
     height: 80,
     flexWrap: 'wrap',
     marginLeft: 5,
     marginRight: 5,
   },
   optionView: {
-    width: width-10,
+    width: '100%',
     flexDirection: 'row',
     marginLeft: 5,
     marginTop: 5,
@@ -60,7 +62,6 @@ export default (styles = StyleSheet.create({
     height: 24,
   },
   optionText: {
-    maxWidth: width-10-24-10-24-4,
     flex: 1,
     flexWrap: 'wrap',
     margin: 2,
@@ -68,11 +69,14 @@ export default (styles = StyleSheet.create({
   optionCount: {
     width: 24,
     height: 24,
-    margin: 2,
+    marginLeft: 2,
+    marginRight: 5,
+    marginTop: 2,
+    marginBottom: 2,
     textAlign: 'right',
   },
   optionGroup: {
-    width: width-10,
+    width: '100%',
     height: 28,
     marginLeft: 5,
     marginTop: 5,
@@ -99,7 +103,7 @@ export default (styles = StyleSheet.create({
     alignSelf: 'center',
   },
   addOptionText: {
-    width: width-10-34-5,
+    flex: 1,
     height: 20,
     marginTop: 4,
   },

@@ -57,6 +57,7 @@ export default class ContentBar extends React.Component {
           showToolbar={this.props.showModalToolbar}
           clearAfterSave={true}
           loggedInUser={this.props.loggedInUser}
+          isAuthor={true}
         />
       </View>
     )

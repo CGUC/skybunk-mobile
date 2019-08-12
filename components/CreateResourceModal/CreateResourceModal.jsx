@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Modal, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform, Dimensions } from 'react-native';
+import { View, Modal, ScrollView, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform, Dimensions } from 'react-native';
 import { Text, Button, Textarea, Icon } from 'native-base';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { ImagePicker, Permissions } from 'expo';
@@ -120,16 +120,33 @@ export default class CreateResourceModal extends React.Component {
 
   render() {
     // TODO fixes: when poll, make touch only cancel outside of modal; also fix keyboard shoving text inputs off screen
+    // and when editing poll, flatlist keyboardShouldPersistTaps doesn't work for some reason
     var {
       onClose,
       isModalOpen,
       submitButtonText,
-      loggedInUser
+      loggedInUser,
+      existingPoll
     } = this.props;
 
     if (!submitButtonText) submitButtonText = 'Submit';
 
+    if (existingPoll && !this.state.pollData) {
+      this.state.pollData = this.state.pollData || existingPoll;
+      this.state.isPoll = !!this.state.pollData;
+    }
+
     const { height, width } = Dimensions.get('window');
+    let modalHeight;
+    if (this.state.isPoll) {
+      if (this.props.showToolbar) {
+        modalHeight = height - 220;
+      } else {
+        modalHeight = height - 250;
+      }
+    } else {
+      modalHeight = 330;
+    }
 
     return (
       <Modal
@@ -152,7 +169,7 @@ export default class CreateResourceModal extends React.Component {
               onSwipeDown={this.hideKeyboard}
               style={styles.gestureRecognizer}
             >
-              <View style={[styles.view, {height: (this.state.isPoll ? height-200 : 330)}]}>
+              <View style={[styles.view, {height: modalHeight}]}>
                 {this.props.showToolbar ?
                   Toolbar({
                     pickImage: this.pickImage,
@@ -161,12 +178,18 @@ export default class CreateResourceModal extends React.Component {
                     image: this.state.image,
                   }) : null}
                 {this.state.isPoll ?
-                  <Poll
-                    style={styles.poll}
-                    data={this.state.pollData}
-                    savePoll={this.updatePoll}
-                    loggedInUser={loggedInUser}
-                  /> :
+                  <ScrollView
+                  style={styles.poll}
+                  keyboardShouldPersistTaps={'handled'}
+                  showsVerticalScrollIndicator={false}>
+                    <Poll
+                      data={this.state.pollData}
+                      savePoll={this.updatePoll}
+                      loggedInUser={loggedInUser}
+                      isAuthor={this.props.isAuthor}
+                      keyboardShouldPersistTaps={'handled'}
+                    />
+                  </ScrollView> :
                   /* A bit hacky, but we need another GestureRecognizer to register swipe over the text box */
                   <GestureRecognizer
                     onSwipeDown={this.hideKeyboard}

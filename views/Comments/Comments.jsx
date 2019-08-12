@@ -8,6 +8,7 @@ import Comment from '../../components/Comment/Comment';
 import ContentBar from '../../components/ContentBar/ContentBar';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import ApiClient from '../../ApiClient';
+import { createPoll } from '../../helpers/poll';
 import styles from './CommentsStyle';
 import defaultStyles from "../../styles/styles";
 import _ from 'lodash'
@@ -115,6 +116,15 @@ export default class CommentsView extends React.Component {
           console.error(err);
           alert("Error updating post. Sorry about that!");
         });
+    }
+
+    else if (type === 'editPoll') {
+      return createPoll(postData._id, data).then(poll => {
+        updateParentState('updatePoll', { _id: postData._id, poll: poll });
+      })
+      .catch(err => {
+        alert("Error updating post. Sorry about that!")
+      });
     }
 
     else if (type === 'deletePost') {

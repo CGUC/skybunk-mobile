@@ -12,12 +12,12 @@ export default (styles = StyleSheet.create({
   view: {
     width: width,
     minHeight: 330,
-    maxHeight: height-200,
+    maxHeight: height-220,
     backgroundColor: '#DDDDDD',
   },
   poll: {
     width: width-10,
-    height: height-330,
+    height: height-350,
   },
   textBox: {
     width: width-10,

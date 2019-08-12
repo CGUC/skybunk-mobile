@@ -4,47 +4,40 @@ import defaultStyles from '../../../styles/styles';
 
 export default (styles = StyleSheet.create({
 	card: {
-    width: width-10,
-    height: 300,
-    backgroundColor: '#DDDDDD',
-    margin: 5,
+    width: '100%',
+    maxHeight: 300,
 	},
   questionText: {
-    width: width-10,
+		marginBottom: 5,
   },
   optionView: {
-    width: width-10,
     marginTop: 5,
-    marginLeft: 5,
-    marginRight: 5,
 		justifyContent: 'flex-start',
   },
   optionInfo: {
-    width: width-20,
     marginTop: 5,
-    marginLeft: 5,
-    marginRight: 5,
     flexDirection: 'row',
-		alignItems: 'center',
+		alignItems: 'flex-start',
   },
   optionText: {
 		flex: 1,
 		flexWrap: 'wrap',
+		fontSize: 14,
   },
   optionCount: {
     marginLeft: 10,
     maxWidth: 50,
+		fontSize: 14,
   },
 	progressbar: {
-		width: width-20,
+		width: '100%',
     marginTop: 5,
-    marginLeft: 5,
-    marginRight: 5,
 	},
   moreContentText: {
-    width: width-10,
-		marginLeft: 5,
 		marginTop: 5,
+		marginBottom: 5,
+		fontSize: 12,
+		color: '#808b96'
   },
   button: {
     margin: 5,

@@ -17,6 +17,7 @@ import ApiClient from '../../ApiClient';
 import styles from './FeedStyle';
 import defaultStyles from '../../styles/styles';
 import {setPostPicture} from '../../helpers/imageCache';
+import { createPoll } from '../../helpers/poll';
 
 export default class FeedView extends React.Component {
 
@@ -103,6 +104,7 @@ export default class FeedView extends React.Component {
     } = this.props;
 
     const loggedInUser = navigation.getParam('loggedInUser');
+    console.log(`my user ID: ${loggedInUser._id}`)
 
     var channel = navigation.getParam('channel');
     if (['all', 'subs'].includes(channel._id)) return console.error(`Can't add post to ${channel._id} feed`);
@@ -114,10 +116,28 @@ export default class FeedView extends React.Component {
       content: data.content,
       tags: tags
     }
+    if (data.poll) {
+      postContent.content = data.poll.title;
+    }
     ApiClient.post('/posts', postContent, {authorized: true})
     .then(response => response.json())
     .then(post => {
-      if (data.image) {
+      if (data.poll) {
+        createPoll(post._id, data.poll).then(poll => {
+          if (data.image) {
+            setPostPicture(
+              post._id,
+              data.image
+            ).then(() => this.loadData());
+          }
+          else {
+            this.loadData();
+          }
+        })
+        .catch((err) => {
+          alert("Error creating poll. Sorry about that!")
+        });
+      } else if (data.image) {
         setPostPicture(
           post._id,
           data.image
@@ -154,6 +174,14 @@ export default class FeedView extends React.Component {
     else if (type === 'editPost') {
       this.updateState('updatePost', data);
     }
+    else if (type === 'editPoll') {
+      return createPoll(postId, data).then(poll => {
+        this.updateState('updatePoll', { _id: postId, poll: poll });
+      })
+      .catch(err => {
+        alert("Error updating post. Sorry about that!")
+      });
+    }
 
     ApiClient.put(`/posts/${postId}`, _.pick(data, ['content', 'image']), {authorized: true})
       .then(() => {
@@ -179,6 +207,15 @@ export default class FeedView extends React.Component {
       this.setState({
         posts: this.state.posts.filter(post => {
           return post._id !== data;
+        })
+      });
+    } else if (type === 'updatePoll') {
+      this.setState({
+        posts: this.state.posts.map(post => {
+          if (post._id === data._id) {
+            post.media.poll = data.poll;
+          }
+          return post;
         })
       });
     }
