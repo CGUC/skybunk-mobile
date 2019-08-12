@@ -92,12 +92,16 @@ export default class Poll extends React.Component {
     return option.usersVoted.findIndex(voter => voter === this.props.loggedInUser._id);
   }
 
+  serverVote = (option, retract) => {
+    pollVote(this.props.postId, { retract: retract, optionId: option._id })
+    .then((poll) => this.setState({ options: poll.options }))
+    .catch((error) => alert("Error updating vote. Sorry about that!"));
+  }
+
   updateOptionVoters = (option) => {
     let userIndex = this.userVoteIndex(option);
     if (!this.props.savePoll) {
-      pollVote(this.props.postId, { retract: userIndex >= 0, optionId: option._id })
-      .then((poll) => this.setState({ options: poll.options }))
-      .catch((error) => alert("Error updating vote. Sorry about that!"));
+      this.serverVote(option, userIndex >= 0);
     } else {
       if (userIndex === -1) {
         option.usersVoted.push(this.props.loggedInUser._id);
@@ -117,20 +121,18 @@ export default class Poll extends React.Component {
       this.updateOptionVoters(opts[optIndex]);
     } else {
       if (!this.props.savePoll) {
-        let promises = [];
-        opts.forEach((opt, i) => {
-          let userIndex = this.userVoteIndex(opt);
-          if (i === optIndex || userIndex >= 0) {
-            promises.push(pollVote(this.props.postId, { retract: userIndex >= 0, optionId: opt._id }));
-          }
-        });
-        promises.reduce((promiseChain, currentTask) => {
-            return promiseChain.then(chainResults =>
-                currentTask.then(currentResult => currentResult)
-            );
-        }, Promise.resolve(null))
-        .then((poll) => this.setState({ options: poll.options }))
-        .catch((error) => alert("Error updating vote. Sorry about that!"));
+        var selectedIndex = opts.findIndex(opt => this.userVoteIndex(opt) >= 0);
+        if (selectedIndex === optIndex) {
+          this.serverVote(opts[optIndex], true);
+        } else if (selectedIndex >= 0) {
+          pollVote(this.props.postId, { retract: true, optionId: opts[selectedIndex]._id })
+          .then((poll) => {
+            this.serverVote(opts[optIndex], false);
+          })
+          .catch((error) => alert("Error updating vote. Sorry about that!"));
+        } else {
+          this.serverVote(opts[optIndex], false);
+        }
       } else {
         for (var i = 0; i < opts.length; i++) {
           if (i === optIndex) {
