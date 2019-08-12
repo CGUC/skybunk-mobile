@@ -34,10 +34,16 @@ export default class Poll extends React.Component {
   }
 
   newOptionUpdate = async (text) => {
+    if (text.length >= 200) {
+      return;
+    }
     this.setState({ newOption: text });
   }
 
   titleUpdate = async (text) => {
+    if (text.length >= 1000) {
+      return;
+    }
     this.state.title = text;
     this.props.savePoll({
       title: text,
@@ -262,8 +268,7 @@ export default class Poll extends React.Component {
   }
 
   render() {
-    // TODO fix: option text limit, options limit of 10
-    // TODO fix: so many security vulnerabilities from unsanitized user input of option text
+    // TODO fix: so many security vulnerabilities from unsanitized user input of option text and poll title
     let editing = !!this.props.savePoll;
 
     return (
