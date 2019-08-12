@@ -119,12 +119,9 @@ export default class CommentsView extends React.Component {
     }
 
     else if (type === 'editPoll') {
-      return createPoll(postData._id, data).then(poll => {
-        updateParentState('updatePoll', { _id: postData._id, poll: poll });
-      })
-      .catch(err => {
-        alert("Error updating post. Sorry about that!")
-      });
+      this.setState({ loading: true, postData: data });
+      this.loadData().then(() => this.setState({ loading: false }));
+      updateParentState('updatePoll', data);
     }
 
     else if (type === 'deletePost') {

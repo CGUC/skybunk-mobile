@@ -1,7 +1,5 @@
 import ApiClient from '../ApiClient';
 
-// TODO - update server side to take full poll data for create / update and remove these client side workarounds
-
 module.exports = {
 	getPoll: function(postID) {
 		return new Promise(function(resolve, reject) {
@@ -14,7 +12,9 @@ module.exports = {
 	},
 	createPoll: function(postID, data) {
 		return new Promise(function(resolve, reject) {
-			ApiClient.post(`/posts/${postID}/poll`, data, {authorized: true}).then(poll => {
+			ApiClient.post(`/posts/${postID}/poll`, data, {authorized: true})
+      .then(response => response.json())
+      .then(poll => {
         resolve(poll);
 			}).catch(error => {
 				reject(error);

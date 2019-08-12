@@ -174,12 +174,8 @@ export default class FeedView extends React.Component {
       this.updateState('updatePost', data);
     }
     else if (type === 'editPoll') {
-      return createPoll(postId, data).then(poll => {
-        this.updateState('updatePoll', { _id: postId, poll: poll });
-      })
-      .catch(err => {
-        alert("Error updating post. Sorry about that!")
-      });
+      this.updateState('updatePoll', data);
+      this.loadData();
     }
 
     ApiClient.put(`/posts/${postId}`, _.pick(data, ['content', 'image']), {authorized: true})
@@ -211,9 +207,7 @@ export default class FeedView extends React.Component {
     } else if (type === 'updatePoll') {
       this.setState({
         posts: this.state.posts.map(post => {
-          if (post._id === data._id) {
-            post.media.poll = data.poll;
-          }
+          if (post._id === data._id) return data;
           return post;
         })
       });
@@ -361,6 +355,7 @@ export default class FeedView extends React.Component {
             onRefresh={this.loadData}
             onEndReachedThreshold={0.8}
             removeClippedSubviews
+            keyboardShouldPersistTaps={'handled'}
           />
 
           {this.getFooterJSX()}

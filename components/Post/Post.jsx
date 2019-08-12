@@ -7,7 +7,7 @@ import { Font } from "expo";
 import date from 'date-fns';
 import Popover from 'react-native-popover-view';
 import {getProfilePicture, getPostPicture} from "../../helpers/imageCache";
-import { getPoll } from '../../helpers/poll';
+import { getPoll, createPoll } from '../../helpers/poll';
 import PollPreview from '../Poll/PollPreview/PollPreview';
 import Poll from '../Poll/Poll';
 import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
@@ -84,7 +84,12 @@ export default class Post extends React.Component {
     this.closeEditingModal();
 
     if (this.state.poll) {
-      updatePost && updatePost(postId, this.state.poll, 'editPoll');
+      createPoll(postId, newContent.poll).then(poll => {
+        updatePost && updatePost(postId, data, 'editPoll');
+      })
+      .catch(err => {
+        alert("Error updating post. Sorry about that!")
+      });
     } else {
       updatePost && updatePost(postId, data, 'editPost');
     }

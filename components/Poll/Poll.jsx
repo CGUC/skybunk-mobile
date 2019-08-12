@@ -88,10 +88,16 @@ export default class Poll extends React.Component {
 
   updateOptionVoters = (option) => {
     let userIndex = this.userVoteIndex(option);
-    if (userIndex === -1) {
-      option.usersVoted.push(this.props.loggedInUser._id);
+    if (!this.props.savePoll) {
+      pollVote(this.props.postId, { retract: userIndex >= 0, optionId: option._id })
+      .then((poll) => this.setState({ options: poll.options }))
+      .catch((error) => alert("Error updating vote. Sorry about that!"));
     } else {
-      option.usersVoted.splice(userIndex, 1);
+      if (userIndex === -1) {
+        option.usersVoted.push(this.props.loggedInUser._id);
+      } else {
+        option.usersVoted.splice(userIndex, 1);
+      }
     }
   }
 
@@ -101,14 +107,24 @@ export default class Poll extends React.Component {
     if (optIndex === -1) {
       return;
     }
-    if (!this.props.savePoll) {
-      let userIndex = this.userVoteIndex(opts[optIndex]);
-      pollVote(this.props.postId, { retract: userIndex >= 0, optionId: opts[optIndex]._id })
-      .then((poll) => this.setState({ options: poll.options }))
-      .catch((error) => alert("Error updating vote. Sorry about that!"));
+    if (this.state.multiSelect) {
+      this.updateOptionVoters(opts[optIndex]);
     } else {
-      if (this.state.multiSelect) {
-        this.updateOptionVoters(opts[optIndex]);
+      if (!this.props.savePoll) {
+        let promises = [];
+        opts.forEach((opt, i) => {
+          let userIndex = this.userVoteIndex(opt);
+          if (i === optIndex || userIndex >= 0) {
+            promises.push(pollVote(this.props.postId, { retract: userIndex >= 0, optionId: opt._id }));
+          }
+        });
+        promises.reduce((promiseChain, currentTask) => {
+            return promiseChain.then(chainResults =>
+                currentTask.then(currentResult => currentResult)
+            );
+        }, Promise.resolve(null))
+        .then((poll) => this.setState({ options: poll.options }))
+        .catch((error) => alert("Error updating vote. Sorry about that!"));
       } else {
         for (var i = 0; i < opts.length; i++) {
           if (i === optIndex) {
@@ -121,18 +137,42 @@ export default class Poll extends React.Component {
           }
         }
       }
-      this.props.savePoll({
-        title: this.state.title,
-        multiSelect: this.state.multiSelect,
-        open: this.state.open,
-        options: opts,
-      });
     }
+    this.props.savePoll && this.props.savePoll({
+      title: this.state.title,
+      multiSelect: this.state.multiSelect,
+      open: this.state.open,
+      options: opts,
+    });
   }
 
   confirmDelete = async (item) => {
-    // TODO - this needs server side changes as well
-    // deletion should only be allowed if this is the option creator or admin
+    if (!this.props.isAuthor || !this.props.savePoll) {
+      return;
+    }
+    Alert.alert(
+      'Hold Up!',
+      `Are you sure you want to remove this option?\nOption: ${item.text}`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', onPress: this.deleteOption.bind(this, item) },
+      ],
+    );
+  }
+
+  deleteOption = (item) => {
+    var opts = this.state.options;
+    var optIndex = opts.findIndex(opt => opt.key === item.key);
+    if (optIndex === -1) {
+      return;
+    }
+    opts.splice(optIndex, 1);
+    this.props.savePoll({
+      title: this.state.title,
+      multiSelect: this.state.multiSelect,
+      open: this.state.open,
+      options: opts,
+    });
   }
 
   addOption = async () => {
@@ -164,13 +204,13 @@ export default class Poll extends React.Component {
   buildListItems = () => {
     let items = this.state.options
             .sort((a, b) => b.usersVoted.length - a.usersVoted.length)
-            .slice();
-    var index = 0;
-    items.forEach((item) => {
-      if (!item.key) {
-        item.key = item._id || `${index++}`;
-      }
-    });
+            .slice()
+            .map(item => {
+              if (item._id) {
+                item.key = item._id;
+              }
+              return item;
+            });
     if (!!this.props.isAuthor || this.state.open) {
       items.push({ key: 'add_option_item' });
     }
@@ -223,6 +263,7 @@ export default class Poll extends React.Component {
 
   render() {
     // TODO fix: option text limit, options limit of 10
+    // TODO fix: so many security vulnerabilities from unsanitized user input of option text
     let editing = !!this.props.savePoll;
 
     return (

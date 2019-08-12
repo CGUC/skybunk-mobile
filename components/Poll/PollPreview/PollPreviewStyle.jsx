@@ -30,8 +30,17 @@ export default (styles = StyleSheet.create({
 		fontSize: 14,
   },
 	progressbar: {
+	  height: 12,
 		width: '100%',
     marginTop: 5,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#2874a6',
+	},
+	filler: {
+	  backgroundColor: '#2e86c1',
+	  height: '100%',
+    borderRadius: 6,
 	},
   moreContentText: {
 		marginTop: 5,

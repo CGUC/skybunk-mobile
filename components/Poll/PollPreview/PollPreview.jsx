@@ -17,7 +17,6 @@ export default class PollPreview extends React.Component {
     this.state = {
       title: cleanTitle,
       options: cleanOpts,
-      total: this.getTotal(cleanOpts)
     }
   }
 
@@ -37,8 +36,13 @@ export default class PollPreview extends React.Component {
   buildListItems = () => {
     let items = this.state.options
             .sort((a, b) => b.usersVoted.length - a.usersVoted.length)
-            .slice(0, 3);
-    items.forEach((item) => { item.key = item._id; });
+            .slice(0, 3)
+            .map(item => {
+              if (item._id) {
+                item.key = item._id;
+              }
+              return item;
+            });
     return items;
   }
 
@@ -54,6 +58,7 @@ export default class PollPreview extends React.Component {
     } else {
       countText = `${item.usersVoted.length}`
     }
+    let totalCount = this.getTotal(this.state.options);
 
     return(
   		<View style={styles.optionView}>
@@ -61,7 +66,9 @@ export default class PollPreview extends React.Component {
   			  <Text style={styles.optionText}>{item.text}</Text>
   			  <Text style={styles.optionCount}>{countText}</Text>
         </View>
-        <Progress.Bar style={styles.progressbar} progress={this.state.total === 0 ? 0 : item.usersVoted.length / this.state.total * 100} />
+        <View style={styles.progressbar}>
+          <View style={[styles.filler, { width: `${totalCount === 0 ? 0 : item.usersVoted.length / totalCount * 100}%` }]} />
+        </View>
   		</View>
     );
   }
