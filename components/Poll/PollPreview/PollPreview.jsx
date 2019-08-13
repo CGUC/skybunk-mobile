@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { View, FlatList } from 'react-native';
 import { Text, Button, Textarea } from 'native-base';
 import { Font } from "expo";
-import * as Progress from 'react-native-progress';
 import styles from "./PollPreviewStyle";
 
 export default class PollPreview extends React.Component {
