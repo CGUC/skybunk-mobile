@@ -215,17 +215,17 @@ export default class LoginView extends React.Component {
                   <Text>{this.state.registering ? 'Register' : 'Login'}</Text>
                 </Button>
                   <Button
+                    dark
                     transparent
                     block
-                    dark
                     onPress={this.toggleRegistering.bind(this)}
                   >
                     <Text>{this.state.registering ? 'Already have an account?' : "Don't have an account?"}</Text>
                 </Button>
                 <Button
+                  dark
                   transparent
                   block
-                  dark
                   onPress={this.contactWebmasters.bind(this)}
                 >
                   <Text>{"Contact the webmasters!"}</Text>
