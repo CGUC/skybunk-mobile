@@ -94,7 +94,15 @@ export default class Poll extends React.Component {
 
   serverVote = (option, retract) => {
     pollVote(this.props.postId, { retract: retract, optionId: option._id })
-    .then((poll) => this.setState({ options: poll.options }))
+    .then((poll) => {
+      this.setState({ options: poll.options });
+      this.props.updatePoll && this.props.updatePoll({
+        title: this.state.title,
+        multiSelect: this.state.multiSelect,
+        open: this.state.open,
+        options: poll.options,
+      });
+    })
     .catch((error) => alert("Error updating vote. Sorry about that!"));
   }
 
@@ -191,7 +199,15 @@ export default class Poll extends React.Component {
     this.setState({ newOption: '' });
     if (!this.props.savePoll) {
       pollOption(this.props.postId, { option: optionText })
-      .then((poll) => this.setState({ options: poll.options }))
+      .then((poll) => {
+        this.setState({ options: poll.options });
+        this.props.updatePoll && this.props.updatePoll({
+          title: this.state.title,
+          multiSelect: this.state.multiSelect,
+          open: this.state.open,
+          options: poll.options,
+        });
+      })
       .catch((error) => alert("Error adding poll option. Sorry about that!"));
     } else {
       var opts = this.state.options;

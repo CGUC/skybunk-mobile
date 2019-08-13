@@ -25,6 +25,7 @@ export default class Post extends React.Component {
       image: null,
       poll: null,
       pollCopy: null,
+      updateKey: 0,
     }
   }
 
@@ -165,6 +166,14 @@ export default class Post extends React.Component {
       return null;
     }
     return JSON.parse(JSON.stringify(source));
+  }
+
+  updatePoll = async (data) => {
+    this.setState({
+      updateKey: (this.state.updateKey + 1) % 10,
+      poll: data,
+      pollCopy: this.copyPollData(data),
+    });
   }
 
   toggleLike = () => {
@@ -350,7 +359,7 @@ export default class Post extends React.Component {
                 {poll ?
                   (this.props.onPressPost ?
                   <PollPreview data={poll} loggedInUser={loggedInUser} />
-                  : <Poll data={poll} postId={data._id} loggedInUser={loggedInUser} isAuthor={isAuthor} />)
+                  : <Poll data={poll} postId={data._id} updatePoll={this.updatePoll} loggedInUser={loggedInUser} isAuthor={isAuthor} />)
                 : <Autolink text={content} numberOfLines={this.props.maxLines} ellipsizeMode='tail' />}
               </Body>
             </CardItem>
@@ -426,6 +435,7 @@ export default class Post extends React.Component {
           clearAfterSave={false}
           loggedInUser={loggedInUser}
           isAuthor={isAuthor}
+          key={this.state.updateKey}
         />
       </View>
     )
