@@ -79,6 +79,7 @@ export default class HomeView extends React.Component {
       .then(postData => {
         const loggedInUser = this.state.user;
         updateParentState = () => ({});
+        this.props.navigation.navigate('Home');
         this.props.navigation.navigate('Comments', { postData, loggedInUser, updateParentState });
       })
     }

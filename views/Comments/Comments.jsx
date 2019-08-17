@@ -272,6 +272,30 @@ export default class CommentsView extends React.Component {
                 </Text>
               }
             </ScrollView>
+        <Card style={styles.card}>
+          <CardItem style={styles.cardItem}>
+            <View style={styles.textContainer}>
+              <TouchableOpacity onPress={() => showUserProfile(this.props.navigation.getParam('loggedInUser'))}>
+                <Thumbnail
+                  small
+                  style={styles.profilePicThumbnail}
+                  source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity style={{flex:1}} onPress={this.onPressComment} hitSlop={{ top: 15, bottom: 15, left: 10, right: 10 }}>
+                <View style={styles.title}>
+                  <Text style={styles.textAuthor}>
+                    {`${authorName} `}
+                  </Text>
+                  <Text note>
+                    {`${createdAt} `}
+                  </Text>
+                </View>
+                <Autolink text={content} style={styles.textContent}/>
+              </TouchableOpacity>
+            </View>
+          </CardItem>
+        </Card>
           </Content>
           <Footer>
             <ContentBar

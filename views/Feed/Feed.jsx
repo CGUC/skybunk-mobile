@@ -4,15 +4,12 @@
 */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { FlatList} from 'react-native';
-import { Container, Footer, Content, Spinner, Text } from 'native-base';
-import { Font, AppLoading } from "expo";
-import ContentBar from '../../components/ContentBar/ContentBar';
+import { Container, Content, Spinner, Text, Button, View } from 'native-base';
+import { Font } from "expo";
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import Post from '../../components/Post/Post';
-import NoData from '../../components/NoData/NoData';
 import ApiClient from '../../ApiClient';
 import styles from './FeedStyle';
 import defaultStyles from '../../styles/styles';
@@ -42,7 +39,8 @@ export default class FeedView extends React.Component {
       page: 1,
       loadedLastPage: false,
       userDataToShow: undefined,
-      showProfileModal: false
+      showProfileModal: false,
+      isContentModalOpen: false
     }
   }
 
@@ -146,6 +144,7 @@ export default class FeedView extends React.Component {
         this.loadData();
       }
     });
+    this.closeContentModal();
   }
 
   updatePost = async (postId, data, type) => {
@@ -236,27 +235,11 @@ export default class FeedView extends React.Component {
     })
   }
 
-  getFooterJSX() {
-    const {
-      navigation,
-    } = this.props;
-
-    var channel = navigation.getParam('channel');
-    const loggedInUser = navigation.getParam('loggedInUser');
-
-    if (!['all', 'subs', 'myPosts'].includes(channel._id)) {
-      return (
-        <Footer>
-          <ContentBar
-            addResource={this.addPost}
-            submitButtonText='Post'
-            showModalToolbar={true}
-            loggedInUser={loggedInUser}
-          />
-        </Footer>
-      )
-    }
-    return null;
+  closeContentModal = () => {
+    this.setState({ isContentModalOpen: false })
+  }
+  openContentModal = () => {
+    this.setState({ isContentModalOpen: true })
   }
 
   buildListItems() {
@@ -320,56 +303,10 @@ export default class FeedView extends React.Component {
     else return null;
   }
 
-  render() {
-    const {
-      posts,
-      loading,
-      userDataToShow,
-      showProfileModal
-    } = this.state;
-
-    const {
-      navigation,
-    } = this.props;
-
-    const channelId = navigation.getParam('channel')._id;
-    const loggedInUser = navigation.getParam('loggedInUser');
-
-    if (loading) {
-      return (
-        <Container style={defaultStyles.backgroundTheme}>
-          <Content>
-            <Spinner color='#cd8500' />
-          </Content>
-        </Container>
-      );
-    } else if (posts.length) {
-      return (
-        <Container style={defaultStyles.backgroundTheme}>
-          <FlatList
-            data={this.buildListItems()}
-            renderItem={this.renderListItem}
-            onEndReached={this.loadNextPage}
-            ListFooterComponent={this.listFooter()}
-            refreshing={this.state.loading}
-            onRefresh={this.loadData}
-            onEndReachedThreshold={0.8}
-            removeClippedSubviews
-            keyboardShouldPersistTaps={'handled'}
-          />
-
-          {this.getFooterJSX()}
-
-          <UserProfile
-            user={userDataToShow}
-            onClose={this.closeProfileModal}
-            isModalOpen={showProfileModal}
-          />
-
-        </Container>
-      )
-    } else {
+  getContentJSX = () => {
+    if(this.state.posts.length == 0){
       var message;
+      const channelId = this.props.navigation.getParam('channel')._id;
       switch (channelId) {
         case 'subs':
           message = 'Nothing here - try subscribing to a channel!';
@@ -380,15 +317,67 @@ export default class FeedView extends React.Component {
         default:
           message = 'No posts yet - you could be the first!';
       }
-
       return (
-        <NoData
-          message={message}
-          addResource={this.addPost}
-          hideFooter={['all', 'subs', 'myPosts'].includes(channelId)}
-          loggedInUser={loggedInUser}
-        />
+        <View style={styles.noDataView}>
+          <Text style={styles.noDataText}>{message}</Text>
+        </View>
+      )
+    }
+    return (
+      <FlatList
+        data={this.buildListItems()}
+        renderItem={this.renderListItem}
+        onEndReached={this.loadNextPage}
+        ListFooterComponent={this.listFooter()}
+        refreshing={this.state.loading}
+        onRefresh={this.loadData}
+        onEndReachedThreshold={0.8}
+        removeClippedSubviews
+      />
+    )
+  }
+
+  render() {
+    const {
+      loading,
+      userDataToShow,
+      showProfileModal
+    } = this.state;
+
+    if (loading) {
+      return (
+        <Container style={defaultStyles.backgroundTheme}>
+          <Content>
+            <Spinner color='#cd8500' />
+          </Content>
+        </Container>
       );
+    } else {
+      return (
+        <Container style={defaultStyles.backgroundTheme}>
+          {this.getContentJSX()}
+
+          <Button style={styles.newPostButton} onPress={this.openContentModal}>
+            <Text>Make A Post</Text>
+          </Button>
+
+          <CreateResourceModal
+            onClose={this.closeContentModal}
+            isModalOpen={this.state.isContentModalOpen} 
+            saveResource={this.addPost}
+            submitButtonText={'Post'}
+            showToolbar={true}
+            clearAfterSave={true}
+          />
+
+          <UserProfile
+            user={userDataToShow}
+            onClose={this.closeProfileModal}
+            isModalOpen={showProfileModal}
+          />
+
+        </Container>
+      )
     }
   }
 }
