@@ -32,7 +32,10 @@ export default (styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   textContent: {
-    paddingLeft: 5
+    paddingLeft: 5,
+    borderWidth: 1,
+    borderRadius: 5,
+    flexGrow: 1
   },
   editButtonsContainer: {
     flex: 1,
@@ -66,5 +69,15 @@ export default (styles = StyleSheet.create({
     flexDirection: 'row',
   	justifyContent: 'space-between',
   	paddingBottom: 5
+  },
+  editorView: {
+    flexDirection: 'row'
+  },
+  editIconView: {
+    flexDirection: 'column',
+    flexGrow: 0
+  },
+  iconStyle: {
+    paddingLeft: 3
   }
 }));

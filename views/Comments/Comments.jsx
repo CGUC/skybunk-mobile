@@ -12,6 +12,7 @@ import { createPoll } from '../../helpers/poll';
 import styles from './CommentsStyle';
 import defaultStyles from "../../styles/styles";
 import _ from 'lodash'
+import CommentEditor from '../../components/CommentEditor/CommentEditor';
 
 export default class CommentsView extends React.Component {
 
@@ -250,8 +251,7 @@ export default class CommentsView extends React.Component {
               showFullDate={true}
             />
             <ScrollView>
-              {comments.length ?
-                _.map(_.orderBy(comments, comment => comment.createdAt.valueOf()),
+                {_.map(_.orderBy(comments, comment => comment.createdAt.valueOf()),
                   (comment, key) => {
                     var enableCommentEditing = comment.author._id === loggedInUser._id;
 
@@ -265,44 +265,10 @@ export default class CommentsView extends React.Component {
                         showUserProfile={this.showUserProfile}
                       />
                     )
-                  })
-                :
-                <Text style={styles.noDataText}>
-                  No comments yet - You could be the first!
-                </Text>
-              }
+                  })}
             </ScrollView>
-        <Card style={styles.card}>
-          <CardItem style={styles.cardItem}>
-            <View style={styles.textContainer}>
-              <TouchableOpacity onPress={() => showUserProfile(this.props.navigation.getParam('loggedInUser'))}>
-                <Thumbnail
-                  small
-                  style={styles.profilePicThumbnail}
-                  source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity style={{flex:1}} onPress={this.onPressComment} hitSlop={{ top: 15, bottom: 15, left: 10, right: 10 }}>
-                <View style={styles.title}>
-                  <Text style={styles.textAuthor}>
-                    {`${authorName} `}
-                  </Text>
-                  <Text note>
-                    {`${createdAt} `}
-                  </Text>
-                </View>
-                <Autolink text={content} style={styles.textContent}/>
-              </TouchableOpacity>
-            </View>
-          </CardItem>
-        </Card>
+        <CommentEditor loggedInUser={loggedInUser}/>
           </Content>
-          <Footer>
-            <ContentBar
-              addResource={(content) => this.updateResource(undefined, content, 'addComment')}
-              submitButtonText='Comment'
-            />
-          </Footer>
 
           <UserProfile
             user={userDataToShow}

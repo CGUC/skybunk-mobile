@@ -1,12 +1,9 @@
 import React from 'react';
-import Autolink from 'react-native-autolink';
-import {TouchableOpacity, View, Modal } from 'react-native';
-import { Text, Thumbnail, Card, CardItem, Button } from 'native-base';
+import { View, TouchableOpacity } from 'react-native';
+import { Text, Thumbnail, Card, CardItem, Textarea, Icon } from 'native-base';
 import _ from 'lodash';
 import { Font, AppLoading } from "expo";
-import date from 'date-fns';
 
-import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
 import styles from "./CommentEditorStyle";
 import {getProfilePicture} from "../../helpers/imageCache"
 
@@ -18,6 +15,7 @@ export default class CommentEditor extends React.Component {
     this.state = {
       loading: true,
       profilePicture: null,
+      commentText: ''
     }
   }
 
@@ -48,6 +46,10 @@ export default class CommentEditor extends React.Component {
     }
   }
 
+  textUpdate = (text) => {
+    this.setState({commentText: text})
+  }
+
   render() {
     const {
       showEditButtons,
@@ -74,13 +76,30 @@ export default class CommentEditor extends React.Component {
                   source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }}
                 />
               </View>
-              <View style={{flex:1}} hitSlop={{ top: 15, bottom: 15, left: 10, right: 10 }}>
+              <View style={{flex:1}}>
                 <View style={styles.title}>
                   <Text style={styles.textAuthor}>
                     {`${authorName} `}
                   </Text>
                 </View>
-                <Textarea style={styles.textContent}/>
+                <View style={styles.editorView}>
+                  <Textarea 
+                    style={styles.textContent} 
+                    placeholder={"Join the discussion!"}
+                    onChangeText={this.textUpdate}
+                    value={this.state.commentText}
+                  />
+                  {this.state.commentText ? 
+                  <View style={styles.editIconView}>
+                    <TouchableOpacity>
+                      <Icon style={[styles.iconStyle, {color: 'green', paddingBottom: 8}]} type='Feather' name='save' />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                      <Icon style={[styles.iconStyle, {color: 'red'}]} type='Feather' name='trash-2' />
+                    </TouchableOpacity>
+                  </View>
+                  : null}
+                </View>
               </View>
             </View>
           </CardItem>
