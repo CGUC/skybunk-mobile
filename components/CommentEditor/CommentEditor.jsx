@@ -92,10 +92,10 @@ export default class CommentEditor extends React.Component {
                   {this.state.commentText ? 
                   <View style={styles.editIconView}>
                     <TouchableOpacity>
-                      <Icon style={[styles.iconStyle, {color: 'green', paddingBottom: 8}]} type='Feather' name='save' />
+                      <Icon style={[styles.iconStyle, {color: 'green', paddingBottom: 8}]} type='Feather' name='check' />
                     </TouchableOpacity>
                     <TouchableOpacity>
-                      <Icon style={[styles.iconStyle, {color: 'red'}]} type='Feather' name='trash-2' />
+                      <Icon style={[styles.iconStyle, {color: 'red'}]} type='Feather' name='x' />
                     </TouchableOpacity>
                   </View>
                   : null}
