@@ -36,18 +36,18 @@ export default class CommentEditor extends React.Component {
     this.setState({ loading: false });
   }
 
-  saveEdited = (newContent) => {
-    const { updateComment, data } = this.props;
-
-    var commentId = data._id;
-    var newComment = {
-      ...data,
-      ...newContent
-    }
-  }
-
   textUpdate = (text) => {
     this.setState({commentText: text})
+  }
+
+  clearComment = () => {
+    this.setState({commentText: ''});
+  }
+
+  addComment = () => {
+    const {updateResource} = this.props;
+    updateResource && updateResource(undefined, {content: this.state.commentText}, 'addComment');
+    this.clearComment();
   }
 
   render() {
@@ -91,10 +91,10 @@ export default class CommentEditor extends React.Component {
                   />
                   {this.state.commentText ? 
                   <View style={styles.editIconView}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={this.addComment}>
                       <Icon style={[styles.iconStyle, {color: 'green', paddingBottom: 8}]} type='Feather' name='check' />
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={this.clearComment}>
                       <Icon style={[styles.iconStyle, {color: 'red'}]} type='Feather' name='x' />
                     </TouchableOpacity>
                   </View>
