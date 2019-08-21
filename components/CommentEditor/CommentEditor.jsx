@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import { Text, Thumbnail, Card, CardItem, Textarea, Icon } from 'native-base';
+import { View, TouchableOpacity, TextInput } from 'react-native';
+import { Text, Thumbnail, Card, CardItem, } from 'native-base';
 import _ from 'lodash';
 import { Font, AppLoading } from "expo";
 
@@ -83,21 +83,17 @@ export default class CommentEditor extends React.Component {
                   </Text>
                 </View>
                 <View style={styles.editorView}>
-                  <Textarea 
+                  <TextInput
                     style={styles.textContent} 
                     placeholder={"Join the discussion!"}
                     onChangeText={this.textUpdate}
                     value={this.state.commentText}
+                    multiline = {true}
                   />
                   {this.state.commentText ? 
-                  <View style={styles.editIconView}>
-                    <TouchableOpacity onPress={this.addComment}>
-                      <Icon style={[styles.iconStyle, {color: 'green', paddingBottom: 8}]} type='Feather' name='check' />
+                    <TouchableOpacity style={styles.commentButton} onPress={this.addComment}>
+                      <Text style={styles.commentButtonText}>post</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={this.clearComment}>
-                      <Icon style={[styles.iconStyle, {color: 'red'}]} type='Feather' name='x' />
-                    </TouchableOpacity>
-                  </View>
                   : null}
                 </View>
               </View>

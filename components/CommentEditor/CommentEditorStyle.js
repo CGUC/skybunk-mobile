@@ -10,6 +10,7 @@ export default (styles = StyleSheet.create({
     marginBottom: 0,
     borderColor: 'rgba(0, 0, 0, 0.0)',
     backgroundColor: 'rgba(0, 0, 0, 0.0)',
+    minWidth: width
   },
   cardItem: {
     backgroundColor: 'rgba(0, 0, 0, 0.0)',
@@ -33,8 +34,7 @@ export default (styles = StyleSheet.create({
   },
   textContent: {
     paddingLeft: 5,
-    borderWidth: 1,
-    borderRadius: 5,
+    height: 30,
     flexGrow: 1
   },
   editButtonsContainer: {
@@ -71,13 +71,20 @@ export default (styles = StyleSheet.create({
   	paddingBottom: 5
   },
   editorView: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderRadius: 5
   },
-  editIconView: {
-    flexDirection: 'column',
-    flexGrow: 0
+  commentButton: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    flexGrow: 0,
+    margin: 3,
+    marginRight: 9
   },
-  iconStyle: {
-    paddingLeft: 3
+  commentButtonText: {
+    fontStyle: 'italic',
+    textAlignVertical: 'center'
   }
 }));
