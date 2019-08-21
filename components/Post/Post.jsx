@@ -3,7 +3,7 @@ import Autolink from 'react-native-autolink';
 import { View, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Modal, Alert, Dimensions } from 'react-native';
 import Image from 'react-native-scalable-image';
 import { Body, Card, CardItem, Text, Thumbnail, Button, Icon } from 'native-base';
-import { Font } from "expo";
+import * as Font from 'expo-font';
 import date from 'date-fns';
 import Popover from 'react-native-popover-view';
 import {getProfilePicture, getPostPicture} from "../../helpers/imageCache"
@@ -25,8 +25,8 @@ export default class Post extends React.Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto: require("../../node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("../../node_modules/native-base/Fonts/Roboto_medium.ttf")
     });
 
     getProfilePicture(this.props.data.author._id).then(pic => {

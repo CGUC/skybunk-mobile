@@ -5,7 +5,7 @@
     "primaryColor": "#ffffff",
     "version": "6.0.0",
     "orientation": "portrait",
-    "sdkVersion": "32.0.0",
+    "sdkVersion": "33.0.0",
     "icon": "./assets/app-icon.png",
     "ios": {
       "bundleIdentifier": "com.grebel.skybunk",
@@ -33,6 +33,9 @@
       "backgroundColor": "#ffffff",
       "resizeMode": "cover",
       "image": "./assets/splash.png"
+    },
+    "packagerOpts": {
+      "sourceExts": ["js", "jsx", "json"]
     }
   }
 }

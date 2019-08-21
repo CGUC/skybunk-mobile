@@ -3,7 +3,8 @@ import { View, TouchableOpacity, Image } from "react-native";
 import { Container, Text, Content } from 'native-base';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { Font, AppLoading } from "expo";
+import { AppLoading } from "expo";
+import * as Font from 'expo-font';
 import ApiClient from '../../ApiClient';
 
 import styles from "./ChannelListStyle";
@@ -27,8 +28,8 @@ export default class ChannelList extends React.Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto: require("../../node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("../../node_modules/native-base/Fonts/Roboto_medium.ttf")
     });
     this.setState({ loading: false });
   }

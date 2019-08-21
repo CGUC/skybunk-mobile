@@ -1,6 +1,7 @@
 import React from 'react';
 import { ImageBackground, View, Image, KeyboardAvoidingView, Platform, Linking, StatusBar } from 'react-native';
-import { Font, AppLoading } from "expo";
+import { AppLoading } from "expo";
+import * as Font from 'expo-font';
 import { Container, Content, Text, Button, Input, Item, Spinner } from 'native-base';
 import notificationToken from '../../helpers/notificationToken';
 import Banner from '../../components/Banner/Banner';
@@ -26,8 +27,8 @@ export default class LoginView extends React.Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto: require("../../node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("../../node_modules/native-base/Fonts/Roboto_medium.ttf")
     });
     this.setState({ loading: false });
   }

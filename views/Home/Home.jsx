@@ -7,7 +7,7 @@ import HomeTabBar from "./HomeTabBar/HomeTabBar";
 import styles from "./HomeStyle";
 import ApiClient from '../../ApiClient';
 import ImageCache from '../../helpers/imageCache'
-import { Font} from "expo";
+import * as Font from 'expo-font';
 import { Notifications } from 'expo';
 import _ from 'lodash';
 
@@ -54,8 +54,8 @@ export default class HomeView extends React.Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto: require("../../node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("../../node_modules/native-base/Fonts/Roboto_medium.ttf")
     });
     ApiClient.get('/channels',  {authorized: true})
     .then(response => {

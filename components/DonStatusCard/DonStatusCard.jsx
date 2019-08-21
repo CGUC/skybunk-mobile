@@ -5,7 +5,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import Switch from 'react-native-switch-pro'
 import Autolink from 'react-native-autolink';
 import _ from 'lodash';
-import { Font} from "expo";
+import * as Font from 'expo-font';
 import {getProfilePicture} from "../../helpers/imageCache"
 import styles from "./DonStatusCardStyle";
 import date from 'date-fns';
@@ -26,8 +26,8 @@ export default class DonStatusCard extends React.Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto: require("../../node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("../../node_modules/native-base/Fonts/Roboto_medium.ttf")
     });
     getProfilePicture(this.props.don._id).then(pic => {
       this.setState({

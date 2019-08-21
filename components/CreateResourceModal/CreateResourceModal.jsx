@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { View, Modal, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
 import { Text, Button, Textarea, Icon } from 'native-base';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
-import { ImagePicker, Permissions } from 'expo';
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
 import Toolbar from './Toolbar/Toolbar'
 import styles from './CreateResourceModalStyle';
 

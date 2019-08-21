@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, TouchableOpacity, Text, View } from 'react-native';
 import { Container, Content, Spinner, Icon } from 'native-base';
-import { Font} from "expo";
+import * as Font from 'expo-font';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import DonStatusCard from '../../components/DonStatusCard/DonStatusCard';
 import styles from './DonInfoStyle';
@@ -62,8 +62,8 @@ export default class DonInfo extends React.Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto: require("../../node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("../../node_modules/native-base/Fonts/Roboto_medium.ttf")
     });
     await this.loadDons();
   }
