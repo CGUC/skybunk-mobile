@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Autolink from 'react-native-autolink';
 import { View, FlatList, TouchableOpacity, Platform, Alert } from 'react-native';
-import { CheckBox } from 'react-native-elements';
-import { Text, Button, Textarea, Icon } from 'native-base';
+import { CheckBox, Icon } from 'react-native-elements';
+import { Text, Button, Textarea } from 'native-base';
 import { Font } from "expo";
-import { pollVote, pollOption } from '../../helpers/poll';
+import { pollVote, pollOption, pollDeleteOption } from '../../helpers/poll';
 import styles from "./PollStyle";
 
 export default class Poll extends React.Component {
@@ -23,6 +24,7 @@ export default class Poll extends React.Component {
       open: cleanOpen,
       options: cleanOpts,
       newOption: '',
+      isAdmin: this.props.loggedInUser && this.props.loggedInUser.role && this.props.loggedInUser.role.includes("admin"),
     }
   }
 
@@ -33,7 +35,25 @@ export default class Poll extends React.Component {
     });
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.options && !nextState.options) {
+      nextState.options = this.state.options;
+    }
+    return true;
+  }
+
+  getTotal = (options) => {
+    var total = 0;
+    options.forEach(opt => { total += opt.usersVoted.length; });
+    return total;
+  }
+
   newOptionUpdate = async (text) => {
+    var match = /\r|\n/.exec(text);
+    if (match) {
+      this.addOption();
+      return;
+    }
     if (text.length >= 200) {
       return;
     }
@@ -95,6 +115,9 @@ export default class Poll extends React.Component {
   serverVote = (option, retract) => {
     pollVote(this.props.postId, { retract: retract, optionId: option._id })
     .then((poll) => {
+      if (!poll.options) {
+        return;
+      }
       this.setState({ options: poll.options });
       this.props.updatePoll && this.props.updatePoll({
         title: this.state.title,
@@ -120,6 +143,9 @@ export default class Poll extends React.Component {
   }
 
   toggleOption = async (item) => {
+    if (!this.state.options) {
+      return;
+    }
     var opts = this.state.options;
     var optIndex = opts.findIndex(opt => opt.key === item.key);
     if (optIndex === -1) {
@@ -163,7 +189,7 @@ export default class Poll extends React.Component {
   }
 
   confirmDelete = async (item) => {
-    if (!this.props.isAuthor || !this.props.savePoll) {
+    if (!this.props.isAuthor && !this.state.isAdmin && item.creator !== this.props.loggedInUser._id) {
       return;
     }
     Alert.alert(
@@ -177,30 +203,53 @@ export default class Poll extends React.Component {
   }
 
   deleteOption = (item) => {
-    var opts = this.state.options;
-    var optIndex = opts.findIndex(opt => opt.key === item.key);
-    if (optIndex === -1) {
-      return;
+    if (this.props.savePoll) {
+      var opts = this.state.options;
+      var optIndex = opts.findIndex(opt => opt.key === item.key);
+      if (optIndex === -1) {
+        return;
+      }
+      opts.splice(optIndex, 1);
+      this.props.savePoll({
+        title: this.state.title,
+        multiSelect: this.state.multiSelect,
+        open: this.state.open,
+        options: opts,
+      });
+    } else {
+      pollDeleteOption(this.props.postId, item)
+      .then((poll) => {
+        if (!poll.options) {
+          return;
+        }
+        this.setState({ options: poll.options });
+        this.props.updatePoll && this.props.updatePoll({
+          title: this.state.title,
+          multiSelect: this.state.multiSelect,
+          open: this.state.open,
+          options: poll.options,
+        });
+      })
+      .catch((error) => alert("Error removing option. Sorry about that!"));
     }
-    opts.splice(optIndex, 1);
-    this.props.savePoll({
-      title: this.state.title,
-      multiSelect: this.state.multiSelect,
-      open: this.state.open,
-      options: opts,
-    });
   }
 
   addOption = async () => {
     if (this.state.newOption.length == 0) {
       return;
     }
+    if (this.state.options.length >= 10) {
+      alert("Cannot have more than 10 options on a poll. Sorry about that!");
+      return;
+    }
     let optionText = this.state.newOption;
-    this.setState({ newOption: '' });
     if (!this.props.savePoll) {
       pollOption(this.props.postId, { option: optionText })
       .then((poll) => {
-        this.setState({ options: poll.options });
+        if (!poll.options) {
+          return;
+        }
+        this.setState({ options: poll.options, newOption: '' });
         this.props.updatePoll && this.props.updatePoll({
           title: this.state.title,
           multiSelect: this.state.multiSelect,
@@ -222,10 +271,14 @@ export default class Poll extends React.Component {
         open: this.state.open,
         options: opts,
       });
+      this.setState({ newOption: '' });
     }
   }
 
   buildListItems = () => {
+    if (!this.state.options) {
+      return;
+    }
     let items = this.state.options
             .sort((a, b) => b.usersVoted.length - a.usersVoted.length)
             .slice()
@@ -246,7 +299,7 @@ export default class Poll extends React.Component {
       return (
         <View style={styles.optionGroup}>
           <TouchableOpacity style={styles.addContainingView} onPress={this.addOption}>
-            <Icon name={Platform.OS === 'ios' ? "ios-add" : "md-add"} style={styles.addView}/>
+            <Icon name="add" style={styles.addView}/>
           </TouchableOpacity>
           <Textarea
             placeholder="Add an option..."
@@ -258,6 +311,9 @@ export default class Poll extends React.Component {
       );
     }
     let selected = (this.userVoteIndex(item) !== -1);
+    let totalCount = this.getTotal(this.state.options);
+    let percentage = totalCount === 0 ? 0 : (item.usersVoted.length / totalCount * 100).toFixed();
+    let canDelete = this.props.isAuthor || this.state.isAdmin || item.creator === this.props.loggedInUser._id;
     return(
   		<TouchableOpacity style={styles.fillWidth} onPress={this.toggleOption.bind(this, item)} onLongPress={this.confirmDelete.bind(this, item)}>
         <View style={styles.optionView}>
@@ -278,8 +334,15 @@ export default class Poll extends React.Component {
               onIconPress={this.toggleOption.bind(this, item)}
               onLongIconPress={this.confirmDelete.bind(this, item)}
             />}
-  			  <Text style={styles.optionText}>{item.text}</Text>
-  			  <Text style={styles.optionCount}>{`${item.usersVoted.length}`}</Text>
+  			  <Autolink style={styles.optionText} text={item.text}/>
+  			  <Text style={styles.optionCount}>{`${item.usersVoted.length}: ${percentage}%`}</Text>
+          {canDelete ?
+            <TouchableOpacity style={styles.optionDeleteContainer} onPress={this.confirmDelete.bind(this, item)}>
+              <Icon
+                name="delete"
+                style={styles.optionDelete}
+              />
+            </TouchableOpacity> : null}
         </View>
   		</TouchableOpacity>
     );
@@ -296,14 +359,9 @@ export default class Poll extends React.Component {
             <CheckBox
               style={styles.topCheckbox}
               containerStyle={styles.topCheckboxContainer}
-              title={`${this.state.open ? 'Disallow' : 'Allow'} Option Creation`}
+              title='Allow Option Creation'
               iconRight
               right
-              iconType='material'
-              checkedIcon='lock'
-              uncheckedIcon='lock-open'
-              checkedColor='red'
-              uncheckedColor='green'
               checked={this.state.open}
               onPress={this.toggleOpen}
               onIconPress={this.toggleOpen}
@@ -319,15 +377,22 @@ export default class Poll extends React.Component {
               onIconPress={this.toggleMultiSelect}
             />
           </View> : null}
-        <Text style={styles.questionText}>Question</Text>
-        <Textarea
-            bordered
-            placeholder="Ask something..."
-            style={styles.textBox}
-            onChangeText={this.titleUpdate}
-            value={this.state.title}
-            disabled={!this.props.isAuthor || !editing}
-        />
+        {this.props.isAuthor && editing ?
+          <View style={styles.fillWidth}>
+            <Text style={styles.questionText}>Question</Text>
+            <Textarea
+              bordered
+              placeholder="Ask something..."
+              style={styles.textBox}
+              onChangeText={this.titleUpdate}
+              value={this.state.title}
+              disabled={!this.props.isAuthor || !editing}
+            />
+          </View> :
+          <Autolink
+              style={styles.finalQuestion}
+              text={this.state.title}
+          />}
         <FlatList
           style={styles.fillWidth}
           keyboardShouldPersistTaps={'handled'}

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Autolink from 'react-native-autolink';
 import { View, FlatList } from 'react-native';
 import { Text, Button, Textarea } from 'native-base';
 import { Font } from "expo";
@@ -60,15 +61,15 @@ export default class PollPreview extends React.Component {
     let totalCount = this.getTotal(this.state.options);
 
     return(
-  		<View style={styles.optionView}>
+      <View style={styles.optionView}>
         <View style={styles.optionInfo}>
-  			  <Text style={styles.optionText}>{item.text}</Text>
-  			  <Text style={styles.optionCount}>{countText}</Text>
+          <Autolink style={styles.optionText} text={item.text}/>
+          <Text style={styles.optionCount}>{countText}</Text>
         </View>
         <View style={styles.progressbar}>
           <View style={[styles.filler, { width: `${totalCount === 0 ? 0 : item.usersVoted.length / totalCount * 100}%` }]} />
         </View>
-  		</View>
+      </View>
     );
   }
 
@@ -83,7 +84,7 @@ export default class PollPreview extends React.Component {
 
     return (
       <View style={styles.card}>
-        <Text style={styles.questionText}>{this.state.title}</Text>
+        <Autolink style={styles.questionText} text={this.state.title}/>
         <FlatList
           data={this.buildListItems()}
           renderItem={this.renderListItem}
