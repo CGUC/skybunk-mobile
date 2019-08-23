@@ -88,12 +88,12 @@ export default (styles = StyleSheet.create({
     height: 28,
     paddingLeft: 3,
     paddingRight: 7,
-    paddingTop: 4,
-    paddingBottom: 4,
+    paddingTop: 1,
+    paddingBottom: 6,
   },
   optionDelete: {
     width: 20,
-    height: 20,
+    height: 21,
   },
   optionGroup: {
     width: '100%',
