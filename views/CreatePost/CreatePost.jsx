@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Modal, ScrollView, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform, Dimensions } from 'react-native';
-import { Text, Button, Textarea, Icon } from 'native-base';
+import { View, Modal, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
+import { Text, Button, Textarea, Icon, Container } from 'native-base';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
-import { ImagePicker, Permissions } from 'expo';
+import { ImagePicker, Permissions, Font } from 'expo';
 import Toolbar from './Toolbar/Toolbar'
-import Poll from '../Poll/Poll';
-import styles from './CreateResourceModalStyle';
+import styles from './CreatePost';
 
-export default class CreateResourceModal extends React.Component {
+export default class CreatePost extends React.Component {
 
   constructor(props) {
     super(props);
@@ -18,10 +17,33 @@ export default class CreateResourceModal extends React.Component {
     this.state = {
       resourceText: existingText || "",
       image: null,
-      isPoll: !!existingPollData,
-      pollData: existingPollData || null
     };
   }
+
+  async componentWillMount() {
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+    });
+  }
+
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Make a Post',
+      headerTitle: null,
+      get headerRight() {
+          return (
+            <TouchableOpacity onPress={navigation.getParam('save')}>
+              {
+                <Text
+                  style={styles.icon}
+                >Post</Text>
+              }
+            </TouchableOpacity>
+          )
+      }
+    }
+  };
 
   saveResource = () => {
     const { saveResource, clearAfterSave } = this.props;
@@ -147,72 +169,35 @@ export default class CreateResourceModal extends React.Component {
     }
 
     return (
-      <Modal
+      <Container
         animationType="slide"
         transparent={true}
         visible={isModalOpen}
         onRequestClose={onClose}
       >
-        <TouchableOpacity
-          activeOpacity={1}
-          style={styles.modal}
-          onPress={onClose}
-        >
-          <KeyboardAvoidingView
-            behavior='padding'
-            // Android already does this by default, so it doubles the padding when enabled
-            enabled={Platform.OS !== 'android'}
-          >
-            <GestureRecognizer
-              onSwipeDown={this.hideKeyboard}
-              style={styles.gestureRecognizer}
-            >
-              <View style={[styles.view, {height: modalHeight}]}>
-                {this.props.showToolbar ?
-                  Toolbar({
-                    pickImage: this.pickImage,
-                    takeImage: this.takeImage,
-                    togglePoll: this.togglePoll,
-                    image: this.state.image,
-                  }) : null}
-                {this.state.isPoll ?
-                  <ScrollView
-                  style={styles.poll}
-                  keyboardShouldPersistTaps={'always'}
-                  showsVerticalScrollIndicator={false}>
-                    <Poll
-                      data={this.state.pollData}
-                      savePoll={this.updatePoll}
-                      loggedInUser={loggedInUser}
-                      isAuthor={this.props.isAuthor}
-                    />
-                  </ScrollView> :
-                  /* A bit hacky, but we need another GestureRecognizer to register swipe over the text box */
-                  <GestureRecognizer
-                    onSwipeDown={this.hideKeyboard}
-                    style={styles.gestureRecognizer}
-                  >
-                    <Textarea
-                      bordered
-                      placeholder="What's on your mind?"
-                      style={styles.textBox}
-                      onChangeText={this.textUpdate}
-                      value={this.state.resourceText}
-                    />
-                  </GestureRecognizer>}
-                <View style={styles.buttonGroup}>
-                  <Button block style={styles.button} onPress={this.saveResource}>
-                    <Text>{submitButtonText}</Text>
-                  </Button>
-                  <Button block style={styles.button} onPress={this.onCancel}>
-                    <Text>Cancel</Text>
-                  </Button>
-                </View>
-              </View>
-            </GestureRecognizer>
-          </KeyboardAvoidingView>
-        </TouchableOpacity>
-      </Modal>
+        <View style={styles.postContentView}>
+          <Textarea
+            bordered
+            placeholder="What's on your mind?" //TODO random rotation
+            style={styles.textBox}
+            onChangeText={this.textUpdate}
+            value={this.state.resourceText}
+          />
+        </View>
+        <View style={styles.selectChannelView}>
+        
+        </View>
+        <View style={styles.ToolbarView}>
+          {Toolbar({
+            pickImage: this.pickImage,
+            takeImage: this.takeImage,
+            image: this.state.image,
+          })}
+        </View>
+        <View style={styles.mediaPreviewView}>
+        
+        </View>
+      </Container>
     )
   }
 }

@@ -10,7 +10,6 @@ import {getProfilePicture, getPostPicture} from "../../helpers/imageCache";
 import { getPoll, createPoll } from '../../helpers/poll';
 import PollPreview from '../Poll/PollPreview/PollPreview';
 import Poll from '../Poll/Poll';
-import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
 import styles from "./PostStyle";
 
 export default class Post extends React.Component {
@@ -424,19 +423,6 @@ export default class Post extends React.Component {
             </TouchableOpacity>
           </Modal>
         </View>
-
-        <CreateResourceModal
-          onClose={this.closeEditingModal}
-          isModalOpen={editing}
-          saveResource={this.saveEdited}
-          existing={content}
-          existingPoll={pollCopy}
-          submitButtonText='Save'
-          clearAfterSave={false}
-          loggedInUser={loggedInUser}
-          isAuthor={isAuthor}
-          key={this.state.updateKey}
-        />
       </View>
     )
   }

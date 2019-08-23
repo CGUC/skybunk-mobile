@@ -7,8 +7,6 @@ import {
 } from 'native-base';
 import styles from "./ContentBarStyle";
 
-import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
-
 export default class ContentBar extends React.Component {
 
   constructor(props) {

@@ -10,7 +10,6 @@ import _ from 'lodash';
 import { Font, AppLoading } from "expo";
 import date from 'date-fns';
 
-import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
 import styles from "./CommentStyle";
 import {getProfilePicture} from "../../helpers/imageCache"
 
@@ -167,16 +166,6 @@ export default class Comment extends React.Component {
             </TouchableOpacity>
           </Modal>
         </View>
-
-        <CreateResourceModal
-          onClose={this.closeEditingModal}
-          isModalOpen={editing}
-          saveResource={this.saveEdited}
-          existing={content}
-          submitButtonText='Save'
-          clearAfterSave={false}
-        />
-
       </View>
     )
   }

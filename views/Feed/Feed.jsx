@@ -238,8 +238,8 @@ export default class FeedView extends React.Component {
   closeContentModal = () => {
     this.setState({ isContentModalOpen: false })
   }
-  openContentModal = () => {
-    this.setState({ isContentModalOpen: true })
+  createPost = () => {
+    this.props.navigation.navigate("CreatePost");
   }
 
   buildListItems() {
@@ -357,19 +357,9 @@ export default class FeedView extends React.Component {
         <Container style={defaultStyles.backgroundTheme}>
           {this.getContentJSX()}
 
-          <Button style={styles.newPostButton} onPress={this.openContentModal}>
+          <Button style={styles.newPostButton} onPress={this.createPost}>
             <Text>Make A Post</Text>
           </Button>
-
-          <CreateResourceModal
-            onClose={this.closeContentModal}
-            isModalOpen={this.state.isContentModalOpen} 
-            saveResource={this.addPost}
-            submitButtonText={'Post'}
-            showToolbar={true}
-            clearAfterSave={true}
-          />
-
           <UserProfile
             user={userDataToShow}
             onClose={this.closeProfileModal}
