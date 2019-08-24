@@ -1,12 +1,15 @@
 import React from 'react';
 import Autolink from 'react-native-autolink';
-import { View, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Modal, Alert, Dimensions } from 'react-native';
+import { View, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Modal, Alert, KeyboardAvoidingView, Keyboard, Platform, Dimensions } from 'react-native';
 import Image from 'react-native-scalable-image';
 import { Body, Card, CardItem, Text, Thumbnail, Button, Icon } from 'native-base';
 import { Font } from "expo";
 import date from 'date-fns';
 import Popover from 'react-native-popover-view';
-import {getProfilePicture, getPostPicture} from "../../helpers/imageCache"
+import {getProfilePicture, getPostPicture} from "../../helpers/imageCache";
+import { getPoll, createPoll } from '../../helpers/poll';
+import PollPreview from '../Poll/PollPreview/PollPreview';
+import Poll from '../Poll/Poll';
 import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
 import styles from "./PostStyle";
 
@@ -20,6 +23,9 @@ export default class Post extends React.Component {
       showEditButtons: false,
       editing: false,
       image: null,
+      poll: null,
+      pollCopy: null,
+      updateKey: 0,
     }
   }
 
@@ -40,6 +46,16 @@ export default class Post extends React.Component {
       getPostPicture(this.props.data._id).then(pic => {
         this.setState({
           image: pic,
+        });
+      }).catch(error => {
+        console.error(error);
+      });
+    }
+    if (this.props.data.media) {
+      getPoll(this.props.data._id).then(poll => {
+        this.setState({
+          poll: poll,
+          pollCopy: this.copyPollData(poll),
         });
       }).catch(error => {
         console.error(error);
@@ -70,7 +86,16 @@ export default class Post extends React.Component {
     }
     this.closeEditingModal();
 
-    updatePost && updatePost(postId, data, 'editPost');
+    if (this.state.poll) {
+      createPoll(postId, newContent.poll).then(poll => {
+        updatePost && updatePost(postId, data, 'editPoll');
+      })
+      .catch(err => {
+        alert("Error updating post. Sorry about that!")
+      });
+    } else {
+      updatePost && updatePost(postId, data, 'editPost');
+    }
   }
 
   closeEditingModal = () => {
@@ -134,6 +159,21 @@ export default class Post extends React.Component {
         { text: 'Continue', style: 'cancel' },
       ],
     )
+  }
+
+  copyPollData = (source) => {
+    if (!source) {
+      return null;
+    }
+    return JSON.parse(JSON.stringify(source));
+  }
+
+  updatePoll = async (data) => {
+    this.setState({
+      updateKey: (this.state.updateKey + 1) % 10,
+      poll: data,
+      pollCopy: this.copyPollData(data),
+    });
   }
 
   toggleLike = () => {
@@ -214,7 +254,9 @@ export default class Post extends React.Component {
     const {
       showEditButtons,
       editing,
-      showLikedList
+      showLikedList,
+      poll,
+      pollCopy
     } = this.state;
 
     const {
@@ -230,9 +272,11 @@ export default class Post extends React.Component {
       comments,
       createdAt,
       tags,
+      media,
     } = data;
     const isLiked = usersLiked.filter(e => e._id == this.props.loggedInUser._id).length > 0;
     var likeIcon = isLiked ? require('../../assets/liked-cookie.png') : require('../../assets/cookie-icon.png');
+    let isAuthor = (author._id === loggedInUser._id);
 
     if (isLiked) {
       usersLiked = usersLiked.filter(user => user._id !== this.props.loggedInUser._id);
@@ -273,86 +317,96 @@ export default class Post extends React.Component {
 
     return (
       <View>
-        <Card style={styles.card}>
+        <KeyboardAvoidingView
+          behavior='position'
+          keyboardVerticalOffset={Platform.OS === 'android' ? 30 : 0}
+          enabled={poll && this.props.onPressPost}
+        >
+          <Card style={styles.card}>
 
-          <CardItem>
-            {/* Using flexbox here because NativeBase's Left/Body/Right isn't as customizable */}
-            <View style={styles.headerContainer}>
+            <CardItem>
+              {/* Using flexbox here because NativeBase's Left/Body/Right isn't as customizable */}
+              <View style={styles.headerContainer}>
 
-              <View style={styles.headerLeft}>
-                <View>
-                  <TouchableOpacity onPress={() => showUserProfile(author)}>
-                    <Thumbnail
-                      style={styles.profilePicThumbnail}
-                      source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }}
-                    />
+                <View style={styles.headerLeft}>
+                  <View>
+                    <TouchableOpacity onPress={() => showUserProfile(author)}>
+                      <Thumbnail
+                        style={styles.profilePicThumbnail}
+                        source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.headerBody}>
+                    <View style={styles.authorDetails}>
+                      <Text>{authorName}</Text>
+                      <Text>{this.props.showTag ? ` ►  ${tags[0]}` : null}</Text>
+                    </View>
+                    <Text note>{createdAt}</Text>
+                  </View>
+                </View>
+
+                <View style={styles.headerRight}>
+                  <TouchableOpacity onPress={this.onPressOptions} hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}>
+                    <Icon style={styles.icon} type='MaterialIcons' name='more-vert' />
                   </TouchableOpacity>
                 </View>
-                <View style={styles.headerBody}>
-                  <View style={styles.authorDetails}>
-                    <Text>{authorName}</Text>
-                    <Text>{this.props.showTag ? ` ►  ${tags[0]}` : null}</Text>
+              </View>
+            </CardItem>
+
+            <CardItem button onPress={this.onPressPost} style={styles.postContent}>
+              <Body>
+                {poll ?
+                  (this.props.onPressPost ?
+                  <PollPreview data={poll} loggedInUser={loggedInUser} />
+                  : <Poll data={poll} postId={data._id} updatePoll={this.updatePoll} loggedInUser={loggedInUser} isAuthor={isAuthor} />)
+                : <Autolink text={content} numberOfLines={this.props.maxLines} ellipsizeMode='tail' />}
+              </Body>
+            </CardItem>
+
+            {this.state.image ? <CardItem style={styles.imageContainer}>
+              <TouchableWithoutFeedback onPress={this.onPressPost}>
+                <Image
+                  style={styles.image}
+                  width={Dimensions.get('window').width}
+                  source={{ uri: `data:image/png;base64,${this.state.image}` }}
+                />
+              </TouchableWithoutFeedback>
+            </CardItem> : null}
+
+            <CardItem style={styles.postFooter}>
+              <View style={styles.footerContainer}>
+                <View style={styles.iconContainer}>
+                  <TouchableOpacity onPress={this.toggleLike}>
+                    <Thumbnail small square source={likeIcon} style={styles.icon} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => this.setState({ showLikedList: true })}
+                    ref={ref => this.dialogRef = ref}
+                    hitSlop={{ top: 10, bottom: 10, left: 0, right: 40 }}
+                  >
+                    <Text style={styles.likesDialog}>{`${likesDialog}`}</Text>
+                  </TouchableOpacity>
+                </View>
+                <TouchableOpacity onPress={this.onPressPost}>
+                  <View style={styles.commentsContainer}>
+                    <Thumbnail small square source={require('../../assets/comments-icon.png')} style={styles.icon} />
+                    <Text style={styles.commentsDialog}>{`${numComments}`}</Text>
                   </View>
-                  <Text note>{createdAt}</Text>
-                </View>
-              </View>
-
-              <View style={styles.headerRight}>
-                <TouchableOpacity onPress={this.onPressOptions} hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}>
-                  <Icon style={styles.icon} type='MaterialIcons' name='more-vert' />
                 </TouchableOpacity>
               </View>
-            </View>
-          </CardItem>
+            </CardItem>
 
-          <CardItem button onPress={this.onPressPost} style={styles.postContent}>
-            <Body>
-              <Autolink text={content} numberOfLines={this.props.maxLines} ellipsizeMode='tail' />
-            </Body>
-          </CardItem>
+            <Popover
+              fromView={this.dialogRef}
+              isVisible={showLikedList}
+              onClose={() => this.setState({ showLikedList: false })}
+            >
+              {this.generateLikesList()}
+            </Popover>
 
-          {this.state.image ? <CardItem style={styles.imageContainer}>
-            <TouchableWithoutFeedback onPress={this.onPressPost}>
-              <Image
-                style={styles.image}
-                width={Dimensions.get('window').width}
-                source={{ uri: `data:image/png;base64,${this.state.image}` }}
-              />
-            </TouchableWithoutFeedback>
-          </CardItem> : null}
-
-          <CardItem style={styles.postFooter}>
-            <View style={styles.footerContainer}>
-              <View style={styles.iconContainer}>
-                <TouchableOpacity onPress={this.toggleLike}>
-                  <Thumbnail small square source={likeIcon} style={styles.icon} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => this.setState({ showLikedList: true })}
-                  ref={ref => this.dialogRef = ref}
-                  hitSlop={{ top: 10, bottom: 10, left: 0, right: 40 }}
-                >
-                  <Text style={styles.likesDialog}>{`${likesDialog}`}</Text>
-                </TouchableOpacity>
-              </View>
-              <TouchableOpacity onPress={this.onPressPost}>
-                <View style={styles.commentsContainer}>
-                  <Thumbnail small square source={require('../../assets/comments-icon.png')} style={styles.icon} />
-                  <Text style={styles.commentsDialog}>{`${numComments}`}</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          </CardItem>
-
-          <Popover
-            fromView={this.dialogRef}
-            isVisible={showLikedList}
-            onClose={() => this.setState({ showLikedList: false })}
-          >
-            {this.generateLikesList()}
-          </Popover>
-
-        </Card>
+          </Card>
+        </KeyboardAvoidingView>
 
         <View>
           <Modal
@@ -376,8 +430,12 @@ export default class Post extends React.Component {
           isModalOpen={editing}
           saveResource={this.saveEdited}
           existing={content}
+          existingPoll={pollCopy}
           submitButtonText='Save'
           clearAfterSave={false}
+          loggedInUser={loggedInUser}
+          isAuthor={isAuthor}
+          key={this.state.updateKey}
         />
       </View>
     )

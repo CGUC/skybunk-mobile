@@ -8,7 +8,7 @@ import ContentBar from '../ContentBar/ContentBar';
 
 export default class NoDataCell extends React.Component {
   render() {
-    var { message, addResource } = this.props;
+    var { message, addResource, loggedInUser } = this.props;
 
     return (
       <Container>
@@ -19,7 +19,7 @@ export default class NoDataCell extends React.Component {
         </Content>
         {!this.props.hideFooter ?
         <Footer>
-          <ContentBar addResource={addResource} showModalToolbar={true}/>
+          <ContentBar addResource={addResource} showModalToolbar={true} loggedInUser={loggedInUser}/>
         </Footer> : null}
       </Container>
     )

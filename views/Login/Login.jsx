@@ -147,7 +147,7 @@ export default class LoginView extends React.Component {
         </Item>
       </View>;
 
-      const logoIcon = 
+      const logoIcon =
         <View>
           <Image
             source={require('../../assets/login-logo.png')}
@@ -236,7 +236,7 @@ export default class LoginView extends React.Component {
             </Content>
           </ImageBackground>
         </Container>
-        
+
       );
     }
   }

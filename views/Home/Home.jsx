@@ -27,8 +27,8 @@ export default class HomeView extends React.Component {
           return null;
         }
         return (
-          <TouchableOpacity 
-            hitSlop={{ top: 10, bottom: 10, left: 0, right: 40 }} 
+          <TouchableOpacity
+            hitSlop={{ top: 10, bottom: 10, left: 0, right: 40 }}
             onPress={() => {navigation.navigate('MemberList', {user: navigation.getParam('user')}); }}>
             <Thumbnail
                   small
@@ -109,10 +109,10 @@ export default class HomeView extends React.Component {
   onPressNotif = (notif) => {
     this.updateNotificationState(notif);
     this.props.navigation.navigate(
-      'Comments', 
-      { 
+      'Comments',
+      {
         postData: notif.data.post,
-        updateParentState: () => {}, 
+        updateParentState: () => {},
         loggedInUser: this.state.user,
       }
     );
@@ -159,7 +159,7 @@ export default class HomeView extends React.Component {
 
   render() {
     const { channels, loading, user } = this.state;
-    
+
     StatusBar.setBarStyle('dark-content', true);
     if (loading) {
       return (
@@ -174,7 +174,7 @@ export default class HomeView extends React.Component {
       return (
         <Container>
           <Container>
-              {this.state.currentTab === 'channels' ? 
+              {this.state.currentTab === 'channels' ?
                 <ChannelList
                   channels={channels}
                   onPressChannel={this.onPressChannel}
@@ -190,7 +190,7 @@ export default class HomeView extends React.Component {
               }
           </Container>
           <Footer>
-            <HomeTabBar 
+            <HomeTabBar
               onSwitchTab={ (tab) => {this.setState({currentTab: tab})} }
               currentTab={this.state.currentTab}
               newNotifications={hasNewNotifications}

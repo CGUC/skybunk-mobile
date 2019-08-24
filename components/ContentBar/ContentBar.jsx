@@ -56,6 +56,8 @@ export default class ContentBar extends React.Component {
           submitButtonText={this.props.submitButtonText}
           showToolbar={this.props.showModalToolbar}
           clearAfterSave={true}
+          loggedInUser={this.props.loggedInUser}
+          isAuthor={true}
         />
       </View>
     )
