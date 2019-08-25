@@ -7,7 +7,8 @@ import {
   Container, Content, Left, Icon, Button
 } from 'native-base';
 import _ from 'lodash';
-import { Font, AppLoading } from "expo";
+import { AppLoading } from "expo";
+import * as Font from 'expo-font';
 import date from 'date-fns';
 
 import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
@@ -29,8 +30,8 @@ export default class Comment extends React.Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto: require("../../node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("../../node_modules/native-base/Fonts/Roboto_medium.ttf")
     });
 
     getProfilePicture(this.props.data.author._id).then(pic => {

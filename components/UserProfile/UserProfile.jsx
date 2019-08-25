@@ -1,7 +1,8 @@
 import React from 'react';
 import { Modal, View, Image, TouchableOpacity } from 'react-native';
 import { Text, Icon, Card, CardItem } from 'native-base';
-import { Font, AppLoading } from "expo";
+import { AppLoading } from "expo";
+import * as Font from 'expo-font';
 import AutoLink from 'react-native-autolink'
 import _ from 'lodash';
 

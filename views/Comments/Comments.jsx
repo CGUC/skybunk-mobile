@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView} from 'react-native';
 import { Container, Footer, Content, Text, Spinner } from 'native-base';
-import { Font } from "expo";
+import * as Font from 'expo-font';
 
 import Post from '../../components/Post/Post';
 import Comment from '../../components/Comment/Comment';
@@ -46,8 +46,8 @@ export default class CommentsView extends React.Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto: require("../../node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("../../node_modules/native-base/Fonts/Roboto_medium.ttf")
     });
 
     await this.loadData();

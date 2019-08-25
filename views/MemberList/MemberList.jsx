@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, Text, Image, TouchableOpacity } from 'react-native';
 import { Container, Content, Spinner, Item, Input, Icon, Header, View, Thumbnail} from 'native-base';
-import { Font } from "expo";
+import * as Font from 'expo-font';
 
 import UserListItem from '../../components/UserListItem/UserListItem';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
@@ -45,8 +45,8 @@ export default class MemberList extends React.Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto: require("../../node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("../../node_modules/native-base/Fonts/Roboto_medium.ttf")
     });
 
     ImageCache.getProfilePicture(this.props.navigation.getParam('user')._id)

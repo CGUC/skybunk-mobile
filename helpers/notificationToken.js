@@ -1,4 +1,5 @@
-import { Permissions, Notifications } from 'expo';
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
 import ApiClient from '../ApiClient';
 
 module.exports = {

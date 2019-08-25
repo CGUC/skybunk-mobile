@@ -1,7 +1,8 @@
 import React from "react";
 import { TouchableOpacity, FlatList } from "react-native";
 import { Container, Text, Button} from 'native-base';
-import { Font, AppLoading } from "expo";
+import { AppLoading } from "expo";
+import * as Font from 'expo-font';
 import date from 'date-fns';
 import defaultStyles from "../../styles/styles";
 
@@ -18,8 +19,8 @@ export default class NotificationList extends React.Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto: require("../../node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("../../node_modules/native-base/Fonts/Roboto_medium.ttf")
     });
     this.setState({ loading: false });
   }

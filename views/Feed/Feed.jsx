@@ -8,7 +8,8 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { FlatList} from 'react-native';
 import { Container, Footer, Content, Spinner, Text } from 'native-base';
-import { Font, AppLoading } from "expo";
+import { AppLoading } from "expo";
+import * as Font from 'expo-font';
 import ContentBar from '../../components/ContentBar/ContentBar';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import Post from '../../components/Post/Post';
@@ -49,8 +50,8 @@ export default class FeedView extends React.Component {
   async componentWillMount() {
 
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto: require("../../node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("../../node_modules/native-base/Fonts/Roboto_medium.ttf")
     });
 
     await this.loadData();

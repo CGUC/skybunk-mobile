@@ -1,8 +1,8 @@
 import React from 'react'
 import { createStackNavigator, createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { Image, TouchableOpacity } from "react-native";
-import LoginView from './views/Login/Login';
 import HomeView from './views/Home/Home';
+import LoginView from './views/Login/Login';
 import FeedView from './views/Feed/Feed';
 import CommentsView from './views/Comments/Comments';
 import SplashScreen from './views/Splash/Splash';
