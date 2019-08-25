@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Modal, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
-import { Text, Button, Textarea, Icon, Container } from 'native-base';
+import { View, Modal, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform, StyleSheet, Image  } from 'react-native';
+import { Text, Button, Textarea, Icon, Container} from 'native-base';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { ImagePicker, Permissions, Font } from 'expo';
 import Toolbar from './Toolbar/Toolbar'
-import styles from './CreatePost';
+import MediaPreview from './MediaPreview/MediaPreview'
+import styles from './CreatePostStyle';
+import RNPickerSelect from 'react-native-picker-select';
 
 export default class CreatePost extends React.Component {
 
@@ -17,6 +19,8 @@ export default class CreatePost extends React.Component {
     this.state = {
       resourceText: existingText || "",
       image: null,
+      isPoll: false, 
+      pollData: null
     };
   }
 
@@ -35,8 +39,7 @@ export default class CreatePost extends React.Component {
           return (
             <TouchableOpacity onPress={navigation.getParam('save')}>
               {
-                <Text
-                  style={styles.icon}
+                <Text style={styles.headerText}
                 >Post</Text>
               }
             </TouchableOpacity>
@@ -98,6 +101,7 @@ export default class CreatePost extends React.Component {
     this.setState({
       image: result.uri,
     });
+    return !!result.uri;
   }
 
   pickImage = async () => {
@@ -125,11 +129,21 @@ export default class CreatePost extends React.Component {
     this.setState({
       image: result.uri,
     });
+    return !!result.uri;
   }
 
-  togglePoll = async () => {
+  addPoll = async () => {
     this.setState({
-      isPoll: !this.state.isPoll,
+      isPoll: true,
+      image: null
+    });
+    return true;
+  }
+
+  clearMedia = async () => {
+    this.setState({
+      isPoll: false,
+      image: null
     });
   }
 
@@ -138,6 +152,12 @@ export default class CreatePost extends React.Component {
       isPoll: !!data,
       pollData: data,
     });
+  }
+
+  updateChannel = (value) => {
+    this.setState({
+      channel: value
+    })
   }
 
   render() {
@@ -156,18 +176,6 @@ export default class CreatePost extends React.Component {
       this.state.isPoll = !!this.state.pollData;
     }
 
-    const { height, width } = Dimensions.get('window');
-    let modalHeight;
-    if (this.state.isPoll) {
-      if (this.props.showToolbar) {
-        modalHeight = height - 220;
-      } else {
-        modalHeight = height - 250;
-      }
-    } else {
-      modalHeight = 330;
-    }
-
     return (
       <Container
         animationType="slide"
@@ -175,6 +183,39 @@ export default class CreatePost extends React.Component {
         visible={isModalOpen}
         onRequestClose={onClose}
       >
+        <View style={styles.selectChannelView}>
+          <RNPickerSelect
+            placeholder={{
+              label: 'Select a channel...',
+              value: null, 
+              color: '#9EA0A4'}}
+            items={[
+              {
+                label: 'Football',
+                value: 'football',
+              },
+              {
+                label: 'Baseball',
+                value: 'baseball',
+              },
+              {
+                label: 'Hockey',
+                value: 'hockey',
+              },
+            ]}
+            onValueChange={this.updateChannel}
+            style={{ //uses inputAndroid and inputiOS style from the stylesheet
+              ...styles,
+              iconContainer: {
+                top: 10,
+                left: 12,
+              },
+            }}
+            Icon={() => {
+              return <Image source={require('../../assets/channel-list.png')} style={styles.channelImage}/>
+            }}
+          />
+        </View>
         <View style={styles.postContentView}>
           <Textarea
             bordered
@@ -184,18 +225,21 @@ export default class CreatePost extends React.Component {
             value={this.state.resourceText}
           />
         </View>
-        <View style={styles.selectChannelView}>
         
-        </View>
         <View style={styles.ToolbarView}>
-          {Toolbar({
-            pickImage: this.pickImage,
-            takeImage: this.takeImage,
-            image: this.state.image,
-          })}
+          <Toolbar
+            pickImage = {this.pickImage}
+            takeImage = {this.takeImage}
+            addPoll = {this.addPoll}
+            clearMedia = {this.clearMedia}
+            image = {this.state.image}
+          />
         </View>
         <View style={styles.mediaPreviewView}>
-        
+          <MediaPreview 
+            image={this.state.image}
+            poll={this.state.poll}
+            isPoll={this.state.isPoll}/>
         </View>
       </Container>
     )

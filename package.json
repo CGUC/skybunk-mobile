@@ -31,6 +31,8 @@
     "react-native-elements": "^1.1.0",
     "react-native-modal-datetime-picker": "^6.0.0",
     "react-native-nav": "2.0.2",
+    "react-native-paper": "^2.16.0",
+    "react-native-picker-select": "^6.3.2",
     "react-native-popover-view": "^1.0.17",
     "react-native-scalable-image": "^0.4.0",
     "react-native-swipe-gestures": "^1.0.3",

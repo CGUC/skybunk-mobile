@@ -9,6 +9,36 @@ export default (styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#00000050'
   },
+  headerText: {
+    fontSize: 17,
+    color: '#FFF',
+    paddingRight: 13,
+  },
+  channelImage: {
+    height:22,
+    width: 22,
+    tintColor: "#000"
+  },
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    color: 'black',
+    paddingLeft: 50, // to ensure the text is never behind the icon
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'purple',
+    borderRadius: 8,
+    color: 'black',
+    paddingLeft: 50, // to ensure the text is never behind the icon
+  },
   view: {
     width: width,
     minHeight: 330,
@@ -40,7 +70,4 @@ export default (styles = StyleSheet.create({
     marginRight: 5,
     ...defaultStyles.primaryColor
   },
-  gestureRecognizer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.0)',
-  }
 }));
