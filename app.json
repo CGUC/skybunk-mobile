@@ -21,7 +21,7 @@
         "CAMERA",
         "CAMERA_ROLL"
       ],
-      "versionCode": 4
+      "versionCode": 8
     },
     "notification": {
       "icon": "./assets/icon-notification.png",
