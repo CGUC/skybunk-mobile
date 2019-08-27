@@ -116,9 +116,6 @@ export default class FeedView extends React.Component {
       content: data.content,
       tags: tags
     }
-    if (data.poll) {
-      postContent.content = data.poll.title;
-    }
     ApiClient.post('/posts', postContent, {authorized: true})
     .then(response => response.json())
     .then(post => {
@@ -176,7 +173,6 @@ export default class FeedView extends React.Component {
     }
     else if (type === 'editPoll') {
       this.updateState('updatePoll', data);
-      this.loadData();
     }
 
     ApiClient.put(`/posts/${postId}`, _.pick(data, ['content', 'image']), {authorized: true})
@@ -212,6 +208,7 @@ export default class FeedView extends React.Component {
           return post;
         })
       });
+      this.loadData();
     }
   }
 

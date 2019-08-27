@@ -88,6 +88,8 @@ export default class Post extends React.Component {
 
     if (this.state.poll) {
       createPoll(postId, newContent.poll).then(poll => {
+        data.poll = poll;
+        data.content = poll.title;
         updatePost && updatePost(postId, data, 'editPoll');
       })
       .catch(err => {
@@ -168,12 +170,22 @@ export default class Post extends React.Component {
     return JSON.parse(JSON.stringify(source));
   }
 
-  updatePoll = async (data) => {
+  updatePoll = async (poll) => {
+    let { updatePost, data } = this.props;
+    let postId = this.props.data._id;
+    data = {
+      ...data,
+      content: poll.title,
+      poll: poll,
+    }
+
     this.setState({
       updateKey: (this.state.updateKey + 1) % 10,
-      poll: data,
-      pollCopy: this.copyPollData(data),
+      poll: poll,
+      pollCopy: this.copyPollData(poll),
     });
+
+    updatePost && updatePost(postId, data, 'votePoll');
   }
 
   toggleLike = () => {
