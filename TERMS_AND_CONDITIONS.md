@@ -30,9 +30,9 @@ In this Agreement, unless the context clearly indicates otherwise, the following
 
 In order to maintain a respectful community, the User profile must never contain:
 
- A name other than the one used in everyday life.
-Inaccurate information about the user.
-An offensive or otherwise inappropriate photo as the profile picture.
+* A name other than the one used in everyday life.
+* Inaccurate information about the user.
+* An offensive or otherwise inappropriate photo as the profile picture.
 
 
 # 3. Content Regulations
@@ -47,25 +47,25 @@ Please remember that we want to *enhance* community, so we ask that you use face
 
 Project Stairwell reserves the right to delete any content without notice. The Content Administrators may also have this privilege, as decided by the Institution.
 
-# 4. Privacy
+**4. Privacy**
 
 Skybunk is a communication app created by Conrad Grebel University College students as a solution to communication problems at the college. All Project Stairwell creators came together to create a service for the residence program to use to enhance the community, and are not liable for anything that may result from downloading the app. Our team will never do anything to intentionally harm you or your device and is dedicated to doing our best to keeping your content secure. See our [Privacy Policy](https://github.com/CGUC/skybunk-mobile/blob/master/PRIVACY_POLICY.md) for more information.
 
-# 5. Links To Other Websites 
+**5. Links To Other Websites**
 
 The Application may contain links to third-party websites or services that are not owned or controlled by Project Stairwell.
 
 Project Stairwell has no control over, and assumes no responsibility for, the content, privacy policies, or practices of any third party web sites or services. You further acknowledge and agree that Project Stairwell shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with the use of or reliance on any such content, goods or services available on or through any such websites or services. 
 
-# 6. Changes to Terms and Conditions
+**6. Changes to Terms and Conditions**
 
 Supplemental Terms and Conditions or other documents that may be posted on Skybunk from time to time are hereby expressly incorporated herein by reference. We reserve the right, in our sole discretion, to make changes or modifications to the Agreement at any time and for any reason. We will alert you about any changes by updating the "Last updated" date of this document, and you waive any right to receive specific notice of each such change. It is your responsibility to periodically review the Application to stay informed of updates. You will be subject to, and will be deemed to have been made aware of and to have accepted, the changes in any revised terms by your continued use of Skybunk after the date a revised Agreement is posted.
 
-# 7. Content Property
+**7. Content Property**
 
 Unless otherwise indicated, Skybunk is our proprietary property and all source code, databases, functionality, software, website designs, audio video, text, photographs, and graphics on it (collectively, the "Content") and the trademarks, service marks, and logos contained therein (the "Marks") are owned or controlled by us or licensed to us, and are protected by copyright and trademark laws and various other intellectual property rights and unfair competition laws of Canada, foreign jurisdictions, and international conventions. The Content and the Marks are provided on the Site "AS IS" for your information and personal use only. Except as expressly provided in these Terms, no part of Skybunk and no Content or Marks may be copied, reproduced, aggregated, republished, uploaded, posted, publicly displayed, encoded, translated, transmitted, distributed, sold, licensed, or otherwise exploited for any commercial purpose whatsoever, without our express prior written permission. 
 
-# 8. Access to Application
+**8. Access to Application**
 
 Project Stairwell reserves the right to remove your account and all of its data if:
 * You are not affiliated with your host Institution in the current academic year.
