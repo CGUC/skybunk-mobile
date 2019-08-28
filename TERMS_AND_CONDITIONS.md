@@ -11,7 +11,7 @@ Your access to and use of the Service is conditioned on your acceptance of and c
 * I understand that using a fake name can result in account deletion and restricted or terminated access to the Application
 * I agree to all of the Terms and Conditions outlined in the Agreement.
 
-# 1. Definitions
+**1. Definitions**
 In this Agreement, unless the context clearly indicates otherwise, the following words and expressions shall have the meaning ascribed:
 
 1.1 “Agreement” means this document containing terms and conditions.
@@ -26,7 +26,7 @@ In this Agreement, unless the context clearly indicates otherwise, the following
 
 1.6 “User(s)” refer to anyone who holds an account with the Application.
 
-# 2. Profile
+**2. Profile**
 
 In order to maintain a respectful community, the User profile must never contain:
 
@@ -35,7 +35,7 @@ In order to maintain a respectful community, the User profile must never contain
 * An offensive or otherwise inappropriate photo as the profile picture.
 
 
-# 3. Content Regulations
+**3. Content Regulations**
 
 Skybunk is a vessel in which Users associated with an Institution can communicate and interact. You may NOT post content:
 
