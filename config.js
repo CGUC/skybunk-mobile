@@ -1,4 +1,4 @@
 module.exports = {
-  AUTH_ADDRESS: 'http://bd72cf97.ngrok.io',
-  VERSION: '6.0.0'
+  AUTH_ADDRESS: 'https://skybunk-auth-dev.herokuapp.com',
+  VERSION: '6.1.0'
 }
