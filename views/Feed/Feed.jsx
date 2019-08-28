@@ -239,7 +239,11 @@ export default class FeedView extends React.Component {
     this.setState({ isContentModalOpen: false })
   }
   createPost = () => {
-    this.props.navigation.navigate("CreatePost");
+    var channel = this.props.navigation.getParam('channel');
+    if(['all', 'subs', 'myPosts'].includes(channel._id)){
+      channel = null;
+    }
+    this.props.navigation.navigate("CreatePost", {channel: channel});
   }
 
   buildListItems() {

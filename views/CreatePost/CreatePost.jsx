@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Modal, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform, StyleSheet, Image  } from 'react-native';
-import { Text, Button, Textarea, Icon, Container} from 'native-base';
+import { Text, Button, Textarea, Icon, Container } from 'native-base';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { ImagePicker, Permissions, Font } from 'expo';
 import Toolbar from './Toolbar/Toolbar'
 import MediaPreview from './MediaPreview/MediaPreview'
 import styles from './CreatePostStyle';
 import RNPickerSelect from 'react-native-picker-select';
+import ApiClient from '../../ApiClient';
+import _ from 'lodash';
 
 export default class CreatePost extends React.Component {
 
@@ -16,11 +18,21 @@ export default class CreatePost extends React.Component {
     var existingText = props.existing;
     var existingPollData = props.existingPoll;
 
+    const channel = props.navigation.getParam('channel');
+    const selectedChannel = {
+      label: channel ? channel.name : "Select a channel...",
+      value: channel ? channel._id : null,
+    }
+    console.log(channel)
+
     this.state = {
       resourceText: existingText || "",
       image: null,
       isPoll: false, 
-      pollData: null
+      pollData: null,
+      loadingChannels: true,
+      selectedChannel: selectedChannel,
+      channels: null
     };
   }
 
@@ -29,6 +41,18 @@ export default class CreatePost extends React.Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
+
+    ApiClient.get('/channels',  {authorized: true})
+    .then(response => {
+      var channelList = _.map(response, channel => {
+        return {
+          label: channel.name,
+          value: channel._id
+        }
+      });
+      this.setState({ channels: channelList, loadingChannels: false });
+    })
+    .catch(err => console.error(err));
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -176,6 +200,8 @@ export default class CreatePost extends React.Component {
       this.state.isPoll = !!this.state.pollData;
     }
 
+    
+
     return (
       <Container
         animationType="slide"
@@ -185,24 +211,10 @@ export default class CreatePost extends React.Component {
       >
         <View style={styles.selectChannelView}>
           <RNPickerSelect
-            placeholder={{
-              label: 'Select a channel...',
-              value: null, 
-              color: '#9EA0A4'}}
-            items={[
-              {
-                label: 'Football',
-                value: 'football',
-              },
-              {
-                label: 'Baseball',
-                value: 'baseball',
-              },
-              {
-                label: 'Hockey',
-                value: 'hockey',
-              },
-            ]}
+            placeholder={this.state.selectedChannel}
+            items={
+              this.state.channels || []
+            }
             onValueChange={this.updateChannel}
             style={{ //uses inputAndroid and inputiOS style from the stylesheet
               ...styles,
