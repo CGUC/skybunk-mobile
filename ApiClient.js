@@ -1,7 +1,6 @@
 var config = require('./config');
 import {AsyncStorage} from 'react-native';
 
-var token;
 var servers;
 export default class ApiClient {
 	static async formatHeaders(options){
@@ -22,31 +21,28 @@ export default class ApiClient {
 			}
 		}
 	}
-	static async getAuthToken(){
-		if(token != undefined) return token;
-		token = await AsyncStorage.getItem('@Skybunk:token');
-		return token;
+
+	static async getAuthToken() {
+		if(servers != undefined) return servers[0].token;
+		servers = JSON.parse(await AsyncStorage.getItem('@Skybunk:servers'));
+		return servers[0].token;
 	}
 
-	static async setAuthToken(_token){
-		token = _token;
-		await AsyncStorage.setItem('@Skybunk:token', token);
-	}
-
-	static async clearAuthToken(){
-		await AsyncStorage.removeItem('@Skybunk:token');
-		token = undefined;
+	static async getServerUrl() {
+		if(servers != undefined) return servers[0].url;
+		servers = JSON.parse(await AsyncStorage.getItem('@Skybunk:servers'));
+		return servers[0].url;
 	}
 
 	static async getServers() {
 		if(servers != undefined) return servers;
-		servers = await AsyncStorage.getItem('@Skybunk:servers');
+		servers = JSON.parse(await AsyncStorage.getItem('@Skybunk:servers'));
 		return servers;
 	}
 
 	static async setServers(_servers) {
 		servers = _servers;
-		await AsyncStorage.setItem('@Skybunk:servers');
+		await AsyncStorage.setItem('@Skybunk:servers', JSON.stringify(servers));
 	}
 
 	static async clearServers() {
@@ -55,8 +51,8 @@ export default class ApiClient {
 	}
 
 	static async get(endpoint, options={}) {
-
-		return fetch(`${servers[0].url}${endpoint}`, {
+		const serverUrl = await this.getServerUrl();
+		return fetch(`${serverUrl}${endpoint}`, {
 				method: 'GET',
 				headers: await this.formatHeaders(options),
 			})
@@ -71,8 +67,8 @@ export default class ApiClient {
 	}
 
 	static async post(endpoint, body, options={}) {
-
-		return fetch(`${servers[0].url}${endpoint}`, {
+		const serverUrl = await this.getServerUrl();
+		return fetch(`${serverUrl}${endpoint}`, {
 			method: 'POST',
 			headers: await this.formatHeaders(options),
 			body: JSON.stringify(body),
@@ -109,15 +105,6 @@ export default class ApiClient {
 			method: 'POST',
 			headers: await this.formatHeaders(options),
 			body: JSON.stringify({username, password}),
-		}).then(response => response.json()).then(responseJson => {
-			if (responseJson.servers) {
-				this.setServers(responseJson.servers);
-				return this.post('/users/login', {username, password})
-			} else {
-				return {message: 'Error, user does not exist'};
-			}
-		}).catch(err => {
-			console.error(err);
 		});
 	};
 
@@ -132,7 +119,8 @@ export default class ApiClient {
 			body.notifications = body.notifications.slice(0, 30);
 		} else console.log("No notifications being sent");
 
-		return fetch(`${servers[0].url}${endpoint}`, {
+		const serverUrl = await this.getServerUrl();
+		return fetch(`${serverUrl}${endpoint}`, {
 			method: 'PUT',
 			headers: await this.formatHeaders(options),
 			body: JSON.stringify(body),
@@ -162,7 +150,8 @@ export default class ApiClient {
 			type: `image/${fileType}`,
 		});
 
-		return fetch(`${servers[0].url}${endpoint}`, {
+		const serverUrl = await this.getServerUrl();
+		return fetch(`${serverUrl}${endpoint}`, {
 			method: method,
 			headers: await this.formatHeaders({...options, contentType: 'multipart/form-data'}),
 			body: formData,
@@ -178,8 +167,8 @@ export default class ApiClient {
 	}
 
 	static async delete(endpoint, options={}) {
-
-		return fetch(`${servers[0].url}${endpoint}`, {
+		const serverUrl = await this.getServerUrl();
+		return fetch(`${serverUrl}${endpoint}`, {
 			method: 'DELETE',
 			headers: await this.formatHeaders(options)
 		})

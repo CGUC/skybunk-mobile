@@ -100,10 +100,11 @@ export default class LoginView extends React.Component {
             });
           }
           else {
-            ApiClient.setAuthToken(jsonResponse.token).then(() => {
-              ApiClient.get('/users/loggedInUser',  {authorized: true}).then(user => {
+            ApiClient.setServers(jsonResponse)
+            .then(() => {
+              ApiClient.get('/users/loggedInUser', {authorized: true}).then(user => {
                 notificationToken.registerForPushNotificationsAsync(user);
-                this.props.navigation.navigate('Home', {token: jsonResponse.token, user});
+                this.props.navigation.navigate('Home', {token: jsonResponse[0].token, user});
               })
               .catch(err => console.error(err));
             }).catch(error => {
