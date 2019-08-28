@@ -27,7 +27,11 @@ export default class CreateResourceModal extends React.Component {
   saveResource = () => {
     const { saveResource, clearAfterSave } = this.props;
     if (clearAfterSave) this.setState({ resourceText: '', image: null, isPoll: false, pollData: null });
-    return saveResource && saveResource({content: this.state.resourceText, image: this.state.image, poll: this.state.pollData});
+    return saveResource && saveResource({
+      content: this.state.resourceText,
+      image: this.state.image,
+      poll: this.state.isPoll ? this.state.pollData : null,
+    });
   }
 
   textUpdate = (text) => {
@@ -107,6 +111,13 @@ export default class CreateResourceModal extends React.Component {
   }
 
   togglePoll = async () => {
+    if (!this.state.isPoll) {
+      if (this.state.pollData) {
+        this.state.pollData.title = this.state.resourceText;
+      } else {
+        this.state.pollData = { title: this.state.resourceText };
+      }
+    }
     this.setState({
       isPoll: !this.state.isPoll,
     });
@@ -114,7 +125,7 @@ export default class CreateResourceModal extends React.Component {
 
   updatePoll = async (data) => {
     this.setState({
-      isPoll: !!data,
+      resourceText: data ? data.title : this.state.resourceText,
       pollData: data,
     });
   }

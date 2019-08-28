@@ -124,6 +124,10 @@ export default class CommentsView extends React.Component {
       updateParentState('updatePoll', data);
     }
 
+    else if (type === 'votePoll') {
+      updateParentState('updatePoll', data);
+    }
+
     else if (type === 'deletePost') {
       ApiClient.delete(`/posts/${postData._id}`, {authorized: true})
         .then(() => {
