@@ -355,11 +355,12 @@ export default class Post extends React.Component {
 
             <CardItem button onPress={this.onPressPost} style={styles.postContent}>
               <Body>
+              <Autolink text={content} numberOfLines={this.props.maxLines} ellipsizeMode='tail' />
                 {poll ?
                   (this.props.onPressPost ?
                   <PollPreview data={poll} loggedInUser={loggedInUser} />
                   : <Poll data={poll} postId={data._id} updatePoll={this.updatePoll} loggedInUser={loggedInUser} isAuthor={isAuthor} />)
-                : <Autolink text={content} numberOfLines={this.props.maxLines} ellipsizeMode='tail' />}
+                : null}
               </Body>
             </CardItem>
 
