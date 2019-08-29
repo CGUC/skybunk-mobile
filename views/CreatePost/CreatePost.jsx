@@ -12,6 +12,7 @@ import _ from 'lodash';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {setPostPicture} from '../../helpers/imageCache';
 import { createPoll } from '../../helpers/poll';
+import Spinner from '../../components/Spinner/Spinner'
 
 export default class CreatePost extends React.Component {
 
@@ -58,6 +59,7 @@ export default class CreatePost extends React.Component {
     const { navigation } = this.props;
     navigation.setParams({
       saveResource: this.saveResource,
+      state: 'editting'
     })
   }
 
@@ -66,6 +68,17 @@ export default class CreatePost extends React.Component {
       title: navigation.getParam('post') ? 'Edit Post' : 'Make a Post',
       headerTitle: null,
       get headerRight() {
+        const state = navigation.getParam('state');
+        if(state==='posting'){
+          return (
+            <View style={{ marginRight: 20 }}>
+              <Spinner
+                size='small'
+                color='white'
+              />
+            </View>
+          )
+        }
           return (
             <TouchableOpacity onPress={navigation.getParam('saveResource')}>
               {
@@ -80,6 +93,7 @@ export default class CreatePost extends React.Component {
   };
 
   saveResource = () => {
+    this.props.navigation.setParams({state: 'posting'});
     const {resourceText, image, pollData, isPoll} = this.state
     this.addPost({
       content: resourceText, 
@@ -104,7 +118,8 @@ export default class CreatePost extends React.Component {
     if(channel[0]){
       channel = channel[0]
     }else{
-      alert("Invalid channel, unable to post.")
+      this.props.navigation.setParams({state: 'editting'});
+      alert("Invalid channel, unable to post.");
     }
     if (['all', 'subs'].includes(channel.value)) return console.error(`Can't add post to ${channel.value} feed`);
 
@@ -133,6 +148,7 @@ export default class CreatePost extends React.Component {
         })
         .catch((err) => {
           console.error(err);
+          this.props.navigation.setParams({state: 'editting'});
           alert("Error creating poll. Sorry about that!")
         });
       } else if (data.image) {
