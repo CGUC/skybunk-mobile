@@ -40,8 +40,7 @@ export default class FeedView extends React.Component {
       page: 1,
       loadedLastPage: false,
       userDataToShow: undefined,
-      showProfileModal: false,
-      isContentModalOpen: false
+      showProfileModal: false
     }
   }
 
@@ -55,6 +54,14 @@ export default class FeedView extends React.Component {
     await this.loadData();
 
     this.setState({ loading: false });
+
+    //refresh data when returning from CreatePost
+    this.props.navigation.addListener(
+      'willFocus',
+      payload => {
+        this.loadData()
+      }
+    );
   }
 
   getUri() {
@@ -81,7 +88,7 @@ export default class FeedView extends React.Component {
       page: 1,
       loadedLastPage: false
     });
-    const loggedInUser = this.props.navigation.getParam('loggedInUser');
+
     await ApiClient.get(this.getUri(), {authorized: true})
       .then(response => {
         this.setState({
@@ -92,60 +99,6 @@ export default class FeedView extends React.Component {
       .catch((err) => {
         console.error(err);
       });
-  }
-
-  addPost = (data) => {
-    /**
-     * Currently data is just a string of text
-     */
-    const {
-      navigation,
-    } = this.props;
-
-    const loggedInUser = navigation.getParam('loggedInUser');
-
-    var channel = navigation.getParam('channel');
-    if (['all', 'subs'].includes(channel._id)) return console.error(`Can't add post to ${channel._id} feed`);
-
-    var tags = channel.tags;
-
-    var postContent = {
-      author: loggedInUser._id,
-      content: data.content,
-      tags: tags
-    }
-    if (data.poll) {
-      postContent.content = data.poll.title;
-    }
-    ApiClient.post('/posts', postContent, {authorized: true})
-    .then(response => response.json())
-    .then(post => {
-      if (data.poll) {
-        createPoll(post._id, data.poll).then(poll => {
-          if (data.image) {
-            setPostPicture(
-              post._id,
-              data.image
-            ).then(() => this.loadData());
-          }
-          else {
-            this.loadData();
-          }
-        })
-        .catch((err) => {
-          alert("Error creating poll. Sorry about that!")
-        });
-      } else if (data.image) {
-        setPostPicture(
-          post._id,
-          data.image
-        ).then(() => this.loadData());
-      }
-      else {
-        this.loadData();
-      }
-    });
-    this.closeContentModal();
   }
 
   updatePost = async (postId, data, type) => {
@@ -236,15 +189,14 @@ export default class FeedView extends React.Component {
     })
   }
 
-  closeContentModal = () => {
-    this.setState({ isContentModalOpen: false })
-  }
   createPost = () => {
     var channel = this.props.navigation.getParam('channel');
+    const loggedInUser = this.props.navigation.getParam('loggedInUser');
+
     if(['all', 'subs', 'myPosts'].includes(channel._id)){
       channel = null;
     }
-    this.props.navigation.navigate("CreatePost", {channel: channel});
+    this.props.navigation.navigate("CreatePost", {channel , loggedInUser, saveResource: this.addPost});
   }
 
   buildListItems() {

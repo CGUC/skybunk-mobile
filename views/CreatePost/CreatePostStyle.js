@@ -10,7 +10,7 @@ export default (styles = StyleSheet.create({
     backgroundColor: '#00000050'
   },
   headerText: {
-    fontSize: 17,
+    fontSize: 16,
     color: '#FFF',
     paddingRight: 13,
   },
@@ -44,7 +44,7 @@ export default (styles = StyleSheet.create({
     height: height-350,
   },
   textBox: {
-    height: 150,
+    fontSize: 16,
     backgroundColor: '#FFFFFF',
     paddingTop: 5,
     borderRadius: 4,
@@ -79,6 +79,7 @@ export default (styles = StyleSheet.create({
     margin: 5
   },
   mediaPreviewView: {
-    margin: 5
+    margin: 5,
+    marginTop: 0
   }
 }));

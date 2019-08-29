@@ -25,7 +25,7 @@ export default class CreatePost extends React.Component {
     this.state = {
       resourceText: existingText || "",
       image: null,
-      isPoll: false, 
+      isPoll: false,
       pollData: null,
       loadingChannels: true,
       selectedChannel: selectedChannel,
@@ -52,16 +52,25 @@ export default class CreatePost extends React.Component {
     .catch(err => console.error(err));
   }
 
+  
+  async componentDidMount() {
+    const { navigation } = this.props;
+    navigation.setParams({
+      saveResource: this.saveResource,
+    })
+  }
+
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'Make a Post',
+      title: navigation.getParam('post') ? 'Edit Post' : 'Make a Post',
       headerTitle: null,
       get headerRight() {
           return (
-            <TouchableOpacity onPress={navigation.getParam('save')}>
+            <TouchableOpacity onPress={navigation.getParam('saveResource')}>
               {
-                <Text style={styles.headerText}
-                >Post</Text>
+                <Text style={styles.headerText}>
+                  Post
+                </Text>
               }
             </TouchableOpacity>
           )
@@ -70,23 +79,74 @@ export default class CreatePost extends React.Component {
   };
 
   saveResource = () => {
-    const { saveResource, clearAfterSave } = this.props;
-    if (clearAfterSave) this.setState({ resourceText: '', image: null, isPoll: false, pollData: null });
-    return saveResource && saveResource({content: this.state.resourceText, image: this.state.image, poll: this.state.pollData});
+    const {resourceText, image, pollData, isPoll} = this.state
+    this.addPost({
+      content: resourceText, 
+      image: image, 
+      poll: isPoll ? pollData : null
+    })
+  }
+
+  addPost = (data) => {
+    const {
+      navigation,
+    } = this.props;
+
+    const {
+      selectedChannel,
+      channels
+    } = this.state;
+
+    const loggedInUser = navigation.getParam('loggedInUser');
+
+    var channel = channels.filter( channel => channel.value==this.state.selectedChannel);
+    if(channel[0]){
+      channel = channel[0]
+    }else{
+      alert("Invalid channel, unable to post.")
+    }
+    if (['all', 'subs'].includes(channel.value)) return console.error(`Can't add post to ${channel.value} feed`);
+
+    var tags = channel.label;
+
+    var postContent = {
+      author: loggedInUser._id,
+      content: data.content,
+      tags: tags
+    }
+
+    ApiClient.post('/posts', postContent, {authorized: true})
+    .then(response => response.json())
+    .then(post => {
+      if (data.poll) {
+        createPoll(post._id, data.poll).then(poll => {
+          if (data.image) {
+            setPostPicture(
+              post._id,
+              data.image
+            ).then(() => navigation.goBack());
+          }
+          else {
+            navigation.goBack();
+          }
+        })
+        .catch((err) => {
+          alert("Error creating poll. Sorry about that!")
+        });
+      } else if (data.image) {
+        setPostPicture(
+          post._id,
+          data.image
+        ).then(() => navigation.goBack());
+      }
+      else {
+        navigation.goBack();
+      }
+    });
   }
 
   textUpdate = (text) => {
     this.setState({ resourceText: text })
-  }
-
-  onCancel = () => {
-    const { onClose, clearAfterSave } = this.props;
-    if (clearAfterSave) this.setState({ resourceText: '', image: null, isPoll: false, pollData: null });
-    onClose();
-  }
-
-  hideKeyboard = () => {
-    Keyboard.dismiss();
   }
 
   takeImage = async() => {
@@ -199,6 +259,11 @@ export default class CreatePost extends React.Component {
 
     const displayToolbar = !this.state.isPoll && !this.state.image
 
+    var postPlaceholder = "Write, post, recieve community..."
+    if(this.state.isPoll){
+      postPlaceholder = "What questions do you have?"
+    }
+
     return (
       <Container
         animationType="slide"
@@ -231,10 +296,11 @@ export default class CreatePost extends React.Component {
           <View style={styles.postContentView}>
             <Textarea
               bordered
-              placeholder="What's on your mind?" //TODO random rotation
+              placeholder={postPlaceholder}
               style={styles.textBox}
               onChangeText={this.textUpdate}
               value={this.state.resourceText}
+              rowSpan={3}
             />
           </View>
           
@@ -248,7 +314,7 @@ export default class CreatePost extends React.Component {
               mediaSelected = {displayToolbar}
             />
           </View>
-          <KeyboardAvoidingView style={styles.mediaPreviewView}>
+          <View style={styles.mediaPreviewView}>
             <MediaPreview 
               image={this.state.image}
               poll={this.state.poll}
@@ -256,7 +322,7 @@ export default class CreatePost extends React.Component {
               updatePoll={this.updatePoll}
               removeMedia={this.clearMedia}
               loggedInUser={loggedInUser}/>
-          </KeyboardAvoidingView>
+          </View>
       </KeyboardAwareScrollView>
       </Container>
     )

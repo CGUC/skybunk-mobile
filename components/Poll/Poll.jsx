@@ -330,6 +330,14 @@ export default class Poll extends React.Component {
 
     return (
       <View style={styles.view}>
+        <FlatList
+          style={styles.fillWidth}
+          keyboardShouldPersistTaps={'handled'}
+          showsVerticalScrollIndicator={false}
+          data={this.buildListItems()}
+          renderItem={this.renderListItem}
+          extraData={this.state}
+        />
         {!!this.props.isAuthor && editing ?
           <View style={styles.fillWidth}>
             <CheckBox
@@ -353,14 +361,6 @@ export default class Poll extends React.Component {
               onIconPress={this.toggleMultiSelect}
             />
           </View> : null}
-        <FlatList
-          style={styles.fillWidth}
-          keyboardShouldPersistTaps={'handled'}
-          showsVerticalScrollIndicator={false}
-          data={this.buildListItems()}
-          renderItem={this.renderListItem}
-          extraData={this.state}
-        />
       </View>
     )
   }
