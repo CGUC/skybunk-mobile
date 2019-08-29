@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, Platform } from "react-native";
 const { height, width } = Dimensions.get('window');
 import defaultStyles from '../../styles/styles'
 
@@ -30,14 +30,8 @@ export default (styles = StyleSheet.create({
     paddingLeft: 50, // to ensure the text is never behind the icon
   },
   inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
     paddingVertical: 8,
-    borderWidth: 1,
-    borderColor: '#d6d7da',
-    borderRadius: 4,
-    color: 'black',
-    paddingLeft: 50, // to ensure the text is never behind the icon
+    marginLeft: 50, // to ensure the text is never behind the icon
   },
   view: {
     width: width,
@@ -70,7 +64,13 @@ export default (styles = StyleSheet.create({
     ...defaultStyles.primaryColor
   },
   selectChannelView: {
-    margin: 10
+    margin: 10,
+    ...(Platform.OS !== 'ios') ? {
+      borderWidth: 1,
+      borderColor: '#d6d7da',
+      borderRadius: 4,
+      color: 'black',
+    } : null
   },
   postContentView: {
     margin: 5

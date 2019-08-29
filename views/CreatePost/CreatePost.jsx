@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Modal, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform, StyleSheet, Image  } from 'react-native';
+import { View, Modal, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform, ScrollView, Image  } from 'react-native';
 import { Text, Button, Textarea, Icon, Container } from 'native-base';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { ImagePicker, Permissions, Font } from 'expo';
@@ -19,11 +19,7 @@ export default class CreatePost extends React.Component {
     var existingPollData = props.existingPoll;
 
     const channel = props.navigation.getParam('channel');
-    const selectedChannel = {
-      label: channel ? channel.name : "Select a channel...",
-      value: channel ? channel._id : null,
-    }
-    console.log(channel)
+    var selectedChannel = channel ? channel._id: '';
 
     this.state = {
       resourceText: existingText || "",
@@ -180,7 +176,7 @@ export default class CreatePost extends React.Component {
 
   updateChannel = (value) => {
     this.setState({
-      channel: value
+      selectedChannel: value
     })
   }
 
@@ -209,9 +205,12 @@ export default class CreatePost extends React.Component {
         visible={isModalOpen}
         onRequestClose={onClose}
       >
+      { /* Hack to dismiss keyboard when text isn't focused */}
+      <ScrollView keyboardShouldPersistTaps='handled' scrollEnabled={false}>
         <View style={styles.selectChannelView}>
           <RNPickerSelect
-            placeholder={this.state.selectedChannel}
+            placeholder={{label: "Select a channel...", value: null}}
+            value={this.state.selectedChannel}
             items={
               this.state.channels || []
             }
@@ -253,6 +252,7 @@ export default class CreatePost extends React.Component {
             poll={this.state.poll}
             isPoll={this.state.isPoll}/>
         </View>
+        </ScrollView>
       </Container>
     )
   }
