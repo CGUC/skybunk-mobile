@@ -1,9 +1,8 @@
+import Constants from 'expo-constants';
 let authServerAddress = 'https://skybunk-auth-dev.herokuapp.com';
 
-if (process.env.NODE_ENV === 'production') {
+if (Constants.manifest.releaseChannel === 'stpauls-demo') {
   authServerAddress = 'https://skybunk-auth-production.herokuapp.com';
-} else if (process.env.NODE_ENV === 'staging') {
-  authServerAddress = 'https://skybunk-auth-staging.herokuapp.com';
 }
 
 module.exports = {
