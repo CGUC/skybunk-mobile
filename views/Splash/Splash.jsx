@@ -1,9 +1,10 @@
 import React from 'react';
 import { ImageBackground, Dimensions } from 'react-native';
-import { Spinner, Container, Content } from 'native-base';
+import { Container, Content } from 'native-base';
 import ApiClient from '../../ApiClient';
 import styles from './SplashStyle';
 import notificationToken from '../../helpers/notificationToken';
+import Spinner from '../../components/Spinner/Spinner'
 
 export default class SplashScreen extends React.Component {
 
@@ -29,7 +30,7 @@ export default class SplashScreen extends React.Component {
       >
         <Container>
           <Content contentContainerStyle={styles.contentContainer}>
-            <Spinner color='#cd8500' />
+            <Spinner/>
           </Content>
         </Container>
       </ImageBackground>

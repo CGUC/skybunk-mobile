@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView} from 'react-native';
-import { Container, Footer, Content, Text, Spinner } from 'native-base';
+import { Container, Footer, Content, Text} from 'native-base';
 import { Font } from "expo";
 
 import Post from '../../components/Post/Post';
@@ -13,6 +13,7 @@ import styles from './CommentsStyle';
 import defaultStyles from "../../styles/styles";
 import _ from 'lodash'
 import CommentEditor from '../../components/CommentEditor/CommentEditor';
+import Spinner from '../../components/Spinner/Spinner'
 
 export default class CommentsView extends React.Component {
 
@@ -232,7 +233,7 @@ export default class CommentsView extends React.Component {
       return (
         <Container style={defaultStyles.backgroundTheme}>
           <Content>
-            <Spinner color='#cd8500' />
+            <Spinner/>
           </Content>
         </Container>
       );

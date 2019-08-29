@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { View, ScrollView, Platform, Dimensions } from 'react-native';
 import {
   Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon,
-  Left, Label, Body, Right, Title, Form, Input, Item, Spinner
+  Left, Label, Body, Right, Title, Form, Input, Item
 } from 'native-base';
 import styles from "./ContentBarStyle";
 

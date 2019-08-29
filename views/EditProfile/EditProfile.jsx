@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Keyboard} from 'react-native';
-import { Icon, Item, Text, Input, Textarea, Spinner } from 'native-base';
+import { Icon, Item, Text, Input, Textarea } from 'native-base';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import _ from 'lodash';
 import ApiClient from '../../ApiClient';
 import styles from './EditProfileStyle';
 import defaultStyles from "../../styles/styles";
 import ProfileHeader from "../../components/ProfileHeader/ProfileHeader"
+import Spinner from '../../components/Spinner/Spinner'
 
 export default class EditProfile extends React.Component {
 

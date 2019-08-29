@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Container, Header, Content, Text, Spinner, Footer } from 'native-base';
+import { Container, Header, Content, Text, Footer } from 'native-base';
 import HomeTabBarButton from './HomeTabBarButton/HomeTabBarButton';
 
 export default class HomeView extends React.Component {

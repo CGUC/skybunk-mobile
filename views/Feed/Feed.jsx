@@ -6,7 +6,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { FlatList} from 'react-native';
-import { Container, Content, Spinner, Text, Button, View } from 'native-base';
+import { Container, Content, Text, Button, View } from 'native-base';
 import { Font } from "expo";
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import Post from '../../components/Post/Post';
@@ -15,6 +15,7 @@ import styles from './FeedStyle';
 import defaultStyles from '../../styles/styles';
 import {setPostPicture} from '../../helpers/imageCache';
 import { createPoll } from '../../helpers/poll';
+import Spinner from '../../components/Spinner/Spinner'
 
 export default class FeedView extends React.Component {
 
@@ -299,7 +300,7 @@ export default class FeedView extends React.Component {
 
   listFooter = () => {
     if (this.state.loadingPage) {
-      return <Spinner color='#cd8500' />;
+      return <Spinner />;
     }
     else if (this.state.loadedLastPage) {
       return <Text style={styles.noMorePosts}>No more posts!</Text>;
@@ -352,7 +353,7 @@ export default class FeedView extends React.Component {
       return (
         <Container style={defaultStyles.backgroundTheme}>
           <Content>
-            <Spinner color='#cd8500' />
+            <Spinner/>
           </Content>
         </Container>
       );
