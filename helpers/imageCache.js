@@ -3,6 +3,8 @@ import ApiClient from '../ApiClient';
 import {AsyncStorage, MemoryStore, Platform} from 'react-native';
 import date from 'date-fns';
 
+const disableCache = false //debugging tool to debug the cache. Should be false in production
+
 var backend
 if(Platform.OS == 'android') backend = MemoryStore
 else backend = AsyncStorage
@@ -30,7 +32,7 @@ module.exports = {
 			profilePicCache.getItem(userID, function(err, cachedPic) {
 				if(err){
 					reject(err);
-				}else if(!cachedPic || !cachedPic.image || date.differenceInHours(new Date(),cachedPic.timeFetched)>24){
+				}else if(disableCache || !cachedPic || !cachedPic.image || date.differenceInHours(new Date(),cachedPic.timeFetched)>24){
 					//cache miss, or over 24 hours old, so go fetch a new copy
 					ApiClient.get(`/users/${userID}/profilePicture`, {authorized: true}).then(pic => {
 
@@ -80,7 +82,7 @@ module.exports = {
 			postPicCache.getItem(postID, function(err, cachedPic) {
 				if(err){
 					reject(err);
-				}else if(!cachedPic || !cachedPic.image || date.differenceInHours(new Date(),cachedPic.timeFetched)>24){
+				}else if(disableCache || !cachedPic || !cachedPic.image || date.differenceInHours(new Date(),cachedPic.timeFetched)>24){
 					//cache miss, or over 24 hours old, so go fetch a new copy
 					ApiClient.get(`/posts/${postID}/image`, {authorized: true}).then(pic => {
 
@@ -119,6 +121,23 @@ module.exports = {
 					});
 				})
 				.catch(err => {
+					reject(err);
+				});
+		});
+	},
+	deletePostPicture: function(postID){
+		return new Promise(function(resolve, reject) {
+			ApiClient.delete(
+				`/posts/${postID}/image`,
+				{authorized: true}
+			  ).then(() => {
+				  console.log("removing item")
+					postPicCache.removeItem(postID, err => {
+						resolve();
+					});
+				})
+				.catch(err => {
+					console.error(err);
 					reject(err);
 				});
 		});

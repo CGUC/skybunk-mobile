@@ -10,8 +10,8 @@ import RNPickerSelect from 'react-native-picker-select';
 import ApiClient from '../../ApiClient';
 import _ from 'lodash';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import {setPostPicture} from '../../helpers/imageCache';
-import { createPoll } from '../../helpers/poll';
+import {setPostPicture, deletePostPicture} from '../../helpers/imageCache';
+import { createPoll, removePoll } from '../../helpers/poll';
 import Spinner from '../../components/Spinner/Spinner'
 
 export default class CreatePost extends React.Component {
@@ -121,11 +121,24 @@ export default class CreatePost extends React.Component {
   saveResource = () => {
     this.props.navigation.setParams({state: 'posting'});
     const {resourceText, image, pollData, isPoll} = this.state
-    this.addPost({
-      content: resourceText, 
-      image: image, 
-      poll: isPoll ? pollData : null
-    })
+    const data = this.props.navigation.getParam('data');
+
+    //if updating post
+    if(data){
+      this.updatePost({
+        ...data,
+        content: resourceText, 
+        image: image, 
+        poll: isPoll ? pollData : null
+      })
+    }else{
+      this.addPost({
+        content: resourceText, 
+        image: image, 
+        poll: isPoll ? pollData : null
+      })
+    }
+    
   }
 
   addPost = (data) => {
@@ -189,15 +202,41 @@ export default class CreatePost extends React.Component {
     });
   }
 
-  updatePost = async (postId, data) => {
+  updatePost = async (data) => {
+    postId = data._id;
+    const {navigation} = this.props;
+    const {pollUpdated, isPoll, pollData, imageUpdated, image} = this.state
     ApiClient.put(`/posts/${postId}`, _.pick(data, ['content']), {authorized: true})
       .then(() => {
-        if(this.state.pollUpdated){
-          
+        if(pollUpdated){
+          if(!isPoll){
+            removePoll(postId).then(() => {
+              navigation.goBack();
+            });
+          }else{
+            createPoll(postId, pollData).then(() => {
+              navigation.goBack();
+            });
+          }
         }
-        //this.loadData();
+        if(imageUpdated){
+          if(!image){
+            console.log("Deleting image")
+            deletePostPicture(postId).then(() => {
+              navigation.goBack();
+            });
+          }else{
+            setPostPicture(postId, image).then(() => {
+              navigation.goBack();
+            });
+          }
+        }else{
+          //no media updated, so just go back
+          navigation.goBack();
+        }
       })
       .catch(err => {
+        console.error(err);
         alert("Error updating post. Sorry about that!");
       });
   }
@@ -238,8 +277,8 @@ export default class CreatePost extends React.Component {
     });
     this.setState({
       image: result.uri,
+      imageUpdated: true,
     });
-    return !!result.uri;
   }
 
   pickImage = async () => {
@@ -266,22 +305,24 @@ export default class CreatePost extends React.Component {
     });
     this.setState({
       image: result.uri,
+      imageUpdated: true,
     });
-    return !!result.uri;
   }
 
   addPoll = async () => {
     this.setState({
       isPoll: true,
-      image: null
+      image: null,
+      pollUpdated: true
     });
-    return true;
   }
 
   clearMedia = async () => {
     this.setState({
       isPoll: false,
-      image: null
+      image: null,
+      imageUpdated: !!this.state.image,
+      pollUpdated: this.state.isPoll
     });
   }
 
@@ -289,6 +330,7 @@ export default class CreatePost extends React.Component {
     this.setState({
       isPoll: !!data,
       pollData: data,
+      pollUpdated: true
     });
   }
 
@@ -299,21 +341,6 @@ export default class CreatePost extends React.Component {
   }
 
   render() {
-    var {
-      onClose,
-      isModalOpen,
-      submitButtonText,
-      loggedInUser,
-      existingPoll
-    } = this.props;
-
-    if (!submitButtonText) submitButtonText = 'Submit';
-
-    if (existingPoll && !this.state.pollData) {
-      this.state.pollData = this.state.pollData || existingPoll;
-      this.state.isPoll = !!this.state.pollData;
-    }
-
     const displayToolbar = !this.state.isPoll && !this.state.image
 
     var postPlaceholder = "Write, post, recieve community..."
@@ -322,12 +349,7 @@ export default class CreatePost extends React.Component {
     }
 
     return (
-      <Container
-        animationType="slide"
-        transparent={true}
-        visible={isModalOpen}
-        onRequestClose={onClose}
-      >
+      <Container>
       { /* Hack to dismiss keyboard when text isn't focused */}
       <KeyboardAwareScrollView keyboardShouldPersistTaps='handled' scrollEnabled={false}>
           <View style={styles.selectChannelView}>
@@ -378,7 +400,7 @@ export default class CreatePost extends React.Component {
               isPoll={this.state.isPoll}
               updatePoll={this.updatePoll}
               removeMedia={this.clearMedia}
-              loggedInUser={loggedInUser}/>
+              loggedInUser={this.props.navigation.getParam('loggedInUser')}/>
           </View>
       </KeyboardAwareScrollView>
       </Container>

@@ -41,7 +41,8 @@ export default class Post extends React.Component {
     }).catch(error => {
       console.error(error);
     });
-    if (this.props.data.image) {
+    const { media }= this.props.data
+    if (media && media.type==='image') {
       getPostPicture(this.props.data._id).then(pic => {
         this.setState({
           image: pic,
@@ -50,7 +51,7 @@ export default class Post extends React.Component {
         console.error(error);
       });
     }
-    if (this.props.data.media) {
+    if (media && media.type==='poll') {
       getPoll(this.props.data._id).then(poll => {
         this.setState({
           poll: poll,
@@ -72,9 +73,9 @@ export default class Post extends React.Component {
 
   onPressEdit = () => {
     this.hideEditButtons();
-    const {data} = this.props
+    const {data, loggedInUser} = this.props
     const {pollCopy, image} = this.state
-    this.props.navigation.navigate("CreatePost",  {data, poll: pollCopy, image})
+    this.props.navigation.navigate("CreatePost",  {data, poll: pollCopy, image, loggedInUser})
   }
 
   saveEdited = (newContent) => {
