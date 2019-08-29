@@ -196,7 +196,7 @@ export default class CreatePost extends React.Component {
       this.state.isPoll = !!this.state.pollData;
     }
 
-    
+    const displayToolbar = !this.state.isPoll && !this.state.image
 
     return (
       <Container
@@ -244,13 +244,15 @@ export default class CreatePost extends React.Component {
             addPoll = {this.addPoll}
             clearMedia = {this.clearMedia}
             image = {this.state.image}
+            mediaSelected = {displayToolbar}
           />
         </View>
         <View style={styles.mediaPreviewView}>
           <MediaPreview 
             image={this.state.image}
             poll={this.state.poll}
-            isPoll={this.state.isPoll}/>
+            isPoll={this.state.isPoll}
+            removeMedia={this.clearMedia}/>
         </View>
         </ScrollView>
       </Container>

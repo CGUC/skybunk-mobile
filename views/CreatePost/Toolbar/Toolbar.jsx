@@ -9,83 +9,65 @@ export default class Toolbar extends React.Component {
     super(props);
 
     this.state = {
-      selectedMedia:  "clearMedia"
+      displayMediaOptions: false
     };
   }
 
   takeImage = () => {
     const { takeImage } = this.props;
-    if(takeImage()){
-      this.setState({
-        selectedMedia: "takeImage"
-      });
-    }
-    
+    takeImage();
   }
 
   pickImage = () => {
     const { pickImage } = this.props;
-    if(pickImage()){
-      this.setState({
-        selectedMedia: "pickImage"
-      });
-    }
+    pickImage();
   }
 
   addPoll = () => {
     const { addPoll } = this.props;
-    if(addPoll()){
-        this.setState({
-        selectedMedia: "addPoll"
-      });
-    }
+    addPoll();
   }
 
   clearMedia = () => {
     const { clearMedia } = this.props;
     clearMedia();
-    this.setState({
-      selectedMedia: "clearMedia"
-    });
   }
 
   render () {
-    const selectedColor = "#999";
-    const unselectedColor = "#DEDEDE";
     const iconSize = 33;
 
-    const {selectedMedia} = this.state;
-
-    const takeImageColor = selectedMedia==="takeImage" ? selectedColor : unselectedColor;
-    const pickImageColor = selectedMedia==="pickImage" ? selectedColor : unselectedColor;
-    const addPollColor = selectedMedia==="addPoll" ? selectedColor : unselectedColor;
-    const clearMediaColor = selectedMedia==="clearMedia" ? selectedColor : unselectedColor;
-
-    return (
-      <View style={styles.view}>
-        <TouchableOpacity onPress={this.clearMedia}>
+    if(this.props.mediaSelected === false){
+      return (
+        <View style={styles.view}>
+          <TouchableOpacity onPress={this.clearMedia}>
           <MaterialIcon 
             name="clear" 
             size={iconSize} 
-            style={[styles.icon, {backgroundColor: clearMediaColor}]}/>
-        </TouchableOpacity>
+            style={styles.icon}/>
+          </TouchableOpacity>
+        </View>
+      )
+    }
+    
+    return (
+      <View style={styles.view}>
         <TouchableOpacity onPress={this.takeImage}>
         <MaterialIcon 
           name="camera-alt" 
           size={iconSize} 
-          style={[styles.icon, {backgroundColor: takeImageColor}]}/>
+          style={styles.icon}/>
         </TouchableOpacity>
         <TouchableOpacity onPress={this.pickImage}>
         <MaterialIcon 
           name="image" 
           size={iconSize} 
-          style={[styles.icon, {backgroundColor: pickImageColor}]}/>
+          style={styles.icon}/>
         </TouchableOpacity>
         <TouchableOpacity onPress={this.addPoll}>
           <MaterialIcon 
             name="poll" 
             size={iconSize} 
-            style={[styles.icon, {backgroundColor: addPollColor}]}/>
+            style={styles.icon}/>
         </TouchableOpacity>
       </View>
     );
