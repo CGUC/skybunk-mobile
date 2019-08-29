@@ -99,45 +99,6 @@ export default class FeedView extends React.Component {
       });
   }
 
-  updatePost = async (postId, data, type) => {
-    if (type === 'toggleLike') {
-      const loggedInUser = this.props.navigation.getParam('loggedInUser');
-      const addLike = data.usersLiked.some(user => user._id === loggedInUser._id);
-
-      return ApiClient.post(`/posts/${postId}/like`, { addLike }, {authorized: true})
-        .then(() => {
-          this.updateState('updatePost', data);
-        })
-        .catch(err => {
-          alert("Error liking post. Sorry about that!")
-        });
-    }
-    else if (type === 'deletePost') {
-      return ApiClient.delete(`/posts/${postId}`, {authorized: true})
-        .then(() => {
-          this.updateState('deletePost', postId);
-        })
-        .catch(err => {
-          alert("Error deleting post. Sorry about that!")
-        });
-    }
-    else if (type === 'editPost') {
-      this.updateState('updatePost', data);
-    }
-    else if (type === 'editPoll') {
-      this.updateState('updatePoll', data);
-      this.loadData();
-    }
-
-    ApiClient.put(`/posts/${postId}`, _.pick(data, ['content', 'image']), {authorized: true})
-      .then(() => {
-        //this.loadData();
-      })
-      .catch(err => {
-        alert("Error updating post. Sorry about that!");
-      });
-  }
-
   /**
    * Allows sub views to update feed data
    */
@@ -194,7 +155,7 @@ export default class FeedView extends React.Component {
     if(['all', 'subs', 'myPosts'].includes(channel._id)){
       channel = null;
     }
-    this.props.navigation.navigate("CreatePost", {channel , loggedInUser, saveResource: this.addPost});
+    this.props.navigation.navigate("CreatePost", {channel , loggedInUser});
   }
 
   buildListItems() {
@@ -218,12 +179,12 @@ export default class FeedView extends React.Component {
         maxLines={10}
         key={item._id}
         onPressPost={this.onPressPost}
-        updatePost={this.updatePost}
         showTag={['all', 'subs', 'myPosts'].includes(channelId)}
         enableEditing={enableEditing}
         enableDeleting={loggedInUser.role && loggedInUser.role.includes("admin")}
         showUserProfile={this.showUserProfile}
         showFullDate={false}
+        navigation={this.props.navigation}
       />
     );
   }

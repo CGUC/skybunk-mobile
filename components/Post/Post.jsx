@@ -71,8 +71,10 @@ export default class Post extends React.Component {
   }
 
   onPressEdit = () => {
-    this.setState({ editing: true })
     this.hideEditButtons();
+    const {data} = this.props
+    const {pollCopy, image} = this.state
+    this.props.navigation.navigate("CreatePost",  {data, poll: pollCopy, image})
   }
 
   saveEdited = (newContent) => {

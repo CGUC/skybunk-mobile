@@ -30,7 +30,7 @@ export default class MediaPreview extends React.Component {
 		return (
 			<View style={[styles.view, styles.pollView]}>
 				<Poll 
-				  data={null}
+				  data={this.props.poll}
           savePoll={this.props.updatePoll}
           loggedInUser={this.props.loggedInUser}
           isAuthor={true}/>

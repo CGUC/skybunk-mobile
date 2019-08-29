@@ -18,17 +18,21 @@ export default class CreatePost extends React.Component {
 
   constructor(props) {
     super(props);
-    var existingText = props.existing;
-    var existingPollData = props.existingPoll;
 
     const channel = props.navigation.getParam('channel');
+    const data = props.navigation.getParam('data');
+    const image = props.navigation.getParam('image');
+    const poll = props.navigation.getParam('poll');
+
+    const existingText = data  ? data.content : '';
     var selectedChannel = channel ? channel._id: '';
 
     this.state = {
       resourceText: existingText || "",
-      image: null,
-      isPoll: false,
-      pollData: null,
+      image: image ? `data:image/png;base64,${image}`: null,
+      imageUpdated: false,
+      isPoll: !!poll,
+      pollData: poll,
       loadingChannels: true,
       selectedChannel: selectedChannel,
       channels: null
@@ -49,7 +53,17 @@ export default class CreatePost extends React.Component {
           value: channel._id
         }
       });
-      this.setState({ channels: channelList, loadingChannels: false });
+
+      var newState =  { channels: channelList, loadingChannels: false };
+
+      //if editting a post, display the correct channel
+      const data = this.props.navigation.getParam('data');
+      if(data && data.tags){
+        var selectedChannel = channelList.filter( channel => channel.label==data.tags[0])[0];
+        selectedChannel = selectedChannel ? selectedChannel.value : null;
+        newState = {...newState, selectedChannel}
+      }
+      this.setState(newState);
     })
     .catch(err => console.error(err));
   }
@@ -69,6 +83,7 @@ export default class CreatePost extends React.Component {
       headerTitle: null,
       get headerRight() {
         const state = navigation.getParam('state');
+        const isEditting = !!navigation.getParam('data');
         if(state==='posting'){
           return (
             <View style={{ marginRight: 20 }}>
@@ -77,6 +92,16 @@ export default class CreatePost extends React.Component {
                 color='white'
               />
             </View>
+          )
+        }else if(isEditting){
+          return (
+            <TouchableOpacity onPress={navigation.getParam('saveResource')}>
+              {
+                <Text style={styles.headerText}>
+                  Save
+                </Text>
+              }
+            </TouchableOpacity>
           )
         }
           return (
@@ -161,6 +186,45 @@ export default class CreatePost extends React.Component {
         navigation.goBack();
       }
     });
+  }
+
+  updatePost = async (postId, data) => {
+    if (type === 'toggleLike') {
+      const loggedInUser = this.props.navigation.getParam('loggedInUser');
+      const addLike = data.usersLiked.some(user => user._id === loggedInUser._id);
+
+      return ApiClient.post(`/posts/${postId}/like`, { addLike }, {authorized: true})
+        .then(() => {
+          this.updateState('updatePost', data);
+        })
+        .catch(err => {
+          alert("Error liking post. Sorry about that!")
+        });
+    }
+    else if (type === 'deletePost') {
+      return ApiClient.delete(`/posts/${postId}`, {authorized: true})
+        .then(() => {
+          this.updateState('deletePost', postId);
+        })
+        .catch(err => {
+          alert("Error deleting post. Sorry about that!")
+        });
+    }
+    else if (type === 'editPost') {
+      this.updateState('updatePost', data);
+    }
+    else if (type === 'editPoll') {
+      this.updateState('updatePoll', data);
+      this.loadData();
+    }
+
+    ApiClient.put(`/posts/${postId}`, _.pick(data, ['content', 'image']), {authorized: true})
+      .then(() => {
+        //this.loadData();
+      })
+      .catch(err => {
+        alert("Error updating post. Sorry about that!");
+      });
   }
 
   textUpdate = (text) => {
@@ -335,7 +399,7 @@ export default class CreatePost extends React.Component {
           <View style={styles.mediaPreviewView}>
             <MediaPreview 
               image={this.state.image}
-              poll={this.state.poll}
+              poll={this.state.pollData}
               isPoll={this.state.isPoll}
               updatePoll={this.updatePoll}
               removeMedia={this.clearMedia}
