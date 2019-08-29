@@ -15,7 +15,7 @@ export default class CommentEditor extends React.Component {
     this.state = {
       loading: true,
       profilePicture: null,
-      commentText: ''
+      commentText: this.props.commentData || ''
     }
   }
 
@@ -25,7 +25,7 @@ export default class CommentEditor extends React.Component {
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
 
-    getProfilePicture(this.props.loggedInUser._id).then(pic => {
+    getProfilePicture(this.props.author._id).then(pic => {
       this.setState({
         profilePicture: pic,
       });
@@ -57,12 +57,12 @@ export default class CommentEditor extends React.Component {
     } = this.state;
 
     const {
-      loggedInUser
+      author
     } = this.props;
 
     var authorName;
-    if (!loggedInUser) authorName = "Ghost";
-    else authorName = `${loggedInUser.firstName} ${loggedInUser.lastName}`;
+    if (!author) authorName = "Ghost";
+    else authorName = `${author.firstName} ${author.lastName}`;
 
     return (
       <View>

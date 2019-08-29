@@ -269,7 +269,7 @@ export default class CommentsView extends React.Component {
                   })}
             </ScrollView>
         <CommentEditor 
-          loggedInUser={loggedInUser}
+          author={loggedInUser}
           updateResource={this.updateResource}/>
           </Content>
 
