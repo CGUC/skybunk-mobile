@@ -13,8 +13,6 @@ import Post from '../../components/Post/Post';
 import ApiClient from '../../ApiClient';
 import styles from './FeedStyle';
 import defaultStyles from '../../styles/styles';
-import {setPostPicture} from '../../helpers/imageCache';
-import { createPoll } from '../../helpers/poll';
 import Spinner from '../../components/Spinner/Spinner'
 
 export default class FeedView extends React.Component {

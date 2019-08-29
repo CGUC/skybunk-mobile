@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Modal, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform, ScrollView, Image  } from 'react-native';
 import { Text, Button, Textarea, Icon, Container } from 'native-base';
-import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { ImagePicker, Permissions, Font } from 'expo';
 import Toolbar from './Toolbar/Toolbar'
 import MediaPreview from './MediaPreview/MediaPreview'
@@ -11,6 +10,8 @@ import RNPickerSelect from 'react-native-picker-select';
 import ApiClient from '../../ApiClient';
 import _ from 'lodash';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import {setPostPicture} from '../../helpers/imageCache';
+import { createPoll } from '../../helpers/poll';
 
 export default class CreatePost extends React.Component {
 
@@ -99,7 +100,7 @@ export default class CreatePost extends React.Component {
 
     const loggedInUser = navigation.getParam('loggedInUser');
 
-    var channel = channels.filter( channel => channel.value==this.state.selectedChannel);
+    var channel = channels.filter( channel => channel.value==selectedChannel);
     if(channel[0]){
       channel = channel[0]
     }else{
@@ -131,6 +132,7 @@ export default class CreatePost extends React.Component {
           }
         })
         .catch((err) => {
+          console.error(err);
           alert("Error creating poll. Sorry about that!")
         });
       } else if (data.image) {
