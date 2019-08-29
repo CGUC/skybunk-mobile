@@ -9,14 +9,12 @@ export default (styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10
   },
+  pollView: {
+    width: width- 10
+  },
   image: {
     width: 300,
     height: 300,
     alignSelf: 'center'
-  },
-  icon: {
-    position: 'absolute',
-    right: 5,
-    top: 5
   }
 }));

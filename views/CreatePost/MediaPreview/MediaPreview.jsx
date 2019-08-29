@@ -26,14 +26,14 @@ export default class MediaPreview extends React.Component {
 				<Image source={{ uri: this.props.image }} style={styles.image}/>
 			</View>
 			);
-	} else if(this.props.poll){
+	} else if(this.props.isPoll){
 		return (
-			<View style={styles.view}>
+			<View style={[styles.view, styles.pollView]}>
 				<Poll 
-				  data={this.state.pollData}
-          savePoll={this.updatePoll}
-          loggedInUser={loggedInUser}
-          isAuthor={this.props.isAuthor}/>
+				  data={null}
+          savePoll={this.props.updatePoll}
+          loggedInUser={this.props.loggedInUser}
+          isAuthor={true}/>
 			</View>
 			);
 	} else{

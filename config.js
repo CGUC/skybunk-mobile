@@ -1,4 +1,4 @@
 module.exports = {
-  API_ADDRESS: 'http://api.grebelife.com',
+  API_ADDRESS: 'https://skybunk-development.herokuapp.com',
   VERSION: '6.0.0'
 }

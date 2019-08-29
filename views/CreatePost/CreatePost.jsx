@@ -10,6 +10,7 @@ import styles from './CreatePostStyle';
 import RNPickerSelect from 'react-native-picker-select';
 import ApiClient from '../../ApiClient';
 import _ from 'lodash';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 export default class CreatePost extends React.Component {
 
@@ -206,55 +207,57 @@ export default class CreatePost extends React.Component {
         onRequestClose={onClose}
       >
       { /* Hack to dismiss keyboard when text isn't focused */}
-      <ScrollView keyboardShouldPersistTaps='handled' scrollEnabled={false}>
-        <View style={styles.selectChannelView}>
-          <RNPickerSelect
-            placeholder={{label: "Select a channel...", value: null}}
-            value={this.state.selectedChannel}
-            items={
-              this.state.channels || []
-            }
-            onValueChange={this.updateChannel}
-            style={{ //uses inputAndroid and inputiOS style from the stylesheet
-              ...styles,
-              iconContainer: {
-                top: 10,
-                left: 12,
-              },
-            }}
-            Icon={() => {
-              return <Image source={require('../../assets/channel-list.png')} style={styles.channelImage}/>
-            }}
-          />
-        </View>
-        <View style={styles.postContentView}>
-          <Textarea
-            bordered
-            placeholder="What's on your mind?" //TODO random rotation
-            style={styles.textBox}
-            onChangeText={this.textUpdate}
-            value={this.state.resourceText}
-          />
-        </View>
-        
-        <View style={styles.ToolbarView}>
-          <Toolbar
-            pickImage = {this.pickImage}
-            takeImage = {this.takeImage}
-            addPoll = {this.addPoll}
-            clearMedia = {this.clearMedia}
-            image = {this.state.image}
-            mediaSelected = {displayToolbar}
-          />
-        </View>
-        <View style={styles.mediaPreviewView}>
-          <MediaPreview 
-            image={this.state.image}
-            poll={this.state.poll}
-            isPoll={this.state.isPoll}
-            removeMedia={this.clearMedia}/>
-        </View>
-        </ScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps='handled' scrollEnabled={false}>
+          <View style={styles.selectChannelView}>
+            <RNPickerSelect
+              placeholder={{label: "Select a channel...", value: null}}
+              value={this.state.selectedChannel}
+              items={
+                this.state.channels || []
+              }
+              onValueChange={this.updateChannel}
+              style={{ //uses inputAndroid and inputiOS style from the stylesheet
+                ...styles,
+                iconContainer: {
+                  top: 10,
+                  left: 12,
+                },
+              }}
+              Icon={() => {
+                return <Image source={require('../../assets/channel-list.png')} style={styles.channelImage}/>
+              }}
+            />
+          </View>
+          <View style={styles.postContentView}>
+            <Textarea
+              bordered
+              placeholder="What's on your mind?" //TODO random rotation
+              style={styles.textBox}
+              onChangeText={this.textUpdate}
+              value={this.state.resourceText}
+            />
+          </View>
+          
+          <View style={styles.ToolbarView}>
+            <Toolbar
+              pickImage = {this.pickImage}
+              takeImage = {this.takeImage}
+              addPoll = {this.addPoll}
+              clearMedia = {this.clearMedia}
+              image = {this.state.image}
+              mediaSelected = {displayToolbar}
+            />
+          </View>
+          <KeyboardAvoidingView style={styles.mediaPreviewView}>
+            <MediaPreview 
+              image={this.state.image}
+              poll={this.state.poll}
+              isPoll={this.state.isPoll}
+              updatePoll={this.updatePoll}
+              removeMedia={this.clearMedia}
+              loggedInUser={loggedInUser}/>
+          </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
       </Container>
     )
   }
