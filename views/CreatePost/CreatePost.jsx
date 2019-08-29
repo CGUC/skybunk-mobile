@@ -33,6 +33,7 @@ export default class CreatePost extends React.Component {
       imageUpdated: false,
       isPoll: !!poll,
       pollData: poll,
+      pollUpdated: false,
       loadingChannels: true,
       selectedChannel: selectedChannel,
       channels: null
@@ -189,37 +190,11 @@ export default class CreatePost extends React.Component {
   }
 
   updatePost = async (postId, data) => {
-    if (type === 'toggleLike') {
-      const loggedInUser = this.props.navigation.getParam('loggedInUser');
-      const addLike = data.usersLiked.some(user => user._id === loggedInUser._id);
-
-      return ApiClient.post(`/posts/${postId}/like`, { addLike }, {authorized: true})
-        .then(() => {
-          this.updateState('updatePost', data);
-        })
-        .catch(err => {
-          alert("Error liking post. Sorry about that!")
-        });
-    }
-    else if (type === 'deletePost') {
-      return ApiClient.delete(`/posts/${postId}`, {authorized: true})
-        .then(() => {
-          this.updateState('deletePost', postId);
-        })
-        .catch(err => {
-          alert("Error deleting post. Sorry about that!")
-        });
-    }
-    else if (type === 'editPost') {
-      this.updateState('updatePost', data);
-    }
-    else if (type === 'editPoll') {
-      this.updateState('updatePoll', data);
-      this.loadData();
-    }
-
-    ApiClient.put(`/posts/${postId}`, _.pick(data, ['content', 'image']), {authorized: true})
+    ApiClient.put(`/posts/${postId}`, _.pick(data, ['content']), {authorized: true})
       .then(() => {
+        if(this.state.pollUpdated){
+          
+        }
         //this.loadData();
       })
       .catch(err => {

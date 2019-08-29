@@ -246,6 +246,7 @@ export default class CommentsView extends React.Component {
               data={postData}
               maxLines={1000}
               updatePost={this.updateResource}
+              deletePost={this.deletePost}
               enableEditing={enablePostEditing}
               enableDeleting={ loggedInUser.role && loggedInUser.role.includes("admin")}
               loggedInUser={loggedInUser}

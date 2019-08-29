@@ -99,6 +99,17 @@ export default class FeedView extends React.Component {
       });
   }
 
+  deletePost = async (postId) => {
+    return ApiClient.delete(`/posts/${postId}`, {authorized: true})
+      .then(() => {
+        this.updateState('deletePost', postId);
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Error deleting post. Sorry about that!")
+      });
+  }
+
   /**
    * Allows sub views to update feed data
    */
@@ -185,6 +196,7 @@ export default class FeedView extends React.Component {
         showUserProfile={this.showUserProfile}
         showFullDate={false}
         navigation={this.props.navigation}
+        deletePost={this.deletePost}
       />
     );
   }
