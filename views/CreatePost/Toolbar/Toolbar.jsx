@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { Icon, Thumbnail } from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import styles from './ToolbarStyle';
 

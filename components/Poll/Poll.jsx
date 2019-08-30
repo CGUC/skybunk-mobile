@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Autolink from 'react-native-autolink';
-import { View, FlatList, TouchableOpacity, Platform, Alert } from 'react-native';
+import { View, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { CheckBox, Icon } from 'react-native-elements';
-import { Text, Button, Textarea } from 'native-base';
+import { Text, Textarea } from 'native-base';
 import { Font } from "expo";
 import { pollVote, pollOption, pollDeleteOption } from '../../helpers/poll';
 import styles from "./PollStyle";

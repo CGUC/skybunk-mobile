@@ -1,6 +1,6 @@
 import React from 'react';
 import Autolink from 'react-native-autolink';
-import { View, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Modal, Alert, KeyboardAvoidingView, Keyboard, Platform, Dimensions } from 'react-native';
+import { View, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Modal, Alert, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
 import Image from 'react-native-scalable-image';
 import { Body, Card, CardItem, Text, Thumbnail, Button, Icon } from 'native-base';
 import { Font } from "expo";

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Autolink from 'react-native-autolink';
 import { View, FlatList } from 'react-native';
-import { Text, Button, Textarea } from 'native-base';
+import { Text } from 'native-base';
 import { Font } from "expo";
 import styles from "./PollPreviewStyle";
 

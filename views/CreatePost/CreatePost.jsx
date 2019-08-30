@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Modal, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform, ScrollView, Image  } from 'react-native';
-import { Text, Button, Textarea, Icon, Container } from 'native-base';
+import { View, TouchableOpacity, Platform, Image  } from 'react-native';
+import { Text, Textarea, Container } from 'native-base';
 import { ImagePicker, Permissions, Font } from 'expo';
 import Toolbar from './Toolbar/Toolbar'
 import MediaPreview from './MediaPreview/MediaPreview'

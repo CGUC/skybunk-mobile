@@ -1,15 +1,12 @@
 import React from 'react';
-import { ScrollView} from 'react-native';
-import { Container, Footer, Content, Text} from 'native-base';
+import { Container, Content, Text} from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Font } from "expo";
 
 import Post from '../../components/Post/Post';
 import Comment from '../../components/Comment/Comment';
-import ContentBar from '../../components/ContentBar/ContentBar';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import ApiClient from '../../ApiClient';
-import { createPoll } from '../../helpers/poll';
 import styles from './CommentsStyle';
 import defaultStyles from "../../styles/styles";
 import _ from 'lodash'
