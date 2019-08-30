@@ -55,6 +55,11 @@ export default class CreatePost extends React.Component {
         }
       });
 
+      sortedChannels = channelList.sort((c1, c2) => {
+        if (c1.name < c2.name) return -1;
+        return 1;
+      });
+
       var newState =  { channels: channelList, loadingChannels: false };
 
       //if editting a post, display the correct channel
@@ -158,9 +163,9 @@ export default class CreatePost extends React.Component {
       channel = channel[0]
     }else{
       this.props.navigation.setParams({state: 'editting'});
-      alert("Invalid channel, unable to post.");
+      alert("Please select a channel.");
+      return;
     }
-    if (['all', 'subs'].includes(channel.value)) return console.error(`Can't add post to ${channel.value} feed`);
 
     var tags = channel.label;
 
@@ -205,8 +210,18 @@ export default class CreatePost extends React.Component {
   updatePost = async (data) => {
     postId = data._id;
     const {navigation} = this.props;
-    const {pollUpdated, isPoll, pollData, imageUpdated, image} = this.state
-    ApiClient.put(`/posts/${postId}`, _.pick(data, ['content']), {authorized: true})
+    const {pollUpdated, isPoll, pollData, imageUpdated, image, channels, selectedChannel} = this.state
+
+    var channel = channels.filter( channel => channel.value==selectedChannel);
+    if(channel[0]){
+      data.tags = [channel[0].label]
+    }else{
+      this.props.navigation.setParams({state: 'editting'});
+      alert("Please select a channel.");
+      return;
+    }
+
+    ApiClient.put(`/posts/${postId}`, _.pick(data, ['content', 'tags']), {authorized: true})
       .then(() => {
         if(pollUpdated){
           if(!isPoll){

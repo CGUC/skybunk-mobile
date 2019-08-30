@@ -317,6 +317,11 @@ export default class Post extends React.Component {
 
     var numComments = comments ? comments.length : 0;
 
+    if(!tags || !tags[0]){
+      console.warn(`Post by ${author} does not have tags: ${content}`)
+      return null;
+    }
+
     return (
       <View>
         <KeyboardAvoidingView
