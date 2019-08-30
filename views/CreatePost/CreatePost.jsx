@@ -85,7 +85,7 @@ export default class CreatePost extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: navigation.getParam('post') ? 'Edit Post' : 'Make a Post',
+      title: navigation.getParam('data') ? 'Edit Post' : 'Make a Post',
       headerTitle: null,
       get headerRight() {
         const state = navigation.getParam('state');
