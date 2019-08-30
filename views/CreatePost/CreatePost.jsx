@@ -221,7 +221,6 @@ export default class CreatePost extends React.Component {
         }
         if(imageUpdated){
           if(!image){
-            console.log("Deleting image")
             deletePostPicture(postId).then(() => {
               navigation.goBack();
             });

@@ -116,13 +116,13 @@ export default class Post extends React.Component {
   }
 
   onConfirmDelete = () => {
-    const { deletePost, data } = this.props;
+    const { updatePost, data } = this.props;
 
     var postId = data._id;
 
     this.hideEditButtons();
 
-    deletePost && deletePost(postId);
+    updatePost && updatePost(postId, {}, "deletePost");
   }
 
   onPressPost = () => {

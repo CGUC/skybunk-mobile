@@ -95,19 +95,7 @@ export default class CommentsView extends React.Component {
     const loggedInUser = this.props.navigation.getParam('loggedInUser');
     const updateParentState = navigation.getParam('updateParentState');
 
-    if (['editPost'].includes(type)) {
-      ApiClient.put(`/posts/${postData._id}`, _.pick(data, ['content', 'image']), {authorized: true})
-        .then(() => {
-          this.setState({ postData: data });
-          updateParentState('updatePost', data);
-        })
-        .catch(err => {
-          console.error(err);
-          alert("Error updating post. Sorry about that!");
-        });
-    }
-
-    else if (['toggleLike'].includes(type)) {
+    if (['toggleLike'].includes(type)) {
       const addLike = data.usersLiked.some(user => user._id === loggedInUser._id);
 
       ApiClient.post(`/posts/${postData._id}/like`, { addLike }, {authorized: true})
@@ -129,12 +117,12 @@ export default class CommentsView extends React.Component {
 
     else if (type === 'deletePost') {
       ApiClient.delete(`/posts/${postData._id}`, {authorized: true})
-        .then(() => {
-          updateParentState('deletePost', postData._id);
-        })
-        .catch(err => {
-          alert("Error deleting post. Sorry about that!")
-        });
+      .then(() => {
+        updateParentState('deletePost', postData._id);
+      })
+      .catch(err => {
+        alert("Error deleting post. Sorry about that!")
+      });
       navigation.goBack();
     }
 
@@ -144,12 +132,12 @@ export default class CommentsView extends React.Component {
         content: data.content,
       }
       ApiClient.post(`/posts/${postData._id}/comment`, commentContent, {authorized: true})
-        .then(() => {
-          this.loadData();
-        })
-        .catch(err => {
-          alert("Error adding comment. Sorry about that!")
-        });
+      .then(() => {
+        this.loadData();
+      })
+      .catch(err => {
+        alert("Error adding comment. Sorry about that!")
+      });
     }
 
     else if (type === 'updateComment') {
@@ -158,38 +146,38 @@ export default class CommentsView extends React.Component {
         content: data.content,
       }
       ApiClient.put(`/posts/${postData._id}/comment/${id}`, commentContent, {authorized: true})
-        .then(() => {
-          var updatedPost = {
-            ...postData,
-            comments: postData.comments.map(comment => {
-              if (comment._id === id) return data;
-              return comment;
-            })
-          };
-          this.setState({ postData: updatedPost });
-          updateParentState('updatePost', updatedPost);
-        })
-        .catch(err => {
-          alert("Error updating comment. Sorry about that!");
-        });
+      .then(() => {
+        var updatedPost = {
+          ...postData,
+          comments: postData.comments.map(comment => {
+            if (comment._id === id) return data;
+            return comment;
+          })
+        };
+        this.setState({ postData: updatedPost });
+        updateParentState('updatePost', updatedPost);
+      })
+      .catch(err => {
+        alert("Error updating comment. Sorry about that!");
+      });
     }
 
     else if (type === 'deleteComment') {
       ApiClient.delete(`/posts/${postData._id}/comment/${id}`, {authorized: true})
-        .then(() => {
-          var updatedPost = {
-            ...postData,
-            comments: postData.comments.filter(comments => {
-              return comments._id !== id;
-            })
-          };
-          this.setState({ postData: updatedPost });
-          updateParentState('updatePost', updatedPost);
-        })
-        .catch(err => {
-          console.error(err)
-          alert("Error deleting comment. Sorry about that!")
-        });
+      .then(() => {
+        var updatedPost = {
+          ...postData,
+          comments: postData.comments.filter(comments => {
+            return comments._id !== id;
+          })
+        };
+        this.setState({ postData: updatedPost });
+        updateParentState('updatePost', updatedPost);
+      })
+      .catch(err => {
+        console.error(err)
+        alert("Error deleting comment. Sorry about that!")
+      });
     }
   }
 
@@ -246,12 +234,12 @@ export default class CommentsView extends React.Component {
               data={postData}
               maxLines={1000}
               updatePost={this.updateResource}
-              deletePost={this.deletePost}
               enableEditing={enablePostEditing}
               enableDeleting={ loggedInUser.role && loggedInUser.role.includes("admin")}
               loggedInUser={loggedInUser}
               showUserProfile={this.showUserProfile}
               showFullDate={true}
+              navigation={this.props.navigation}
             />
             <KeyboardAwareScrollView>
                 {_.map(_.orderBy(comments, comment => comment.createdAt.valueOf()),

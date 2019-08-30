@@ -131,7 +131,6 @@ module.exports = {
 				`/posts/${postID}/image`,
 				{authorized: true}
 			  ).then(() => {
-				  console.log("removing item")
 					postPicCache.removeItem(postID, err => {
 						resolve();
 					});
