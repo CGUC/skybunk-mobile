@@ -34,8 +34,9 @@ export default (styles = StyleSheet.create({
   },
   textContent: {
     paddingLeft: 5,
-    height: 30,
-    flexGrow: 1
+    height: 38,
+    flexGrow: 1,
+    flexShrink: 1
   },
   editButtonsContainer: {
     flex: 1,
