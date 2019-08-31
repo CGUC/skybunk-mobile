@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Autolink from 'react-native-autolink';
 import { View, FlatList } from 'react-native';
 import { Text } from 'native-base';
-import { Font } from "expo";
+import * as Font from 'expo-font';
 import styles from "./PollPreviewStyle";
 
 export default class PollPreview extends React.Component {

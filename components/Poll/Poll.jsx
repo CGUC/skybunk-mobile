@@ -4,7 +4,7 @@ import Autolink from 'react-native-autolink';
 import { View, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { CheckBox, Icon } from 'react-native-elements';
 import { Text, Textarea } from 'native-base';
-import { Font } from "expo";
+import * as Font from 'expo-font';
 import { pollVote, pollOption, pollDeleteOption } from '../../helpers/poll';
 import styles from "./PollStyle";
 

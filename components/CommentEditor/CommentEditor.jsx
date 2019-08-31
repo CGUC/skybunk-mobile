@@ -2,7 +2,8 @@ import React from 'react';
 import { View, TouchableOpacity, TextInput } from 'react-native';
 import { Text, Thumbnail, Card, CardItem, } from 'native-base';
 import _ from 'lodash';
-import { Font, AppLoading } from "expo";
+import { AppLoading } from "expo";
+import * as Font from 'expo-font';
 
 import styles from "./CommentEditorStyle";
 import {getProfilePicture} from "../../helpers/imageCache"
