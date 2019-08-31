@@ -7,9 +7,10 @@ Your access to and use of the Service is conditioned on your acceptance of and c
 
 *BY DOWNLOADING AND USING THE APPLICATION, YOU ARE AGREEING TO THE FOLLOWING:*
 
-* I understand that I should not post any personal information other than my full name, and that I should use a completely original password.
+* I understand that I am posting any personal information at my own risk
+* I understand that I should use a completely original password
 * I understand that using a fake name can result in account deletion and restricted or terminated access to the Application
-* I agree to all of the Terms and Conditions outlined in the Agreement.
+* I agree to all of the Terms and Conditions outlined in the Agreement
 
 **1. Definitions**
 In this Agreement, unless the context clearly indicates otherwise, the following words and expressions shall have the meaning ascribed:
@@ -32,16 +33,16 @@ In order to maintain a respectful community, the User profile must never contain
 
 * A name other than the one used in everyday life.
 * Inaccurate information about the user.
-* An offensive or otherwise inappropriate photo as the profile picture.
+* An offensive or otherwise inappropriate profile picture, bio, or other public information.
 
 
 **3. Content Regulations**
 
 Skybunk is a vessel in which Users associated with an Institution can communicate and interact. You may NOT post content:
 
-That is unlawful, misleading, discriminatory or fraudulent.
-That infringes or violates someone else's rights.
-That causes or is a virus, malicious code, or other content that causes the disabling of the app or the user’s device.
+* That is unlawful, misleading, discriminatory or fraudulent.
+* That infringes or violates someone else's rights.
+* That causes or is a virus, malicious code, or other content that causes the disabling of the app or the user’s device.
 
 Please remember that we want to *enhance* community, so we ask that you use face-to-face communication wherever possible and keep all posts positive and inclusive.
 
@@ -69,5 +70,5 @@ Unless otherwise indicated, Skybunk is our proprietary property and all source c
 
 Project Stairwell reserves the right to remove your account and all of its data if:
 * You are not affiliated with your host Institution in the current academic year.
-* You produce any content outlined in the Content Regulations.
+* You produce any content that violates the Content Regulations
 * Any other reason agreed upon by Project Stairwell or the Content Administrators.
