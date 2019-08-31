@@ -1,24 +1,18 @@
 /**
  * Screen to display a feed of relevant posts in a scrollable list.
- * TODO: This should probably be re-used for All Feed and My Subs, receiving specificity through props
 */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { FlatList} from 'react-native';
-import { Container, Footer, Content, Spinner, Text } from 'native-base';
-import { AppLoading } from "expo";
+import { Container, Content, Text, Button, View } from 'native-base';
 import * as Font from 'expo-font';
-import ContentBar from '../../components/ContentBar/ContentBar';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import Post from '../../components/Post/Post';
-import NoData from '../../components/NoData/NoData';
 import ApiClient from '../../ApiClient';
 import styles from './FeedStyle';
 import defaultStyles from '../../styles/styles';
-import {setPostPicture} from '../../helpers/imageCache';
-import { createPoll } from '../../helpers/poll';
+import Spinner from '../../components/Spinner/Spinner'
 
 export default class FeedView extends React.Component {
 
@@ -57,6 +51,14 @@ export default class FeedView extends React.Component {
     await this.loadData();
 
     this.setState({ loading: false });
+
+    //refresh data when returning from CreatePost
+    this.props.navigation.addListener(
+      'willFocus',
+      payload => {
+        this.loadData()
+      }
+    );
   }
 
   getUri() {
@@ -83,7 +85,7 @@ export default class FeedView extends React.Component {
       page: 1,
       loadedLastPage: false
     });
-    const loggedInUser = this.props.navigation.getParam('loggedInUser');
+
     await ApiClient.get(this.getUri(), {authorized: true})
       .then(response => {
         this.setState({
@@ -96,92 +98,37 @@ export default class FeedView extends React.Component {
       });
   }
 
-  addPost = (data) => {
-    /**
-     * Currently data is just a string of text
-     */
-    const {
-      navigation,
-    } = this.props;
+  updatePost = async (postId, data, type) => {	
+    if (type === 'toggleLike') {	
+      const loggedInUser = this.props.navigation.getParam('loggedInUser');	
+      const addLike = data.usersLiked.some(user => user._id === loggedInUser._id);	
 
-    const loggedInUser = navigation.getParam('loggedInUser');
-
-    var channel = navigation.getParam('channel');
-    if (['all', 'subs'].includes(channel._id)) return console.error(`Can't add post to ${channel._id} feed`);
-
-    var tags = channel.tags;
-
-    var postContent = {
-      author: loggedInUser._id,
-      content: data.content,
-      tags: tags
+      return ApiClient.post(`/posts/${postId}/like`, { addLike }, {authorized: true})	
+        .then(() => {	
+          this.updateState('updatePost', data);	
+        })	
+        .catch(err => {	
+          alert("Error liking post. Sorry about that!")	
+        });	
     }
-    ApiClient.post('/posts', postContent, {authorized: true})
-    .then(response => response.json())
-    .then(post => {
-      if (data.poll) {
-        createPoll(post._id, data.poll).then(poll => {
-          if (data.image) {
-            setPostPicture(
-              post._id,
-              data.image
-            ).then(() => this.loadData());
-          }
-          else {
-            this.loadData();
-          }
-        })
-        .catch((err) => {
-          alert("Error creating poll. Sorry about that!")
-        });
-      } else if (data.image) {
-        setPostPicture(
-          post._id,
-          data.image
-        ).then(() => this.loadData());
-      }
-      else {
-        this.loadData();
-      }
+    else if (type === 'deletePost') {	
+      return ApiClient.delete(`/posts/${postId}`, {authorized: true})	
+        .then(() => {	
+          this.updateState('deletePost', postId);	
+        })	
+        .catch(err => {	
+          alert("Error deleting post. Sorry about that!")	
+        });	
+    }
+
+    ApiClient.put(`/posts/${postId}`, _.pick(data, ['content', 'image']), {authorized: true})	
+    .then(() => {
+      this.loadData();
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Error deleting post. Sorry about that!")
     });
-  }
-
-  updatePost = async (postId, data, type) => {
-    if (type === 'toggleLike') {
-      const loggedInUser = this.props.navigation.getParam('loggedInUser');
-      const addLike = data.usersLiked.some(user => user._id === loggedInUser._id);
-
-      return ApiClient.post(`/posts/${postId}/like`, { addLike }, {authorized: true})
-        .then(() => {
-          this.updateState('updatePost', data);
-        })
-        .catch(err => {
-          alert("Error liking post. Sorry about that!")
-        });
-    }
-    else if (type === 'deletePost') {
-      return ApiClient.delete(`/posts/${postId}`, {authorized: true})
-        .then(() => {
-          this.updateState('deletePost', postId);
-        })
-        .catch(err => {
-          alert("Error deleting post. Sorry about that!")
-        });
-    }
-    else if (type === 'editPost') {
-      this.updateState('updatePost', data);
-    }
-    else if (type === 'editPoll') {
-      this.updateState('updatePoll', data);
-    }
-
-    ApiClient.put(`/posts/${postId}`, _.pick(data, ['content', 'image']), {authorized: true})
-      .then(() => {
-        //this.loadData();
-      })
-      .catch(err => {
-        alert("Error updating post. Sorry about that!");
-      });
   }
 
   /**
@@ -234,27 +181,14 @@ export default class FeedView extends React.Component {
     })
   }
 
-  getFooterJSX() {
-    const {
-      navigation,
-    } = this.props;
+  createPost = () => {
+    var channel = this.props.navigation.getParam('channel');
+    const loggedInUser = this.props.navigation.getParam('loggedInUser');
 
-    var channel = navigation.getParam('channel');
-    const loggedInUser = navigation.getParam('loggedInUser');
-
-    if (!['all', 'subs', 'myPosts'].includes(channel._id)) {
-      return (
-        <Footer>
-          <ContentBar
-            addResource={this.addPost}
-            submitButtonText='Post'
-            showModalToolbar={true}
-            loggedInUser={loggedInUser}
-          />
-        </Footer>
-      )
+    if(['all', 'subs', 'myPosts'].includes(channel._id)){
+      channel = null;
     }
-    return null;
+    this.props.navigation.navigate("CreatePost", {channel , loggedInUser});
   }
 
   buildListItems() {
@@ -278,12 +212,13 @@ export default class FeedView extends React.Component {
         maxLines={10}
         key={item._id}
         onPressPost={this.onPressPost}
-        updatePost={this.updatePost}
         showTag={['all', 'subs', 'myPosts'].includes(channelId)}
         enableEditing={enableEditing}
         enableDeleting={loggedInUser.role && loggedInUser.role.includes("admin")}
         showUserProfile={this.showUserProfile}
         showFullDate={false}
+        navigation={this.props.navigation}
+        updatePost={this.updatePost}
       />
     );
   }
@@ -310,7 +245,7 @@ export default class FeedView extends React.Component {
 
   listFooter = () => {
     if (this.state.loadingPage) {
-      return <Spinner color='#cd8500' />;
+      return <Spinner />;
     }
     else if (this.state.loadedLastPage) {
       return <Text style={styles.noMorePosts}>No more posts!</Text>;
@@ -318,56 +253,10 @@ export default class FeedView extends React.Component {
     else return null;
   }
 
-  render() {
-    const {
-      posts,
-      loading,
-      userDataToShow,
-      showProfileModal
-    } = this.state;
-
-    const {
-      navigation,
-    } = this.props;
-
-    const channelId = navigation.getParam('channel')._id;
-    const loggedInUser = navigation.getParam('loggedInUser');
-
-    if (loading) {
-      return (
-        <Container style={defaultStyles.backgroundTheme}>
-          <Content>
-            <Spinner color='#cd8500' />
-          </Content>
-        </Container>
-      );
-    } else if (posts.length) {
-      return (
-        <Container style={defaultStyles.backgroundTheme}>
-          <FlatList
-            data={this.buildListItems()}
-            renderItem={this.renderListItem}
-            onEndReached={this.loadNextPage}
-            ListFooterComponent={this.listFooter()}
-            refreshing={this.state.loading}
-            onRefresh={this.loadData}
-            onEndReachedThreshold={0.8}
-            removeClippedSubviews
-            keyboardShouldPersistTaps={'handled'}
-          />
-
-          {this.getFooterJSX()}
-
-          <UserProfile
-            user={userDataToShow}
-            onClose={this.closeProfileModal}
-            isModalOpen={showProfileModal}
-          />
-
-        </Container>
-      )
-    } else {
+  getContentJSX = () => {
+    if(this.state.posts.length == 0){
       var message;
+      const channelId = this.props.navigation.getParam('channel')._id;
       switch (channelId) {
         case 'subs':
           message = 'Nothing here - try subscribing to a channel!';
@@ -378,15 +267,57 @@ export default class FeedView extends React.Component {
         default:
           message = 'No posts yet - you could be the first!';
       }
-
       return (
-        <NoData
-          message={message}
-          addResource={this.addPost}
-          hideFooter={['all', 'subs', 'myPosts'].includes(channelId)}
-          loggedInUser={loggedInUser}
-        />
+        <View style={styles.noDataView}>
+          <Text style={styles.noDataText}>{message}</Text>
+        </View>
+      )
+    }
+    return (
+      <FlatList
+        data={this.buildListItems()}
+        renderItem={this.renderListItem}
+        onEndReached={this.loadNextPage}
+        ListFooterComponent={this.listFooter()}
+        refreshing={this.state.loading}
+        onRefresh={this.loadData}
+        onEndReachedThreshold={0.8}
+        removeClippedSubviews
+      />
+    )
+  }
+
+  render() {
+    const {
+      loading,
+      userDataToShow,
+      showProfileModal
+    } = this.state;
+
+    if (loading) {
+      return (
+        <Container style={defaultStyles.backgroundTheme}>
+          <Content>
+            <Spinner/>
+          </Content>
+        </Container>
       );
+    } else {
+      return (
+        <Container style={defaultStyles.backgroundTheme}>
+          {this.getContentJSX()}
+
+          <Button style={styles.newPostButton} onPress={this.createPost}>
+            <Text>Make A Post</Text>
+          </Button>
+          <UserProfile
+            user={userDataToShow}
+            onClose={this.closeProfileModal}
+            isModalOpen={showProfileModal}
+          />
+
+        </Container>
+      )
     }
   }
 }

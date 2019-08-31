@@ -1,17 +1,17 @@
 import React from 'react';
-import { ScrollView} from 'react-native';
-import { Container, Footer, Content, Text, Spinner } from 'native-base';
+import { Container, Content, Text, Spinner } from 'native-base';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as Font from 'expo-font';
 
 import Post from '../../components/Post/Post';
 import Comment from '../../components/Comment/Comment';
-import ContentBar from '../../components/ContentBar/ContentBar';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import ApiClient from '../../ApiClient';
-import { createPoll } from '../../helpers/poll';
 import styles from './CommentsStyle';
 import defaultStyles from "../../styles/styles";
 import _ from 'lodash'
+import CommentEditor from '../../components/CommentEditor/CommentEditor';
+import Spinner from '../../components/Spinner/Spinner'
 
 export default class CommentsView extends React.Component {
 
@@ -92,19 +92,7 @@ export default class CommentsView extends React.Component {
     const loggedInUser = this.props.navigation.getParam('loggedInUser');
     const updateParentState = navigation.getParam('updateParentState');
 
-    if (['editPost'].includes(type)) {
-      ApiClient.put(`/posts/${postData._id}`, _.pick(data, ['content', 'image']), {authorized: true})
-        .then(() => {
-          this.setState({ postData: data });
-          updateParentState('updatePost', data);
-        })
-        .catch(err => {
-          console.error(err);
-          alert("Error updating post. Sorry about that!");
-        });
-    }
-
-    else if (['toggleLike'].includes(type)) {
+    if (['toggleLike'].includes(type)) {
       const addLike = data.usersLiked.some(user => user._id === loggedInUser._id);
 
       ApiClient.post(`/posts/${postData._id}/like`, { addLike }, {authorized: true})
@@ -130,12 +118,12 @@ export default class CommentsView extends React.Component {
 
     else if (type === 'deletePost') {
       ApiClient.delete(`/posts/${postData._id}`, {authorized: true})
-        .then(() => {
-          updateParentState('deletePost', postData._id);
-        })
-        .catch(err => {
-          alert("Error deleting post. Sorry about that!")
-        });
+      .then(() => {
+        updateParentState('deletePost', postData._id);
+      })
+      .catch(err => {
+        alert("Error deleting post. Sorry about that!")
+      });
       navigation.goBack();
     }
 
@@ -145,12 +133,12 @@ export default class CommentsView extends React.Component {
         content: data.content,
       }
       ApiClient.post(`/posts/${postData._id}/comment`, commentContent, {authorized: true})
-        .then(() => {
-          this.loadData();
-        })
-        .catch(err => {
-          alert("Error adding comment. Sorry about that!")
-        });
+      .then(() => {
+        this.loadData();
+      })
+      .catch(err => {
+        alert("Error adding comment. Sorry about that!")
+      });
     }
 
     else if (type === 'updateComment') {
@@ -159,38 +147,38 @@ export default class CommentsView extends React.Component {
         content: data.content,
       }
       ApiClient.put(`/posts/${postData._id}/comment/${id}`, commentContent, {authorized: true})
-        .then(() => {
-          var updatedPost = {
-            ...postData,
-            comments: postData.comments.map(comment => {
-              if (comment._id === id) return data;
-              return comment;
-            })
-          };
-          this.setState({ postData: updatedPost });
-          updateParentState('updatePost', updatedPost);
-        })
-        .catch(err => {
-          alert("Error updating comment. Sorry about that!");
-        });
+      .then(() => {
+        var updatedPost = {
+          ...postData,
+          comments: postData.comments.map(comment => {
+            if (comment._id === id) return data;
+            return comment;
+          })
+        };
+        this.setState({ postData: updatedPost });
+        updateParentState('updatePost', updatedPost);
+      })
+      .catch(err => {
+        alert("Error updating comment. Sorry about that!");
+      });
     }
 
     else if (type === 'deleteComment') {
       ApiClient.delete(`/posts/${postData._id}/comment/${id}`, {authorized: true})
-        .then(() => {
-          var updatedPost = {
-            ...postData,
-            comments: postData.comments.filter(comments => {
-              return comments._id !== id;
-            })
-          };
-          this.setState({ postData: updatedPost });
-          updateParentState('updatePost', updatedPost);
-        })
-        .catch(err => {
-          console.error(err)
-          alert("Error deleting comment. Sorry about that!")
-        });
+      .then(() => {
+        var updatedPost = {
+          ...postData,
+          comments: postData.comments.filter(comments => {
+            return comments._id !== id;
+          })
+        };
+        this.setState({ postData: updatedPost });
+        updateParentState('updatePost', updatedPost);
+      })
+      .catch(err => {
+        console.error(err)
+        alert("Error deleting comment. Sorry about that!")
+      });
     }
   }
 
@@ -235,7 +223,7 @@ export default class CommentsView extends React.Component {
       return (
         <Container style={defaultStyles.backgroundTheme}>
           <Content>
-            <Spinner color='#cd8500' />
+            <Spinner/>
           </Content>
         </Container>
       );
@@ -252,10 +240,10 @@ export default class CommentsView extends React.Component {
               loggedInUser={loggedInUser}
               showUserProfile={this.showUserProfile}
               showFullDate={true}
+              navigation={this.props.navigation}
             />
-            <ScrollView>
-              {comments.length ?
-                _.map(_.orderBy(comments, comment => comment.createdAt.valueOf()),
+            <KeyboardAwareScrollView>
+                {_.map(_.orderBy(comments, comment => comment.createdAt.valueOf()),
                   (comment, key) => {
                     var enableCommentEditing = comment.author._id === loggedInUser._id;
 
@@ -269,20 +257,12 @@ export default class CommentsView extends React.Component {
                         showUserProfile={this.showUserProfile}
                       />
                     )
-                  })
-                :
-                <Text style={styles.noDataText}>
-                  No comments yet - You could be the first!
-                </Text>
-              }
-            </ScrollView>
+                  })}
+            </KeyboardAwareScrollView>
+        <CommentEditor 
+          author={loggedInUser}
+          updateResource={this.updateResource}/>
           </Content>
-          <Footer>
-            <ContentBar
-              addResource={(content) => this.updateResource(undefined, content, 'addComment')}
-              submitButtonText='Comment'
-            />
-          </Footer>
 
           <UserProfile
             user={userDataToShow}

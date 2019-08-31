@@ -2,11 +2,12 @@ import React from 'react';
 import { ImageBackground, View, Image, KeyboardAvoidingView, Platform, Linking, StatusBar } from 'react-native';
 import { AppLoading } from "expo";
 import * as Font from 'expo-font';
-import { Container, Content, Text, Button, Input, Item, Spinner } from 'native-base';
+import { Container, Content, Text, Button, Input, Item } from 'native-base';
 import notificationToken from '../../helpers/notificationToken';
 import Banner from '../../components/Banner/Banner';
 import ApiClient from '../../ApiClient';
 import styles from './LoginStyle';
+import Spinner from '../../components/Spinner/Spinner'
 
 export default class LoginView extends React.Component {
   static navigationOptions = { header: null };

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Autolink from 'react-native-autolink';
 import { View, FlatList } from 'react-native';
-import { Text, Button, Textarea } from 'native-base';
+import { Text } from 'native-base';
 import { Font } from "expo";
 import styles from "./PollPreviewStyle";
 
@@ -10,12 +10,9 @@ export default class PollPreview extends React.Component {
 
   constructor(props) {
     super(props);
-
-    let cleanTitle = this.props.data && this.props.data.title ? this.props.data.title : '';
     let cleanOpts = this.props.data && this.props.data.options ? this.props.data.options : [];
 
     this.state = {
-      title: cleanTitle,
       options: cleanOpts,
     }
   }
@@ -84,7 +81,6 @@ export default class PollPreview extends React.Component {
 
     return (
       <View style={styles.card}>
-        <Autolink style={styles.questionText} text={this.state.title}/>
         <FlatList
           data={this.buildListItems()}
           renderItem={this.renderListItem}

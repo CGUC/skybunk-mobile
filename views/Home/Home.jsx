@@ -1,6 +1,6 @@
 import React from 'react';
 import { StatusBar, TouchableOpacity, Image } from 'react-native';
-import { Container, Content, Spinner, Footer, Thumbnail} from 'native-base';
+import { Container, Content, Footer, Thumbnail} from 'native-base';
 import ChannelList from "../../components/ChannelList/ChannelList";
 import NotificationList from "../../components/NotificationList/NotificationList";
 import HomeTabBar from "./HomeTabBar/HomeTabBar";
@@ -10,6 +10,7 @@ import ImageCache from '../../helpers/imageCache'
 import * as Font from 'expo-font';
 import { Notifications } from 'expo';
 import _ from 'lodash';
+import Spinner from '../../components/Spinner/Spinner'
 
 export default class HomeView extends React.Component {
 
@@ -79,6 +80,7 @@ export default class HomeView extends React.Component {
       .then(postData => {
         const loggedInUser = this.state.user;
         updateParentState = () => ({});
+        this.props.navigation.navigate('Home');
         this.props.navigation.navigate('Comments', { postData, loggedInUser, updateParentState });
       })
     }
@@ -165,7 +167,7 @@ export default class HomeView extends React.Component {
       return (
         <Container>
           <Content contentContainerStyle={styles.contentContainer}>
-            <Spinner color='#cd8500' />
+            <Spinner/>
           </Content>
         </Container>
       );

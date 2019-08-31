@@ -28,6 +28,24 @@ module.exports = {
       });
     });
   },
+  removePoll: function(postID) {
+    return new Promise(function(resolve, reject) {
+      ApiClient.delete(`/posts/${postID}/poll`, {authorized: true})
+      .then(response => {
+        if (!response.ok) {
+          response.json().then(error => {
+            reject(error);
+          });
+        } else {
+          response.json().then(poll => {
+            resolve(poll);
+          });
+        }
+      }).catch(error => {
+        reject(error);
+      });
+    });
+  },
   pollOption: function(postID, option) {
     return new Promise(function(resolve, reject) {
       ApiClient.post(`/posts/${postID}/poll/option`, option, {authorized: true})

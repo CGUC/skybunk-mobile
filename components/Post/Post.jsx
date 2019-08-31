@@ -1,6 +1,6 @@
 import React from 'react';
 import Autolink from 'react-native-autolink';
-import { View, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Modal, Alert, KeyboardAvoidingView, Keyboard, Platform, Dimensions } from 'react-native';
+import { View, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Modal, Alert, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
 import Image from 'react-native-scalable-image';
 import { Body, Card, CardItem, Text, Thumbnail, Button, Icon } from 'native-base';
 import * as Font from 'expo-font';
@@ -10,7 +10,6 @@ import {getProfilePicture, getPostPicture} from "../../helpers/imageCache";
 import { getPoll, createPoll } from '../../helpers/poll';
 import PollPreview from '../Poll/PollPreview/PollPreview';
 import Poll from '../Poll/Poll';
-import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
 import styles from "./PostStyle";
 
 export default class Post extends React.Component {
@@ -42,7 +41,8 @@ export default class Post extends React.Component {
     }).catch(error => {
       console.error(error);
     });
-    if (this.props.data.image) {
+    const { media }= this.props.data
+    if (media && media.type==='image') {
       getPostPicture(this.props.data._id).then(pic => {
         this.setState({
           image: pic,
@@ -51,7 +51,7 @@ export default class Post extends React.Component {
         console.error(error);
       });
     }
-    if (this.props.data.media) {
+    if (media && media.type==='poll') {
       getPoll(this.props.data._id).then(poll => {
         this.setState({
           poll: poll,
@@ -72,8 +72,10 @@ export default class Post extends React.Component {
   }
 
   onPressEdit = () => {
-    this.setState({ editing: true })
     this.hideEditButtons();
+    const {data, loggedInUser} = this.props
+    const {pollCopy, image} = this.state
+    this.props.navigation.navigate("CreatePost",  {data, poll: pollCopy, image, loggedInUser})
   }
 
   saveEdited = (newContent) => {
@@ -327,6 +329,11 @@ export default class Post extends React.Component {
 
     var numComments = comments ? comments.length : 0;
 
+    if(!tags || !tags[0]){
+      console.warn(`Post by ${author} does not have tags: ${content}`)
+      return null;
+    }
+
     return (
       <View>
         <KeyboardAvoidingView
@@ -368,11 +375,12 @@ export default class Post extends React.Component {
 
             <CardItem button onPress={this.onPressPost} style={styles.postContent}>
               <Body>
+              <Autolink text={content} numberOfLines={this.props.maxLines} ellipsizeMode='tail' />
                 {poll ?
                   (this.props.onPressPost ?
                   <PollPreview data={poll} loggedInUser={loggedInUser} />
                   : <Poll data={poll} postId={data._id} updatePoll={this.updatePoll} loggedInUser={loggedInUser} isAuthor={isAuthor} />)
-                : <Autolink text={content} numberOfLines={this.props.maxLines} ellipsizeMode='tail' />}
+                : null}
               </Body>
             </CardItem>
 
@@ -436,19 +444,6 @@ export default class Post extends React.Component {
             </TouchableOpacity>
           </Modal>
         </View>
-
-        <CreateResourceModal
-          onClose={this.closeEditingModal}
-          isModalOpen={editing}
-          saveResource={this.saveEdited}
-          existing={content}
-          existingPoll={pollCopy}
-          submitButtonText='Save'
-          clearAfterSave={false}
-          loggedInUser={loggedInUser}
-          isAuthor={isAuthor}
-          key={this.state.updateKey}
-        />
       </View>
     )
   }

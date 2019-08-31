@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Autolink from 'react-native-autolink';
-import { View, FlatList, TouchableOpacity, Platform, Alert } from 'react-native';
+import { View, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { CheckBox, Icon } from 'react-native-elements';
-import { Text, Button, Textarea } from 'native-base';
+import { Text, Textarea } from 'native-base';
 import { Font } from "expo";
 import { pollVote, pollOption, pollDeleteOption } from '../../helpers/poll';
 import styles from "./PollStyle";
@@ -13,13 +13,11 @@ export default class Poll extends React.Component {
   constructor(props) {
     super(props);
 
-    let cleanTitle = this.props.data && this.props.data.title ? this.props.data.title : '';
     let cleanOpts = this.props.data && this.props.data.options ? this.props.data.options : [];
     let cleanMultiSelect = this.props.data && this.props.data.multiSelect === false ? false : true;
     let cleanOpen = this.props.data && this.props.data.open === true ? true : false;
 
     this.state = {
-      title: cleanTitle,
       multiSelect: cleanMultiSelect,
       open: cleanOpen,
       options: cleanOpts,
@@ -60,19 +58,6 @@ export default class Poll extends React.Component {
     this.setState({ newOption: text });
   }
 
-  titleUpdate = async (text) => {
-    if (text.length >= 1000) {
-      return;
-    }
-    this.state.title = text;
-    this.props.savePoll({
-      title: text,
-      multiSelect: this.state.multiSelect,
-      open: this.state.open,
-      options: this.state.options,
-    });
-  }
-
   toggleMultiSelect = async () => {
     if (this.state.multiSelect) {
       for (var i = 0; i < this.state.options.length; i++) {
@@ -91,7 +76,6 @@ export default class Poll extends React.Component {
     }
     this.state.multiSelect = !this.state.multiSelect;
     this.props.savePoll({
-      title: this.state.title,
       multiSelect: this.state.multiSelect,
       open: this.state.open,
       options: this.state.options,
@@ -101,7 +85,6 @@ export default class Poll extends React.Component {
   toggleOpen = () => {
     this.state.open = !this.state.open;
     this.props.savePoll({
-      title: this.state.title,
       multiSelect: this.state.multiSelect,
       open: this.state.open,
       options: this.state.options,
@@ -120,7 +103,6 @@ export default class Poll extends React.Component {
       }
       this.setState({ options: poll.options });
       this.props.updatePoll && this.props.updatePoll({
-        title: this.state.title,
         multiSelect: this.state.multiSelect,
         open: this.state.open,
         options: poll.options,
@@ -181,7 +163,6 @@ export default class Poll extends React.Component {
       }
     }
     this.props.savePoll && this.props.savePoll({
-      title: this.state.title,
       multiSelect: this.state.multiSelect,
       open: this.state.open,
       options: opts,
@@ -211,7 +192,6 @@ export default class Poll extends React.Component {
       }
       opts.splice(optIndex, 1);
       this.props.savePoll({
-        title: this.state.title,
         multiSelect: this.state.multiSelect,
         open: this.state.open,
         options: opts,
@@ -224,7 +204,6 @@ export default class Poll extends React.Component {
         }
         this.setState({ options: poll.options });
         this.props.updatePoll && this.props.updatePoll({
-          title: this.state.title,
           multiSelect: this.state.multiSelect,
           open: this.state.open,
           options: poll.options,
@@ -251,7 +230,6 @@ export default class Poll extends React.Component {
         }
         this.setState({ options: poll.options, newOption: '' });
         this.props.updatePoll && this.props.updatePoll({
-          title: this.state.title,
           multiSelect: this.state.multiSelect,
           open: this.state.open,
           options: poll.options,
@@ -266,7 +244,6 @@ export default class Poll extends React.Component {
         usersVoted: [],
       });
       this.props.savePoll({
-        title: this.state.title,
         multiSelect: this.state.multiSelect,
         open: this.state.open,
         options: opts,
@@ -349,11 +326,18 @@ export default class Poll extends React.Component {
   }
 
   render() {
-    // TODO fix: so many security vulnerabilities from unsanitized user input of option text and poll title
     let editing = !!this.props.savePoll;
 
     return (
       <View style={styles.view}>
+        <FlatList
+          style={styles.fillWidth}
+          keyboardShouldPersistTaps={'handled'}
+          showsVerticalScrollIndicator={false}
+          data={this.buildListItems()}
+          renderItem={this.renderListItem}
+          extraData={this.state}
+        />
         {!!this.props.isAuthor && editing ?
           <View style={styles.fillWidth}>
             <CheckBox
@@ -377,30 +361,6 @@ export default class Poll extends React.Component {
               onIconPress={this.toggleMultiSelect}
             />
           </View> : null}
-        {this.props.isAuthor && editing ?
-          <View style={styles.fillWidth}>
-            <Text style={styles.questionText}>Question</Text>
-            <Textarea
-              bordered
-              placeholder="Ask something..."
-              style={styles.textBox}
-              onChangeText={this.titleUpdate}
-              value={this.state.title}
-              disabled={!this.props.isAuthor || !editing}
-            />
-          </View> :
-          <Autolink
-              style={styles.finalQuestion}
-              text={this.state.title}
-          />}
-        <FlatList
-          style={styles.fillWidth}
-          keyboardShouldPersistTaps={'handled'}
-          showsVerticalScrollIndicator={false}
-          data={this.buildListItems()}
-          renderItem={this.renderListItem}
-          extraData={this.state}
-        />
       </View>
     )
   }

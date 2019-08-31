@@ -4,6 +4,7 @@ import { Image, TouchableOpacity } from "react-native";
 import HomeView from './views/Home/Home';
 import LoginView from './views/Login/Login';
 import FeedView from './views/Feed/Feed';
+import CreatePostView from './views/CreatePost/CreatePost';
 import CommentsView from './views/Comments/Comments';
 import SplashScreen from './views/Splash/Splash';
 import SettingsView from './views/Settings/Settings';
@@ -16,6 +17,7 @@ const AppStack = createStackNavigator(
   {
     Home: HomeView,
     Feed: FeedView,
+    CreatePost: CreatePostView,
     Comments: CommentsView,
     Settings: SettingsView,
     MemberList: MemberListView,
