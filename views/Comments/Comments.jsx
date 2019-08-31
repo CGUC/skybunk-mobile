@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Content, Text, Spinner } from 'native-base';
+import { Container, Content, Text } from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as Font from 'expo-font';
 
