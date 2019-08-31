@@ -8,5 +8,5 @@ let authServerAddress = 'https://skybunk-auth-production.herokuapp.com';
 
 module.exports = {
   AUTH_ADDRESS: authServerAddress,
-  VERSION: '6.1.0'
+  VERSION: '7.1.0'
 }
