@@ -1,5 +1,5 @@
 ## TERMS & CONDITIONS
-_Last updated: August 26, 2019_
+_Last updated: August 31, 2019_
 
 Please read these Terms and Conditions carefully before using the Skybunk mobile application operated by Project Stairwell.
 

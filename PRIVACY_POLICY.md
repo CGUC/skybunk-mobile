@@ -1,5 +1,5 @@
 ## Privacy Policy
-_Last updated: August 27, 2019_
+_Last updated: August 31, 2019_
 
 Project Stairwell built the Skybunk app as an Open Source app. This SERVICE is provided by Project Stairwell at no cost and is intended for use as is.
 
