@@ -51,6 +51,7 @@ export default class CreatePost extends React.Component {
       var channelList = _.map(response, channel => {
         return {
           label: channel.name,
+          tags: channel.tags,
           value: channel._id
         }
       });
@@ -167,7 +168,7 @@ export default class CreatePost extends React.Component {
       return;
     }
 
-    var tags = channel.label;
+    var tags = channel.tags[0];
 
     var postContent = {
       author: loggedInUser._id,
