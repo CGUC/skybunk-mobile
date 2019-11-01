@@ -7,12 +7,13 @@ import {
   Container, Content, Left, Icon, Button
 } from 'native-base';
 import _ from 'lodash';
-import { Font, AppLoading } from "expo";
+import { AppLoading } from "expo";
+import * as Font from 'expo-font';
 import date from 'date-fns';
 
-import CreateResourceModal from '../CreateResourceModal/CreateResourceModal';
 import styles from "./CommentStyle";
 import {getProfilePicture} from "../../helpers/imageCache"
+import CommentEditor from '../CommentEditor/CommentEditor';
 
 export default class Comment extends React.Component {
 
@@ -29,8 +30,8 @@ export default class Comment extends React.Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto: require("../../node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("../../node_modules/native-base/Fonts/Roboto_medium.ttf")
     });
 
     getProfilePicture(this.props.data.author._id).then(pic => {
@@ -59,18 +60,15 @@ export default class Comment extends React.Component {
     this.hideEditButtons();
   }
 
-  saveEdited = (newContent) => {
+  saveEdited = (commentId, newComment, type) => {
     const { updateComment, data } = this.props;
 
     var commentId = data._id;
-    var newComment = {
-      ...data,
-      ...newContent
-    }
+    data.content = newComment.content;
 
     this.closeEditingModal();
 
-    updateComment && updateComment(commentId, newComment, "updateComment");
+    updateComment && updateComment(commentId, data, "updateComment");
   }
 
   closeEditingModal = () => {
@@ -115,6 +113,16 @@ export default class Comment extends React.Component {
     }else{
       //Display how long ago the post was made
       createdAt = date.distanceInWordsToNow(createdAt, {addSuffix: true});
+    }
+
+    if(editing){
+      return (
+        <CommentEditor
+          author={author}
+          updateResource={this.saveEdited}
+          commentData={content}
+        />
+      )
     }
 
     return (
@@ -167,16 +175,6 @@ export default class Comment extends React.Component {
             </TouchableOpacity>
           </Modal>
         </View>
-
-        <CreateResourceModal
-          onClose={this.closeEditingModal}
-          isModalOpen={editing}
-          saveResource={this.saveEdited}
-          existing={content}
-          submitButtonText='Save'
-          clearAfterSave={false}
-        />
-
       </View>
     )
   }

@@ -1,7 +1,7 @@
 var config = require('./config');
 import {AsyncStorage} from 'react-native';
 
-var token;
+var servers;
 export default class ApiClient {
 	static async formatHeaders(options){
 		const contentType = options.contentType ? options.contentType : 'application/json'
@@ -21,25 +21,38 @@ export default class ApiClient {
 			}
 		}
 	}
-	static async getAuthToken(){
-		if(token != undefined) return token;
-		token = await AsyncStorage.getItem('@Skybunk:token');
-		return token;
+
+	static async getAuthToken() {
+		if(servers != undefined) return servers[0].token;
+		servers = JSON.parse(await AsyncStorage.getItem('@Skybunk:servers'));
+		return servers[0].token;
 	}
 
-	static async setAuthToken(_token){
-		token = _token;
-		await AsyncStorage.setItem('@Skybunk:token', token);
+	static async getServerUrl() {
+		if(servers != undefined) return servers[0].url;
+		servers = JSON.parse(await AsyncStorage.getItem('@Skybunk:servers'));
+		return servers[0].url;
 	}
 
-	static async clearAuthToken(){
-		await AsyncStorage.removeItem('@Skybunk:token');
-		token = undefined;
+	static async getServers() {
+		if(servers != undefined) return servers;
+		servers = JSON.parse(await AsyncStorage.getItem('@Skybunk:servers'));
+		return servers;
+	}
+
+	static async setServers(_servers) {
+		servers = _servers;
+		await AsyncStorage.setItem('@Skybunk:servers', JSON.stringify(servers));
+	}
+
+	static async clearServers() {
+		await AsyncStorage.removeItem('@Skybunk:servers');
+		servers = undefined;
 	}
 
 	static async get(endpoint, options={}) {
-
-		return fetch(`${config.API_ADDRESS}${endpoint}`, {
+		const serverUrl = await this.getServerUrl();
+		return fetch(`${serverUrl}${endpoint}`, {
 				method: 'GET',
 				headers: await this.formatHeaders(options),
 			})
@@ -54,8 +67,8 @@ export default class ApiClient {
 	}
 
 	static async post(endpoint, body, options={}) {
-
-		return fetch(`${config.API_ADDRESS}${endpoint}`, {
+		const serverUrl = await this.getServerUrl();
+		return fetch(`${serverUrl}${endpoint}`, {
 			method: 'POST',
 			headers: await this.formatHeaders(options),
 			body: JSON.stringify(body),
@@ -63,6 +76,35 @@ export default class ApiClient {
 		.catch(err => {
 			err = err.replace(/</g, '').replace(/>/g, '');
 			console.error(err);
+		});
+	};
+
+	static async register(newUser, options={}) {
+		if (!newUser.username) return {message: 'Username is required'};
+		if (!newUser.password) return {message: 'Password is required'};
+		if (!newUser.firstName) return {message: 'First name is required'};
+		if (!newUser.lastName) return {message: 'Last name is required'};
+		if (!newUser.goldenTicket) return {message: 'golden ticket is required'};
+		
+		const authResponse = await fetch(`${config.AUTH_ADDRESS}/users`, {
+			method: 'POST',
+			headers: await this.formatHeaders(options),
+			body: JSON.stringify(newUser),
+		});
+		const authResponseJson = await authResponse.json();
+
+		if (authResponseJson.servers) {
+			this.setServers(authResponseJson.servers);
+			return await this.post('/users', newUser);
+		}
+		return {message: authResponseJson};
+	};
+
+	static async login(username, password, options={},) {
+		return fetch(`${config.AUTH_ADDRESS}/users/login`, {
+			method: 'POST',
+			headers: await this.formatHeaders(options),
+			body: JSON.stringify({username, password}),
 		});
 	};
 
@@ -77,7 +119,8 @@ export default class ApiClient {
 			body.notifications = body.notifications.slice(0, 30);
 		} else console.log("No notifications being sent");
 
-		return fetch(`${config.API_ADDRESS}${endpoint}`, {
+		const serverUrl = await this.getServerUrl();
+		return fetch(`${serverUrl}${endpoint}`, {
 			method: 'PUT',
 			headers: await this.formatHeaders(options),
 			body: JSON.stringify(body),
@@ -107,7 +150,8 @@ export default class ApiClient {
 			type: `image/${fileType}`,
 		});
 
-		return fetch(`${config.API_ADDRESS}${endpoint}`, {
+		const serverUrl = await this.getServerUrl();
+		return fetch(`${serverUrl}${endpoint}`, {
 			method: method,
 			headers: await this.formatHeaders({...options, contentType: 'multipart/form-data'}),
 			body: formData,
@@ -123,8 +167,8 @@ export default class ApiClient {
 	}
 
 	static async delete(endpoint, options={}) {
-
-		return fetch(`${config.API_ADDRESS}${endpoint}`, {
+		const serverUrl = await this.getServerUrl();
+		return fetch(`${serverUrl}${endpoint}`, {
 			method: 'DELETE',
 			headers: await this.formatHeaders(options)
 		})

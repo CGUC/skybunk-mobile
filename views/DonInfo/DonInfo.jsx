@@ -1,12 +1,13 @@
 import React from 'react';
 import { FlatList, TouchableOpacity, Text, View } from 'react-native';
-import { Container, Content, Spinner, Icon } from 'native-base';
-import { Font} from "expo";
+import { Container, Content, Icon } from 'native-base';
+import * as Font from 'expo-font';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
 import DonStatusCard from '../../components/DonStatusCard/DonStatusCard';
 import styles from './DonInfoStyle';
 import defaultStyles from "../../styles/styles";
 import ApiClient from '../../ApiClient';
+import Spinner from '../../components/Spinner/Spinner'
 
 export default class DonInfo extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -62,8 +63,8 @@ export default class DonInfo extends React.Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto: require("../../node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("../../node_modules/native-base/Fonts/Roboto_medium.ttf")
     });
     await this.loadDons();
   }
@@ -209,7 +210,7 @@ export default class DonInfo extends React.Component {
       return (
         <Container style={defaultStyles.backgroundTheme}>
           <Content>
-            <Spinner color='#cd8500' />
+            <Spinner/>
           </Content>
         </Container>
       )

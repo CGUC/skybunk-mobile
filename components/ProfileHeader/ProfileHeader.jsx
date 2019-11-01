@@ -1,7 +1,8 @@
 import React from "react";
 import { Alert, Text, View, Image, TouchableOpacity, ImageBackground, Platform, Linking } from "react-native";
 import { Icon } from "native-base"
-import { ImagePicker, Permissions } from 'expo';
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
 import styles from "./ProfileHeaderStyle";
 import config from '../../config';
 import {getProfilePicture, setProfilePicture} from '../../helpers/imageCache'

@@ -1,4 +1,12 @@
+// import Constants from 'expo-constants';
+let authServerAddress = 'https://skybunk-auth-production.herokuapp.com';
+
+// TODO: Please change the above link to dev and update any necessary release channels below when ready
+// if (Constants.manifest.releaseChannel === 'stpauls-demo') {
+//   authServerAddress = 'https://skybunk-auth-production.herokuapp.com';
+// }
+
 module.exports = {
-  API_ADDRESS: 'http://api.grebelife.com',
-  VERSION: '6.0.0'
+  AUTH_ADDRESS: authServerAddress,
+  VERSION: '7.1.0'
 }

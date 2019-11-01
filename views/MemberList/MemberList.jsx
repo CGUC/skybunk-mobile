@@ -1,10 +1,11 @@
 import React from 'react';
 import { FlatList, Text, Image, TouchableOpacity } from 'react-native';
-import { Container, Content, Spinner, Item, Input, Icon, Header, View, Thumbnail} from 'native-base';
-import { Font } from "expo";
+import { Container, Content, Item, Input, Icon, Header, View, Thumbnail} from 'native-base';
+import * as Font from 'expo-font';
 
 import UserListItem from '../../components/UserListItem/UserListItem';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
+import Spinner from '../../components/Spinner/Spinner'
 import styles from './MemberListStyle';
 import defaultStyles from '../../styles/styles';
 import ApiClient from '../../ApiClient';
@@ -45,8 +46,8 @@ export default class MemberList extends React.Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto: require("../../node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("../../node_modules/native-base/Fonts/Roboto_medium.ttf")
     });
 
     ImageCache.getProfilePicture(this.props.navigation.getParam('user')._id)
@@ -189,7 +190,7 @@ export default class MemberList extends React.Component {
     let { loadedLastPage } = this.state;
 
     if (!loadedLastPage) {
-      return <Spinner color='#cd8500' />;
+      return <Spinner/>;
     } else return (
       <Text style={styles.noMoreUsers}>
         That's everyone!
@@ -240,7 +241,7 @@ export default class MemberList extends React.Component {
       return (
         <Container style={defaultStyles.backgroundTheme}>
           <Content>
-            <Spinner color='#cd8500' />
+            <Spinner/>
           </Content>
         </Container>
       )

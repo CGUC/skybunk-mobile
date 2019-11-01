@@ -1,11 +1,13 @@
 import React from 'react';
 import { ImageBackground, View, Image, KeyboardAvoidingView, Platform, Linking, StatusBar } from 'react-native';
-import { Font, AppLoading } from "expo";
-import { Container, Content, Text, Button, Input, Item, Spinner } from 'native-base';
+import { AppLoading } from "expo";
+import * as Font from 'expo-font';
+import { Container, Content, Text, Button, Input, Item } from 'native-base';
 import notificationToken from '../../helpers/notificationToken';
 import Banner from '../../components/Banner/Banner';
 import ApiClient from '../../ApiClient';
 import styles from './LoginStyle';
+import Spinner from '../../components/Spinner/Spinner'
 
 export default class LoginView extends React.Component {
   static navigationOptions = { header: null };
@@ -26,8 +28,8 @@ export default class LoginView extends React.Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto: require("../../node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("../../node_modules/native-base/Fonts/Roboto_medium.ttf")
     });
     this.setState({ loading: false });
   }
@@ -55,14 +57,13 @@ export default class LoginView extends React.Component {
     // Register the user
     if (this.state.registering) {
       this.setState({ processing: true });
-      ApiClient.post('/users', {
+      ApiClient.register({
         username: this.state.username,
         password: this.state.password,
         firstName: this.state.firstName,
         lastName: this.state.lastName,
         goldenTicket: this.state.goldenTicket,
       })
-        .then(response => response.json())
         .then(jsonResponse => {
           if (jsonResponse.message) {
             this.setState({
@@ -90,10 +91,7 @@ export default class LoginView extends React.Component {
     // Login the user
     else {
       this.setState({ processing: true });
-      ApiClient.post('/users/login', {
-        username: this.state.username,
-        password: this.state.password,
-      })
+      ApiClient.login(this.state.username, this.state.password)
         .then(response => response.json())
         .then(jsonResponse => {
           if (jsonResponse.err) {
@@ -104,10 +102,11 @@ export default class LoginView extends React.Component {
             });
           }
           else {
-            ApiClient.setAuthToken(jsonResponse.token).then(() => {
-              ApiClient.get('/users/loggedInUser',  {authorized: true}).then(user => {
+            ApiClient.setServers(jsonResponse)
+            .then(() => {
+              ApiClient.get('/users/loggedInUser', {authorized: true}).then(user => {
                 notificationToken.registerForPushNotificationsAsync(user);
-                this.props.navigation.navigate('Home', {token: jsonResponse.token, user});
+                this.props.navigation.navigate('Home', {token: jsonResponse[0].token, user});
               })
               .catch(err => console.error(err));
             }).catch(error => {
@@ -147,7 +146,7 @@ export default class LoginView extends React.Component {
         </Item>
       </View>;
 
-      const logoIcon = 
+      const logoIcon =
         <View>
           <Image
             source={require('../../assets/login-logo.png')}
@@ -236,7 +235,7 @@ export default class LoginView extends React.Component {
             </Content>
           </ImageBackground>
         </Container>
-        
+
       );
     }
   }

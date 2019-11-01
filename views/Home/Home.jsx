@@ -1,15 +1,16 @@
 import React from 'react';
 import { StatusBar, TouchableOpacity, Image } from 'react-native';
-import { Container, Content, Spinner, Footer, Thumbnail} from 'native-base';
+import { Container, Content, Footer, Thumbnail} from 'native-base';
 import ChannelList from "../../components/ChannelList/ChannelList";
 import NotificationList from "../../components/NotificationList/NotificationList";
 import HomeTabBar from "./HomeTabBar/HomeTabBar";
 import styles from "./HomeStyle";
 import ApiClient from '../../ApiClient';
 import ImageCache from '../../helpers/imageCache'
-import { Font} from "expo";
+import * as Font from 'expo-font';
 import { Notifications } from 'expo';
 import _ from 'lodash';
+import Spinner from '../../components/Spinner/Spinner'
 
 export default class HomeView extends React.Component {
 
@@ -27,8 +28,8 @@ export default class HomeView extends React.Component {
           return null;
         }
         return (
-          <TouchableOpacity 
-            hitSlop={{ top: 10, bottom: 10, left: 0, right: 40 }} 
+          <TouchableOpacity
+            hitSlop={{ top: 10, bottom: 10, left: 0, right: 40 }}
             onPress={() => {navigation.navigate('MemberList', {user: navigation.getParam('user')}); }}>
             <Thumbnail
                   small
@@ -54,8 +55,8 @@ export default class HomeView extends React.Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto: require("../../node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("../../node_modules/native-base/Fonts/Roboto_medium.ttf")
     });
     ApiClient.get('/channels',  {authorized: true})
     .then(response => {
@@ -79,6 +80,7 @@ export default class HomeView extends React.Component {
       .then(postData => {
         const loggedInUser = this.state.user;
         updateParentState = () => ({});
+        this.props.navigation.navigate('Home');
         this.props.navigation.navigate('Comments', { postData, loggedInUser, updateParentState });
       })
     }
@@ -109,10 +111,10 @@ export default class HomeView extends React.Component {
   onPressNotif = (notif) => {
     this.updateNotificationState(notif);
     this.props.navigation.navigate(
-      'Comments', 
-      { 
+      'Comments',
+      {
         postData: notif.data.post,
-        updateParentState: () => {}, 
+        updateParentState: () => {},
         loggedInUser: this.state.user,
       }
     );
@@ -159,13 +161,13 @@ export default class HomeView extends React.Component {
 
   render() {
     const { channels, loading, user } = this.state;
-    
+
     StatusBar.setBarStyle('dark-content', true);
     if (loading) {
       return (
         <Container>
           <Content contentContainerStyle={styles.contentContainer}>
-            <Spinner color='#cd8500' />
+            <Spinner/>
           </Content>
         </Container>
       );
@@ -174,7 +176,7 @@ export default class HomeView extends React.Component {
       return (
         <Container>
           <Container>
-              {this.state.currentTab === 'channels' ? 
+              {this.state.currentTab === 'channels' ?
                 <ChannelList
                   channels={channels}
                   onPressChannel={this.onPressChannel}
@@ -190,7 +192,7 @@ export default class HomeView extends React.Component {
               }
           </Container>
           <Footer>
-            <HomeTabBar 
+            <HomeTabBar
               onSwitchTab={ (tab) => {this.setState({currentTab: tab})} }
               currentTab={this.state.currentTab}
               newNotifications={hasNewNotifications}
