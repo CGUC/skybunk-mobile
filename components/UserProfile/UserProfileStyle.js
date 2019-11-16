@@ -29,6 +29,9 @@ export default (styles = StyleSheet.create({
   cardShort: {
     height: 300
   },
+  cardChannelDescription: {
+    height: 200
+  },
   cancelRow: {
     alignSelf: 'flex-end',
     marginTop: 10,
@@ -48,7 +51,8 @@ export default (styles = StyleSheet.create({
     fontWeight: "400",
     fontSize: 26,
     marginTop: 10,
-    marginBottom: 15
+    marginBottom: 15,
+    textAlign: 'center'
   },
   infoBlock: {
     alignSelf: 'flex-start',
@@ -59,6 +63,9 @@ export default (styles = StyleSheet.create({
   },
   infoText: {
     textAlign: 'left'
+  },
+  channelInfoText: {
+    textAlign: 'center'
   },
   bioBlock: {
     overflow: 'scroll',

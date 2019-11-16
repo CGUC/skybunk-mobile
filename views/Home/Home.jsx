@@ -3,6 +3,7 @@ import { StatusBar, TouchableOpacity, Image } from 'react-native';
 import { Container, Content, Footer, Thumbnail} from 'native-base';
 import ChannelList from "../../components/ChannelList/ChannelList";
 import NotificationList from "../../components/NotificationList/NotificationList";
+import ChannelProfile from '../../components/ChannelProfile/ChannelProfile.jsx';
 import HomeTabBar from "./HomeTabBar/HomeTabBar";
 import styles from "./HomeStyle";
 import ApiClient from '../../ApiClient';
@@ -49,7 +50,9 @@ export default class HomeView extends React.Component {
       channels: [],
       user: props.navigation.getParam('user'),
       notifications: props.navigation.getParam('user').notifications,
-      currentTab: 'channels'
+      currentTab: 'channels',
+      channelDataToShow: undefined,
+      showChannelModal: false
     }
   }
 
@@ -108,6 +111,19 @@ export default class HomeView extends React.Component {
     this.props.navigation.navigate('Feed', { channel, loggedInUser: user });
   }
 
+  onLongPressChannel = (channelId, channelName) => {
+    const { channels, user } = this.state;
+    var channel;
+
+    if (['all', 'subs', 'myPosts'].includes(channelId)) channel = { _id: channelId, name: channelName };
+    else channel = _.head(_.filter(channels, { _id: channelId }));
+
+    this.setState({
+      channelDataToShow: channel,
+      showChannelModal: true
+    })
+  }
+
   onPressNotif = (notif) => {
     this.updateNotificationState(notif);
     this.props.navigation.navigate(
@@ -118,6 +134,13 @@ export default class HomeView extends React.Component {
         loggedInUser: this.state.user,
       }
     );
+  }
+
+  closeChannelModal = () => {
+    this.setState({
+      channelDataToShow: undefined,
+      showChannelModal: false
+    })
   }
 
   updateNotificationState = (notif) => {
@@ -160,8 +183,8 @@ export default class HomeView extends React.Component {
   }
 
   render() {
-    const { channels, loading, user } = this.state;
-
+    const { channels, loading, user, channelDataToShow, showChannelModal } = this.state;
+    
     StatusBar.setBarStyle('dark-content', true);
     if (loading) {
       return (
@@ -180,6 +203,7 @@ export default class HomeView extends React.Component {
                 <ChannelList
                   channels={channels}
                   onPressChannel={this.onPressChannel}
+                  onLongPressChannel={this.onLongPressChannel}
                   user={user}
                 /> :
                 <NotificationList
@@ -191,6 +215,13 @@ export default class HomeView extends React.Component {
                 />
               }
           </Container>
+
+          <ChannelProfile
+            channel={channelDataToShow}
+            onClose={this.closeChannelModal}
+            isModalOpen={showChannelModal}
+          />
+
           <Footer>
             <HomeTabBar
               onSwitchTab={ (tab) => {this.setState({currentTab: tab})} }
