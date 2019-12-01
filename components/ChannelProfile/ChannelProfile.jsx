@@ -1,32 +1,15 @@
 import React from 'react';
-import { Modal, View, Image, TouchableOpacity } from 'react-native';
-import { Text, Icon, Card, CardItem } from 'native-base';
-import { Font, AppLoading } from "expo";
-import AutoLink from 'react-native-autolink'
+import { Modal, View, TouchableOpacity } from 'react-native';
+import { Text, Icon } from 'native-base';
 import _ from 'lodash';
 
-import styles from '../../components/UserProfile/UserProfileStyle';
-import {getProfilePicture} from '../../helpers/imageCache'
+import styles from '../../components/ChannelProfile/ChannelProfileStyle';
 
 export default class ChannelProfile extends React.Component {
 
   onClose = () => {
     const { onClose } = this.props;
     onClose();
-  }
-
-  getCloseJSX() {
-    return (
-      <View style={styles.cancelRow}>
-        <TouchableOpacity onPress={this.onClose}>
-          <Icon
-            type="EvilIcons"
-            name='close'
-            style={styles.cancelIcon}
-          />
-        </TouchableOpacity>
-      </View>
-    )
   }
 
   render() {
@@ -51,7 +34,15 @@ export default class ChannelProfile extends React.Component {
         >
           <View style={[styles.card, styles.cardChannelDescription]}>
 
-            {this.getCloseJSX()}
+            <View style={styles.cancelRow}>
+              <TouchableOpacity onPress={this.onClose}>
+                <Icon
+                  type="EvilIcons"
+                  name='close'
+                  style={styles.cancelIcon}
+                />
+              </TouchableOpacity>
+            </View>
 
             <Text style={styles.name}>
               {`${channelData.name}`}
