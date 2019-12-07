@@ -103,13 +103,21 @@ export default class HomeView extends React.Component {
 
   onPressChannel = (channelId, channelName) => {
     const { channels, user } = this.state;
-    let channel = channels.find(channel => channel._id === channelId);
+
+    let channel;
+    if (['all', 'subs', 'myPosts'].includes(channelId)) channel = { _id: channelId, name: channelName };
+    else channel = channels.find(channel => channel._id === channelId);
+
     this.props.navigation.navigate('Feed', { channel, loggedInUser: user });
   }
 
   onLongPressChannel = (channelId, channelName) => {
     const { channels, user } = this.state;
-    let channel = channels.find(channel => channel._id === channelId);
+
+    let channel;
+    if (['all', 'subs', 'myPosts'].includes(channelId)) channel = { _id: channelId, name: channelName };
+    else channel = channels.find(channel => channel._id === channelId);
+
     this.setState({
       channelDataToShow: channel,
       showChannelModal: true

@@ -4,10 +4,11 @@
 
 import React from 'react';
 import _ from 'lodash';
-import { FlatList} from 'react-native';
+import { FlatList, TouchableOpacity, Image} from 'react-native';
 import { Container, Content, Text, Button, View } from 'native-base';
 import * as Font from 'expo-font';
 import UserProfile from '../../components/UserProfile/UserProfile.jsx';
+import ChannelProfile from '../../components/ChannelProfile/ChannelProfile.jsx';
 import Post from '../../components/Post/Post';
 import ApiClient from '../../ApiClient';
 import styles from './FeedStyle';
@@ -22,6 +23,14 @@ export default class FeedView extends React.Component {
     else title = 'Feed';
 
     return {
+      get headerRight() {
+        if (!channel.description) return null;
+        return (
+          <TouchableOpacity onPress={navigation.getParam('showChannelProfile')}>    
+            <Image source={require('../../assets/info-icon.png')} style={styles.infoIcon} />
+          </TouchableOpacity>
+        )
+      },
       title: title,
       headerTitle: null,
     };
@@ -37,7 +46,9 @@ export default class FeedView extends React.Component {
       page: 1,
       loadedLastPage: false,
       userDataToShow: undefined,
-      showProfileModal: false
+      channelDataToShow: undefined,
+      showUserModal: false,
+      showChannelModal: false
     }
   }
 
@@ -59,6 +70,10 @@ export default class FeedView extends React.Component {
         this.loadData()
       }
     );
+
+    this.props.navigation.setParams({
+      showChannelProfile: this.showChannelProfile
+    });
   }
 
   getUri() {
@@ -170,14 +185,29 @@ export default class FeedView extends React.Component {
   showUserProfile = (user) => {
     this.setState({
       userDataToShow: user,
-      showProfileModal: true
+      showUserModal: true
     })
   }
 
-  closeProfileModal = () => {
+  closeUserModal = () => {
     this.setState({
       userDataToShow: undefined,
-      showProfileModal: false
+      showUserModal: false
+    })
+  }
+
+  showChannelProfile = () => {
+    var channel = this.props.navigation.getParam('channel');
+    this.setState({
+      channelDataToShow: channel,
+      showChannelModal: true
+    })
+  }
+
+  closeChannelModal = () => {
+    this.setState({
+      channelDataToShow: undefined,
+      showChannelModal: false
     })
   }
 
@@ -216,6 +246,7 @@ export default class FeedView extends React.Component {
         enableEditing={enableEditing}
         enableDeleting={loggedInUser.role && loggedInUser.role.includes("admin")}
         showUserProfile={this.showUserProfile}
+        showChannelProfile={this.showChannelProfile}
         showFullDate={false}
         navigation={this.props.navigation}
         updatePost={this.updatePost}
@@ -291,7 +322,9 @@ export default class FeedView extends React.Component {
     const {
       loading,
       userDataToShow,
-      showProfileModal
+      channelDataToShow,
+      showUserModal: showUserModal,
+      showChannelModal: showChannelModal
     } = this.state;
 
     if (loading) {
@@ -312,8 +345,13 @@ export default class FeedView extends React.Component {
           </Button>
           <UserProfile
             user={userDataToShow}
-            onClose={this.closeProfileModal}
-            isModalOpen={showProfileModal}
+            onClose={this.closeUserModal}
+            isModalOpen={showUserModal}
+          />
+          <ChannelProfile
+            channel={channelDataToShow}
+            onClose={this.closeChannelModal}
+            isModalOpen={showChannelModal}
           />
 
         </Container>
