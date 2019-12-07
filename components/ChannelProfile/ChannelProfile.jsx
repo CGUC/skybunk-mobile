@@ -1,7 +1,6 @@
 import React from 'react';
 import { Modal, View, TouchableOpacity } from 'react-native';
 import { Text, Icon } from 'native-base';
-import _ from 'lodash';
 
 import styles from '../../components/ChannelProfile/ChannelProfileStyle';
 
