@@ -13,7 +13,7 @@ export default (StyleSheet.create({
 		alignItems: 'center',
 		backgroundColor: '#FFF',
 		borderBottomColor: '#CCCCCC',
-    	borderBottomWidth: 1,
+    		borderBottomWidth: 1,
 		marginBottom: 1
 	},
 	markAllSeenText: {
