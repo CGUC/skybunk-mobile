@@ -52,10 +52,6 @@ export default class CommentEditor extends React.Component {
   }
 
   render() {
-    const {
-      showEditButtons,
-      editing
-    } = this.state;
 
     const {
       author
@@ -90,6 +86,7 @@ export default class CommentEditor extends React.Component {
                     onChangeText={this.textUpdate}
                     value={this.state.commentText}
                     multiline = {true}
+                    scrollEnabled  = {false}
                   />
                   {this.state.commentText ? 
                     <TouchableOpacity style={styles.commentButton} onPress={this.addComment}>

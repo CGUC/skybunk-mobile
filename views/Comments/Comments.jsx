@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Content, Text } from 'native-base';
+import { Container, Content, Text} from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as Font from 'expo-font';
 
@@ -12,6 +12,7 @@ import defaultStyles from "../../styles/styles";
 import _ from 'lodash'
 import CommentEditor from '../../components/CommentEditor/CommentEditor';
 import Spinner from '../../components/Spinner/Spinner'
+import { ScrollView, KeyboardAvoidingView,  } from 'react-native';
 
 export default class CommentsView extends React.Component {
 
@@ -242,7 +243,7 @@ export default class CommentsView extends React.Component {
               showFullDate={true}
               navigation={this.props.navigation}
             />
-            <KeyboardAwareScrollView>
+            <ScrollView>
                 {_.map(_.orderBy(comments, comment => comment.createdAt.valueOf()),
                   (comment, key) => {
                     var enableCommentEditing = comment.author._id === loggedInUser._id;
@@ -258,10 +259,11 @@ export default class CommentsView extends React.Component {
                       />
                     )
                   })}
-            </KeyboardAwareScrollView>
-        <CommentEditor 
-          author={loggedInUser}
-          updateResource={this.updateResource}/>
+              <CommentEditor 
+            author={loggedInUser}
+            updateResource={this.updateResource}/>
+            </ScrollView>
+
           </Content>
 
           <UserProfile

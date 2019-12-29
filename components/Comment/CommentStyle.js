@@ -32,7 +32,8 @@ export default (styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   textContent: {
-    paddingLeft: 5
+    paddingLeft: 5,
+    fontSize: 16
   },
   editButtonsContainer: {
     flex: 1,
