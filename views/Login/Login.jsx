@@ -106,7 +106,9 @@ export default class LoginView extends React.Component {
             .then(() => {
               ApiClient.get('/users/loggedInUser', {authorized: true}).then(user => {
                 notificationToken.registerForPushNotificationsAsync(user);
-                this.props.navigation.navigate('Home', {token: jsonResponse[0].token, user});
+                var token = jsonResponse[0] !== undefined && jsonResponse[0].token !== undefined ? 
+                jsonResponse[0].token : jsonResponse.token;
+                this.props.navigation.navigate('Home', {token, user});
               })
               .catch(err => console.error(err));
             }).catch(error => {

@@ -65,6 +65,7 @@ export default class EditProfile extends React.Component {
       affiliation: _.get(user, 'info.affiliation', undefined),
       phone: _.get(user, 'info.phone', undefined),
       bio: _.get(user, 'info.bio', undefined),
+      email: _.get(user, 'info.email', undefined),
       avoidKeyboard: false,
     }
   }
@@ -102,6 +103,7 @@ export default class EditProfile extends React.Component {
       address,
       affiliation,
       phone,
+      email,
       bio
     } = this.state;
 
@@ -118,6 +120,7 @@ export default class EditProfile extends React.Component {
     if (address) user.info.address = address;
     if (affiliation) user.info.affiliation = affiliation;
     if (phone) user.info.phone = phone;
+    if (email) user.info.email = email;
     if (bio) user.info.bio = bio;
 
     return user;
@@ -180,7 +183,6 @@ export default class EditProfile extends React.Component {
       <ScrollView>
         <KeyboardAvoidingView
           behavior='position'
-          enabled={this.state.avoidKeyboard}
           style={{...defaultStyles.backgroundTheme, ...styles.container}}
         >
           <ProfileHeader user={this.props.navigation.getParam('user')}/>
@@ -193,6 +195,7 @@ export default class EditProfile extends React.Component {
             {this.generateFieldJSX('address', 'Room Number / Address', 'Where can you be found?')}
             {this.generateFieldJSX('affiliation', 'Affiliation with Grebel', 'i.e. Resident')}
             {this.generateFieldJSX('phone', 'Phone Number', 'Let others contact you')}
+            {this.generateFieldJSX('email', 'Email', 'This won\'t be shared with anyone')}
             {this.generateFieldJSX('bio', 'Bio', 'Share something about yourself')}
           </GestureRecognizer>
         </KeyboardAvoidingView>
