@@ -51,14 +51,6 @@ export default class FeedView extends React.Component {
     await this.loadData();
 
     this.setState({ loading: false });
-
-    //refresh data when returning from CreatePost
-    this.props.navigation.addListener(
-      'willFocus',
-      payload => {
-        this.loadData()
-      }
-    );
   }
 
   getUri() {
