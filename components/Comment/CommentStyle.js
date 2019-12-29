@@ -27,19 +27,21 @@ export default (styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-start'
   },
+  
   textAuthor: {
     paddingLeft: 5,
     fontWeight: 'bold'
   },
   textContent: {
     paddingLeft: 5,
-    fontSize: 16
+    fontSize: 16,
+    flex: 1
   },
   editButtonsContainer: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-end',
-    alignItems: 'center',
+    alignItems: 'bottom',
     backgroundColor: '#00000050'
   },
   view: {
@@ -67,5 +69,47 @@ export default (styles = StyleSheet.create({
     flexDirection: 'row',
   	justifyContent: 'space-between',
   	paddingBottom: 5
-  }
+  },
+  icon: {
+		width: 25,
+		height: 25,
+		marginRight: 0,
+		paddingRight: 0
+  },
+  iconContainer: {
+		flexDirection: 'column',
+    padding: 5,
+    flex: 0
+  },
+  likesDialog: {
+		fontSize: 12,
+		paddingBottom: 3,
+		flex: 1,
+    textAlignVertical: 'bottom',
+    alignSelf: 'center'
+  },
+  
+  likedList: {
+		padding: 20,
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'flex-start',
+		alignItems: 'flex-start',
+	},
+	likedListIcon: {
+		width: 25,
+		height: 25,
+		marginBottom: 10,
+		alignSelf: 'center'
+	},
+	line: {
+		width: '100%',
+		borderBottomWidth: 1,
+		borderBottomColor: '#C0C0C0',
+		paddingLeft: 20,
+		paddingRight: 20
+	},
+	likedListItem: {
+		padding: 5
+	}
 }));

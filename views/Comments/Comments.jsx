@@ -81,7 +81,7 @@ export default class CommentsView extends React.Component {
   }
 
   updateResource = async (id, data, type) => {
-
+    console.log(type)
     const {
       navigation,
     } = this.props;
@@ -100,6 +100,22 @@ export default class CommentsView extends React.Component {
         .then(() => {
           this.setState({ postData: data });
           updateParentState('updatePost', data);
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Error updating post. Sorry about that!");
+        });
+    } else if (['toggleCommentLike'].includes(type)) {
+      const addLike = data.usersLiked.some(user => user._id === loggedInUser._id);
+      console.log(addLike)
+      ApiClient.post(`/posts/${postData._id}/comment/${id}/like`, { addLike }, {authorized: true})
+        .then(() => {
+          postData.comments.forEach((comment) =>{
+            if(comment._id === id){
+              comment = data;
+            }
+          });
+          this.setState({ postData});
         })
         .catch(err => {
           console.error(err);
@@ -256,6 +272,7 @@ export default class CommentsView extends React.Component {
                         enableEditing={enableCommentEditing}
                         enableDeleting={ loggedInUser.role && loggedInUser.role.includes("admin")}
                         showUserProfile={this.showUserProfile}
+                        loggedInUser={loggedInUser}
                       />
                     )
                   })}

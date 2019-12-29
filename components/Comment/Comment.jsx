@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Autolink from 'react-native-autolink';
-import { Dimensions, TouchableOpacity, View, Modal } from 'react-native';
+import { ScrollView, TouchableOpacity, View, Modal } from 'react-native';
 import {
   Text, Thumbnail, ListItem, Card, CardItem,
   Container, Content, Left, Icon, Button
@@ -10,6 +10,7 @@ import _ from 'lodash';
 import { AppLoading } from "expo";
 import * as Font from 'expo-font';
 import date from 'date-fns';
+import Popover from 'react-native-popover-view';
 
 import styles from "./CommentStyle";
 import {getProfilePicture} from "../../helpers/imageCache"
@@ -25,6 +26,7 @@ export default class Comment extends React.Component {
       profilePicture: null,
       showEditButtons: false,
       editing: false,
+      showLikedList: false
     }
   }
 
@@ -85,10 +87,58 @@ export default class Comment extends React.Component {
     updateComment && updateComment(commentId, {}, "deleteComment");
   }
 
+  toggleLike = () => {
+    const {
+      data,
+      loggedInUser,
+      updateComment
+    } = this.props;
+
+    if (data.usersLiked.find((user) => user._id === loggedInUser._id)) {
+      data.usersLiked = data.usersLiked.filter(user => user._id !== loggedInUser._id);
+    } else {
+      console.log("pushing")
+      data.usersLiked.push({
+        _id: loggedInUser._id,
+        firstname: loggedInUser.firstName,
+        lastName: loggedInUser.lastName
+      });
+    }
+
+    if (data.likes < 0) data.likes = 0; // (Grebel's a positive community, come on!)
+    console.log("Updating resource")
+    updateComment && updateComment(data._id, data, 'toggleCommentLike');
+    console.log("Updating resource")
+  }
+
+  generateLikesList = () => {
+    let {
+      usersLiked
+    } = this.props.data;
+
+    if (usersLiked.filter(e => e._id == this.props.loggedInUser._id).length) {
+      usersLiked = usersLiked.filter(user => user._id !== this.props.loggedInUser._id);
+      usersLiked.unshift({ firstName: 'You' }); // a wee hack
+    }
+
+    return (
+      <ScrollView contentContainerStyle={styles.likedList}>
+        <Thumbnail small square source={require('../../assets/liked-cookie.png')} style={styles.likedListIcon} />
+        <View style={styles.line} />
+          {usersLiked.map((user, i) => {
+            return (
+              <Text key={i} style={styles.likedListItem}>{user.firstName} {user.lastName || ''}</Text>
+            )
+          })}
+      </ScrollView>
+    )
+  }
+
   render() {
     const {
       showEditButtons,
-      editing
+      editing,
+      showLikedList
     } = this.state;
 
     const {
@@ -101,6 +151,7 @@ export default class Comment extends React.Component {
       author,
       content,
       createdAt,
+      usersLiked,
     } = data;
 
     var authorName;
@@ -125,6 +176,11 @@ export default class Comment extends React.Component {
       )
     }
 
+    const isLiked = usersLiked.filter(e => e._id == this.props.loggedInUser._id).length > 0;
+
+    var likeIcon = isLiked ? require('../../assets/liked-cookie.png') : require('../../assets/cookie-icon.png');
+    var likesDialog = usersLiked.length > 0 ? usersLiked.length : '';
+
     return (
       <View>
         <Card style={styles.card}>
@@ -146,10 +202,31 @@ export default class Comment extends React.Component {
                     {`${createdAt} `}
                   </Text>
                 </View>
-                <Autolink text={content} style={styles.textContent}/>
+                <View style={{flexDirection: 'row'}}>
+                  <Autolink text={content} style={styles.textContent}/>
+                  <View style={styles.iconContainer}>
+                    <TouchableOpacity
+                      onPress={() => this.setState({ showLikedList: true })}
+                      ref={ref => this.dialogRef = ref}
+                      hitSlop={{ top: 40, bottom: 10, left: 30, right: 40 }}
+                    >
+                      <Text style={styles.likesDialog}>{`${likesDialog}`}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.toggleLike}>
+                      <Thumbnail small square source={likeIcon} style={styles.icon} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
               </TouchableOpacity>
             </View>
           </CardItem>
+        <Popover
+            fromView={this.dialogRef}
+            isVisible={showLikedList}
+            onClose={() => this.setState({ showLikedList: false })}
+          >
+            {this.generateLikesList()}
+          </Popover>
         </Card>
 
         <View>
