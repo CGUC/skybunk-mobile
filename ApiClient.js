@@ -42,14 +42,6 @@ export default class ApiClient {
 
 	static async setServers(_servers) {
 		servers = _servers;
-
-		if(servers.token != undefined){ //reverse compatibility
-			servers = [{
-                name: "legacy",
-                url: config.AUTH_ADDRESS,
-                token: servers.token,
-              }];
-		}
 		await AsyncStorage.setItem('@Skybunk:servers', JSON.stringify(servers));
 	}
 
