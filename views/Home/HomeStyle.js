@@ -13,7 +13,7 @@ export default (StyleSheet.create({
 		alignItems: 'center',
 		backgroundColor: '#FFF',
 		borderBottomColor: '#CCCCCC',
-    borderBottomWidth: 1,
+    		borderBottomWidth: 1,
 		marginBottom: 1
 	},
 	markAllSeenText: {
@@ -26,7 +26,7 @@ export default (StyleSheet.create({
 		height: 30,
 		marginRight: 15,
 		marginBottom: 5
-		},
+	},
 	profilePicThumbnail: {
 		borderWidth: 1,
 		marginLeft: 15,

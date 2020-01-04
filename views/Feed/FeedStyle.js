@@ -15,15 +15,21 @@ export default (styles = StyleSheet.create({
 		bottom:40, 
 		right:20,
 	  ...defaultStyles.primaryColor},
-	  noDataView: {
+	noDataView: {
 		flex: 1,
 		flexDirection: 'column',
 		justifyContent: 'flex-start',
 		alignItems: 'center',
 		marginTop: height / 3
 	  },
-	  noDataText: {
+	noDataText: {
 		fontSize: 18,
 		fontStyle: 'italic',
-	  }
+	},
+	infoIcon: {
+		width: 25,
+		height: 25,
+		marginRight: 15,
+		marginBottom: 0
+	}
 }));
