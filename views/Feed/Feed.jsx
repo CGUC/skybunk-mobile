@@ -63,14 +63,6 @@ export default class FeedView extends React.Component {
 
     this.setState({ loading: false });
 
-    //refresh data when returning from CreatePost
-    this.props.navigation.addListener(
-      'willFocus',
-      payload => {
-        this.loadData()
-      }
-    );
-
     this.props.navigation.setParams({
       showChannelProfile: this.showChannelProfile
     });

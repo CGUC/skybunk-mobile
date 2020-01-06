@@ -52,6 +52,7 @@ export default (styles = StyleSheet.create({
     borderColor: '#d6d7da',
     marginLeft: 5,
     marginRight: 5,
+    minHeight: 80,
   },
   buttonGroup: {
     height: 100,
