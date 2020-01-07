@@ -41,7 +41,7 @@ export default (styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-end',
-    alignItems: 'bottom',
+    alignItems: 'baseline',
     backgroundColor: '#00000050'
   },
   view: {
