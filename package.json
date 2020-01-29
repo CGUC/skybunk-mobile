@@ -15,7 +15,9 @@
     "eslint-plugin-react": "^7.18.0",
     "eslint-plugin-react-hooks": "^1.7.0",
     "eslint-plugin-react-native": "^3.8.1",
+    "husky": "^4.2.1",
     "jest-expo": "^32.0.1",
+    "lint-staged": "^10.0.4",
     "prettier": "1.19.1",
     "react-native-scripts": "2.0.1",
     "react-test-renderer": "16.8.3"
@@ -63,5 +65,14 @@
     "react-native-switch-pro": "^1.0.2-beta",
     "react-native-vector-icons": "^6.6.0",
     "react-navigation": "^3.3.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{js,css,md}": "prettier --write"
   }
 }
