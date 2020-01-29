@@ -28,7 +28,7 @@
     "eject": "expo eject",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "test": "jest",
+    "test": "jest --coverage",
     "code-format": "npx eslint \"./**/*.js\" \"./**/*.jsx\" --fix && npx prettier \"./**/*.js\" \"./**/*.jsx\" --write",
     "code-format-check": "npx eslint \"./**/*.js\" \"./**/*.jsx\" && npx prettier \"./**/*.js\" \"./**/*.jsx\" --check"
   },

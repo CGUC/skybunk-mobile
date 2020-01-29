@@ -28,7 +28,7 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: npm run-script code-format-check && yarn test
+      - run: npm run-script code-format-check && npm test
 
       - coveralls/upload
 
