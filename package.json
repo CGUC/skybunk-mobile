@@ -20,7 +20,7 @@
     "lint-staged": "^10.0.4",
     "prettier": "1.19.1",
     "react-native-scripts": "2.0.1",
-    "react-test-renderer": "16.8.3"
+    "react-test-renderer": "^16.8.3"
   },
   "main": "./node_modules/expo/AppEntry.js",
   "scripts": {
@@ -34,6 +34,9 @@
   },
   "jest": {
     "preset": "jest-expo",
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    },
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base)"
     ]
