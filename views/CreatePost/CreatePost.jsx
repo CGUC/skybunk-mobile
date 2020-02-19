@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, TouchableOpacity, Platform, Image  } from 'react-native';
+import { View, TouchableOpacity, Platform, Image, TextInput  } from 'react-native';
 import { Text, Textarea, Container } from 'native-base';
 import { ImagePicker, Permissions, Font } from 'expo';
 import Toolbar from './Toolbar/Toolbar'
@@ -388,13 +388,13 @@ export default class CreatePost extends React.Component {
             />
           </View>
           <View style={styles.postContentView}>
-            <Textarea
+            <TextInput
               bordered
               placeholder={postPlaceholder}
               style={styles.textBox}
               onChangeText={this.textUpdate}
               value={this.state.resourceText}
-              rowSpan={3}
+              multiline={true}
             />
           </View>
           

@@ -18,6 +18,9 @@ export default (styles = StyleSheet.create({
 		paddingTop: 0,
 		paddingBottom: 0,
 	},
+	autolinkContent: {
+		fontSize: 16
+	},
 	postFooter: {
 		marginTop: 3,
 		marginBottom: 3

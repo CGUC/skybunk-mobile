@@ -48,7 +48,8 @@ export default (styles = StyleSheet.create({
     fontWeight: "400",
     fontSize: 26,
     marginTop: 10,
-    marginBottom: 15
+    marginBottom: 15,
+    textAlign: 'center'
   },
   infoBlock: {
     alignSelf: 'flex-start',

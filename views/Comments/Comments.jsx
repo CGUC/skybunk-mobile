@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Content, Text } from 'native-base';
+import { Container, Content, Text} from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as Font from 'expo-font';
 
@@ -12,6 +12,7 @@ import defaultStyles from "../../styles/styles";
 import _ from 'lodash'
 import CommentEditor from '../../components/CommentEditor/CommentEditor';
 import Spinner from '../../components/Spinner/Spinner'
+import { ScrollView, KeyboardAvoidingView,  } from 'react-native';
 
 export default class CommentsView extends React.Component {
 
@@ -80,7 +81,7 @@ export default class CommentsView extends React.Component {
   }
 
   updateResource = async (id, data, type) => {
-
+    console.log(type)
     const {
       navigation,
     } = this.props;
@@ -99,6 +100,22 @@ export default class CommentsView extends React.Component {
         .then(() => {
           this.setState({ postData: data });
           updateParentState('updatePost', data);
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Error updating post. Sorry about that!");
+        });
+    } else if (['toggleCommentLike'].includes(type)) {
+      const addLike = data.usersLiked.some(user => user._id === loggedInUser._id);
+      console.log(addLike)
+      ApiClient.post(`/posts/${postData._id}/comment/${id}/like`, { addLike }, {authorized: true})
+        .then(() => {
+          postData.comments.forEach((comment) =>{
+            if(comment._id === id){
+              comment = data;
+            }
+          });
+          this.setState({ postData});
         })
         .catch(err => {
           console.error(err);
@@ -242,7 +259,7 @@ export default class CommentsView extends React.Component {
               showFullDate={true}
               navigation={this.props.navigation}
             />
-            <KeyboardAwareScrollView>
+            <ScrollView>
                 {_.map(_.orderBy(comments, comment => comment.createdAt.valueOf()),
                   (comment, key) => {
                     var enableCommentEditing = comment.author._id === loggedInUser._id;
@@ -255,13 +272,15 @@ export default class CommentsView extends React.Component {
                         enableEditing={enableCommentEditing}
                         enableDeleting={ loggedInUser.role && loggedInUser.role.includes("admin")}
                         showUserProfile={this.showUserProfile}
+                        loggedInUser={loggedInUser}
                       />
                     )
                   })}
-            </KeyboardAwareScrollView>
-        <CommentEditor 
-          author={loggedInUser}
-          updateResource={this.updateResource}/>
+              <CommentEditor 
+            author={loggedInUser}
+            updateResource={this.updateResource}/>
+            </ScrollView>
+
           </Content>
 
           <UserProfile

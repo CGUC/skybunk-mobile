@@ -38,6 +38,10 @@ export default class ChannelList extends React.Component {
     if (this.props.onPressChannel) this.props.onPressChannel(id, name);
   }
 
+  onLongPressChannel = (id, name) => {
+    if (this.props.onLongPressChannel) this.props.onLongPressChannel(id, name);
+  }
+
   updateSubscription = (id, index) => {
     if (['all', 'subs', 'myPosts'].includes(id)) return;
 
@@ -105,7 +109,9 @@ export default class ChannelList extends React.Component {
             <TouchableOpacity onPress={this.updateSubscription(channel.id, subIndex)} activeOpacity={0.5}>
               <Image opacity={opacity} source={icon} style={styles.notificationBell} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.channelListButton} onPress={() => this.onPressChannel(channel.id, channel.name)}>
+            <TouchableOpacity style={styles.channelListButton} 
+              onPress={() => this.onPressChannel(channel.id, channel.name)} 
+              onLongPress={() => this.onLongPressChannel(channel.id, channel.name)}>
               <Text style={styles.channelText}>{channel.name}</Text>
               <Image source={require('../../assets/arrowright.png')} style={styles.rightArrow} />
             </TouchableOpacity>
@@ -147,5 +153,6 @@ export default class ChannelList extends React.Component {
 
 ChannelList.propTypes = {
   onPressChannel: PropTypes.func,
+  onLongPressChannel: PropTypes.func,
   channels: PropTypes.array,
 }
