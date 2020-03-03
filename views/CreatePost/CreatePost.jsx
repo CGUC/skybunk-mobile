@@ -75,7 +75,7 @@ export default class CreatePost extends React.Component {
     .catch(err => console.error(err));
   }
 
-  
+
   async componentDidMount() {
     const { navigation } = this.props;
     navigation.setParams({
@@ -133,18 +133,18 @@ export default class CreatePost extends React.Component {
     if(data){
       this.updatePost({
         ...data,
-        content: resourceText, 
-        image: image, 
+        content: resourceText,
+        image: image,
         poll: isPoll ? pollData : null
       })
     }else{
       this.addPost({
-        content: resourceText, 
-        image: image, 
+        content: resourceText,
+        image: image,
         poll: isPoll ? pollData : null
       })
     }
-    
+
   }
 
   addPost = (data) => {
@@ -375,6 +375,7 @@ export default class CreatePost extends React.Component {
                 this.state.channels || []
               }
               onValueChange={this.updateChannel}
+              useNativeAndroidPickerStyle={false}
               style={{ //uses inputAndroid and inputiOS style from the stylesheet
                 ...styles,
                 iconContainer: {
@@ -397,7 +398,7 @@ export default class CreatePost extends React.Component {
               rowSpan={3}
             />
           </View>
-          
+
           <View style={styles.ToolbarView}>
             <Toolbar
               pickImage = {this.pickImage}
@@ -409,7 +410,7 @@ export default class CreatePost extends React.Component {
             />
           </View>
           <View style={styles.mediaPreviewView}>
-            <MediaPreview 
+            <MediaPreview
               image={this.state.image}
               poll={this.state.pollData}
               isPoll={this.state.isPoll}
