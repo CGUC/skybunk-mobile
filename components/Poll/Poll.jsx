@@ -277,10 +277,12 @@ export default class Poll extends React.Component {
     const items = this.state.options
       .sort((a, b) => b.usersVoted.length - a.usersVoted.length)
       .slice()
-      .map(item => ({
-        ...item,
-        key: item._id,
-      }));
+      .map(item => {
+        if (item._id) {
+          item.key = item._id; // eslint-disable-line no-param-reassign
+        }
+        return item;
+      });
     if (!!this.props.isAuthor || this.state.open) {
       items.push({ key: 'add_option_item' });
     }
