@@ -229,21 +229,21 @@ export default class FeedView extends React.Component {
   };
 
   loadNextPage = async () => {
-    const { page } = this.state;
     if (this.state.loadingPage || this.state.loadedLastPage) return;
+    const { page, posts } = this.state;
     this.setState(
       {
         page: page + 1,
         loadingPage: true,
       },
-      state =>
+      () =>
         ApiClient.get(this.getUri(), {
           authorized: true,
-          headers: { page: state.page },
+          headers: { page: this.state.page },
         })
           .then(response => {
             this.setState({
-              posts: [...state.posts, ...response],
+              posts: [...posts, ...response],
               loadingPage: false,
               loadedLastPage: response.length < 15,
             });
