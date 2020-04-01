@@ -29,85 +29,90 @@ export default class Post extends React.Component {
 
     this.FIRST_NAMES = [
       "Twinkle",
-      "Beardface",
+      "Pooks",
       "Fire",
       "Woodsy",
-      "Grand-alf",
+      "Gandalf",
       "Tim",
-      "The Winter",
+      "Winter",
       "Shadow",
       "Giggly",
-      "Bardsong",
+      "Spooks",
       "Thunder",
-      "Crescent",
-      "Footloose",
+      "Grebel",
+      "Footsie",
       "Dagger",
       "Toothless",
       "Fairy",
       "Harry",
-      "Elf-fart",
-      "NSync",
+      "Elfenstine",
+      "Floofer",
       "Sandwhich",
       "Moon",
       "Ned",
-      "Sharkface",
+      "Kitty",
       "Mindlord",
       "Youtube",
-      "Zebra"
+      "Shadow"
     ]
 
     this.LAST_NAMES = [
       "Firehazard",
-      "BurntToast",
+      "Toast",
       "Salamander",
       "Dragontongue",
       "Sunlapper",
       "Queereye",
       "Earthshaker",
-      "Just Tim",
-      "Forger",
+      "Tim",
+      "Fluffer",
       "Summerwand",
-      "Littlestar",
+      "Snuggles",
       "Treehugger",
-      "Crocodile",
+      "Cuddles",
       "Magichands",
       "Hands",
       "Wolf",
       "Cow",
       "Crow",
-      "Merlinus",
+      "Merlin",
       "Troll",
       "Shairaships",
       "Wingear",
       "Dancer",
       "Imp",
       "Potty",
-      "The Cripple"
+      "Kitten"
+    ]
+
+    this.MIDDLE = [
+      "Mc",
+      "Von",
+      "Vander",
+      "St",
+      "Mac"
     ]
 
     this.PICTURES = [
-      "https://www.citizensenergygroup.com/My-Home/Utility-Services/Water/Water-Wizard/wizard-icon",
-      "https://pbs.twimg.com/profile_images/3191719194/4868f31e0953a5f16cc7e696647fd32c.jpeg",
-      "https://i.pinimg.com/600x315/3d/a4/16/3da4168f224f86a66e61d2c79427255c.jpg",
-      "https://i.pinimg.com/600x315/57/6f/b9/576fb9478e870b9563199da8fd92d54f.jpg",
-      "https://vignette.wikia.nocookie.net/mrmen/images/1/15/Mr_cheeky1.png/revision/latest/scale-to-width-down/340?cb=20170519093913",
-      "https://cdn.clipart.email/07906e2122f3f42461a4fe95a84554b2_mr-men-characters_256-256.png",
-      "https://i.pinimg.com/originals/74/78/70/747870d994e6c08d751715366e87a4d6.png",
-      "https://i.pinimg.com/originals/98/e9/5a/98e95a0729a1de830329a2bbe259d3e0.jpg",
-      "https://modernmanofthecloth.files.wordpress.com/2013/11/mr-grumble_01.png?w=256&h=256",
-      "https://i.pinimg.com/originals/5c/4f/88/5c4f88fffe96461a712f9f3859919f05.jpg",
-      "https://www.quizmasters.biz/Pub%20Genius/Mr_Men/Characters/Unofficial/Mr%20Excited_44.png",
-      "https://i.pinimg.com/600x315/13/fa/a1/13faa16c1010681420d71a5521316516.jpg",
-      "https://www.mrmen.com/wp-content/uploads/2016/06/lmbossy-128-1.jpg",
-      "https://www.mrmen.com/wp-content/uploads/2016/06/lmdotty-128-1.jpg",
-      "https://www.mrmen.com/wp-content/uploads/2018/02/lminventor_128-1-1.jpg",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ_XsbZsyFCysxxxXfVOEpVLr4ERpjKAA1JuLPR0H1k3ds4vw_h&usqp=CAU",
-      "https://i.pinimg.com/600x315/08/4e/d8/084ed89f97142982887e943d69ab17d3.jpg",
-      "https://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-12/256/dog-face.png",
-      "https://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-11/256/cat-face.png",
-      "https://i.pinimg.com/originals/7d/b0/bd/7db0bd87e0d8d715bc7eb9cc31c79927.png",
-      "https://a.wattpad.com/useravatar/BodoBanana.256.456524.jpg",
-      "https://b.thumbs.redditmedia.com/34mZd4CPuWddzVkhKqIXgigWdTcymoRywICEC_sD7cQ.png",
+      "https://a.wattpad.com/useravatar/Kitten6416.256.440418.jpg",
+      "https://i.pinimg.com/originals/e2/1c/61/e21c610b3078c665b06348af7b4535f0.jpg",
+      "https://a.wattpad.com/useravatar/Kitten6416.256.440418.jpg",
+      "https://a.wattpad.com/useravatar/ShyKitten13.256.435525.jpg",
+      "https://a.thumbs.redditmedia.com/aZgT3brFyzKwCh6synQ395042guv7XxNBbt3vwHIBk4.png",
+      "https://pbs.twimg.com/profile_images/422121203440955392/Ma_alVbk.jpeg",
+      "https://a.wattpad.com/useravatar/kittychan_atsumi.256.149618.jpg",
+      "https://images.pexels.com/users/avatars/1001118/phil-goulson-177.jpeg?w=256&h=256&fit=crop&crop=faces&auto=compress",
+      "https://is3-ssl.mzstatic.com/image/thumb/Purple6/v4/0d/82/aa/0d82aa05-1f50-bb1b-5d65-160c46962362/source/256x256bb.jpg",
+      "https://pbs.twimg.com/profile_images/594104592335446017/XXPHjAU3.jpg",
+      "https://i.pinimg.com/originals/7d/c3/2e/7dc32e6daee17e8919340fe962ec1067.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQBkrJHl2kF4dIPeT1BvAXaK0blSl20TLJhY32sOwzMEwWP_eYI&usqp=CAU",
+      "https://static.wixstatic.com/media/7770f1_ed5ef8b7496741bba3032d5064ec8162~mv2.jpg/v1/fill/w_256,h_256,al_c,lg_1,q_80/7770f1_ed5ef8b7496741bba3032d5064ec8162~mv2.webp",
+      "https://is3-ssl.mzstatic.com/image/thumb/Purple128/v4/a2/8a/3c/a28a3ce2-f2af-652c-c27f-9a959f193f56/source/256x256bb.jpg",
+      "https://cdn163.picsart.com/222702403000202.jpg?type=webp&to=crop&r=256",
+      "https://i.pinimg.com/474x/b5/e1/be/b5e1bef76b2058910f556c85c1040b79.jpg",
+      "https://i.pinimg.com/originals/1b/e4/94/1be494c3c065c9c97da3231f7303ee85.jpg",
+      "https://pbs.twimg.com/profile_images/2819857246/57340e8a6924c086162be0e0211525c1.jpeg",
+      "https://i.pinimg.com/originals/81/39/0d/81390dfb8ad297c7abd5e0179a0f8486.jpg",
       "https://pbs.twimg.com/media/BRtfYmQCIAI89-r.jpg:large"
     ]
   }
@@ -396,10 +401,10 @@ export default class Post extends React.Component {
     var authorName;
     if (!author) authorName = "Ghost";
     // else authorName = `${author.firstName} ${author.lastName}`;
-    else authorName = `${this.FIRST_NAMES[Math.floor(Math.random() * 25)]} ${this.LAST_NAMES[Math.floor(Math.random() * 25)]}`;
+    else authorName = `${this.FIRST_NAMES[Math.floor(Math.random() * 25)]} ${this.MIDDLE[Math.floor(Math.random() * 5)]}${this.LAST_NAMES[Math.floor(Math.random() * 25)]}`;
 
     // TODO: implement
-    var authorPhoto = this.PICTURES[0];//author.profilePicture;
+    var authorPhoto = author.profilePicture;
 
     if(this.props.showFullDate){
       //If in comment view, view full date including timestamp
@@ -438,7 +443,7 @@ export default class Post extends React.Component {
                       <Thumbnail
                         style={styles.profilePicThumbnail}
                         // source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }}
-                        source={{ uri: this.PICTURES[Math.floor(Math.random() * 23)] }}
+                        source={{ uri: this.PICTURES[Math.floor(Math.random() * 20)] }}
                       />
                     </TouchableOpacity>
                   </View>
