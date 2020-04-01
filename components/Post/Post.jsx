@@ -26,6 +26,90 @@ export default class Post extends React.Component {
       pollCopy: null,
       updateKey: 0,
     }
+
+    this.FIRST_NAMES = [
+      "Twinkle",
+      "Beardface",
+      "Fire",
+      "Woodsy",
+      "Grand-alf",
+      "Tim",
+      "The Winter",
+      "Shadow",
+      "Giggly",
+      "Bardsong",
+      "Thunder",
+      "Crescent",
+      "Footloose",
+      "Dagger",
+      "Toothless",
+      "Fairy",
+      "Harry",
+      "Elf-fart",
+      "NSync",
+      "Sandwhich",
+      "Moon",
+      "Ned",
+      "Sharkface",
+      "Mindlord",
+      "Youtube",
+      "Zebra"
+    ]
+
+    this.LAST_NAMES = [
+      "Firehazard",
+      "BurntToast",
+      "Salamander",
+      "Dragontongue",
+      "Sunlapper",
+      "Queereye",
+      "Earthshaker",
+      "Just Tim",
+      "Forger",
+      "Summerwand",
+      "Littlestar",
+      "Treehugger",
+      "Crocodile",
+      "Magichands",
+      "Hands",
+      "Wolf",
+      "Cow",
+      "Crow",
+      "Merlinus",
+      "Troll",
+      "Shairaships",
+      "Wingear",
+      "Dancer",
+      "Imp",
+      "Potty",
+      "The Cripple"
+    ]
+
+    this.PICTURES = [
+      "https://www.citizensenergygroup.com/My-Home/Utility-Services/Water/Water-Wizard/wizard-icon",
+      "https://pbs.twimg.com/profile_images/3191719194/4868f31e0953a5f16cc7e696647fd32c.jpeg",
+      "https://i.pinimg.com/600x315/3d/a4/16/3da4168f224f86a66e61d2c79427255c.jpg",
+      "https://i.pinimg.com/600x315/57/6f/b9/576fb9478e870b9563199da8fd92d54f.jpg",
+      "https://vignette.wikia.nocookie.net/mrmen/images/1/15/Mr_cheeky1.png/revision/latest/scale-to-width-down/340?cb=20170519093913",
+      "https://cdn.clipart.email/07906e2122f3f42461a4fe95a84554b2_mr-men-characters_256-256.png",
+      "https://i.pinimg.com/originals/74/78/70/747870d994e6c08d751715366e87a4d6.png",
+      "https://i.pinimg.com/originals/98/e9/5a/98e95a0729a1de830329a2bbe259d3e0.jpg",
+      "https://modernmanofthecloth.files.wordpress.com/2013/11/mr-grumble_01.png?w=256&h=256",
+      "https://i.pinimg.com/originals/5c/4f/88/5c4f88fffe96461a712f9f3859919f05.jpg",
+      "https://www.quizmasters.biz/Pub%20Genius/Mr_Men/Characters/Unofficial/Mr%20Excited_44.png",
+      "https://i.pinimg.com/600x315/13/fa/a1/13faa16c1010681420d71a5521316516.jpg",
+      "https://www.mrmen.com/wp-content/uploads/2016/06/lmbossy-128-1.jpg",
+      "https://www.mrmen.com/wp-content/uploads/2016/06/lmdotty-128-1.jpg",
+      "https://www.mrmen.com/wp-content/uploads/2018/02/lminventor_128-1-1.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ_XsbZsyFCysxxxXfVOEpVLr4ERpjKAA1JuLPR0H1k3ds4vw_h&usqp=CAU",
+      "https://i.pinimg.com/600x315/08/4e/d8/084ed89f97142982887e943d69ab17d3.jpg",
+      "https://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-12/256/dog-face.png",
+      "https://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-11/256/cat-face.png",
+      "https://i.pinimg.com/originals/7d/b0/bd/7db0bd87e0d8d715bc7eb9cc31c79927.png",
+      "https://a.wattpad.com/useravatar/BodoBanana.256.456524.jpg",
+      "https://b.thumbs.redditmedia.com/34mZd4CPuWddzVkhKqIXgigWdTcymoRywICEC_sD7cQ.png",
+      "https://pbs.twimg.com/media/BRtfYmQCIAI89-r.jpg:large"
+    ]
   }
 
   async componentWillMount() {
@@ -311,10 +395,11 @@ export default class Post extends React.Component {
     // In case author account is deleted
     var authorName;
     if (!author) authorName = "Ghost";
-    else authorName = `${author.firstName} ${author.lastName}`;
+    // else authorName = `${author.firstName} ${author.lastName}`;
+    else authorName = `${this.FIRST_NAMES[Math.floor(Math.random() * 25)]} ${this.LAST_NAMES[Math.floor(Math.random() * 25)]}`;
 
     // TODO: implement
-    var authorPhoto = author.profilePicture;
+    var authorPhoto = this.PICTURES[0];//author.profilePicture;
 
     if(this.props.showFullDate){
       //If in comment view, view full date including timestamp
@@ -352,7 +437,8 @@ export default class Post extends React.Component {
                     <TouchableOpacity onPress={() => showUserProfile(author)}>
                       <Thumbnail
                         style={styles.profilePicThumbnail}
-                        source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }}
+                        // source={{ uri: `data:image/png;base64,${this.state.profilePicture}` }}
+                        source={{ uri: this.PICTURES[Math.floor(Math.random() * 23)] }}
                       />
                     </TouchableOpacity>
                   </View>
